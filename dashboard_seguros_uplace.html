@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dictamen Comparativo · Renovación Póliza Uplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0C1720;
+    --bg-2: #0F1E29;
+    --panel: #14273570;
+    --panel-solid: #142735;
+    --line: #223A4A;
+    --text: #E9F1F4;
+    --muted: #8CA4B2;
+    --muted-2: #5E7789;
+    --gold: #C99A3B;
+    --gold-dim: #C99A3B33;
+    --green: #4E9E72;
+    --green-dim: #4E9E7222;
+    --amber: #D6A63C;
+    --amber-dim: #D6A63C22;
+    --red: #C15A46;
+    --red-dim: #C15A4622;
+    --cyan: #4C93A6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;}
+  body{
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-attachment: fixed;
+    background-color: var(--bg);
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:40px 28px 90px;}
+
+  /* ---- Header / dictamen strip ---- */
+  header{
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, #0F212D 0%, #0C1A24 100%);
+    border-radius:4px;
+    padding:28px 32px;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  header::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--gold), transparent 70%);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--gold); display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold);}
+  h1{
+    font-family:'Space Grotesk', sans-serif; font-weight:600;
+    font-size:clamp(24px,3.4vw,34px); line-height:1.15; margin-top:12px; max-width:820px;
+    letter-spacing:-.01em;
+  }
+  .subline{color:var(--muted); font-size:14.5px; margin-top:10px; max-width:760px; line-height:1.5;}
+  .meta-row{
+    display:flex; gap:28px; margin-top:22px; flex-wrap:wrap;
+    border-top:1px solid var(--line); padding-top:18px;
+  }
+  .meta-item{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--muted-2);}
+  .meta-item b{display:block; color:var(--text); font-size:13.5px; font-family:'Inter'; font-weight:600; margin-top:3px;}
+
+  /* ---- Section titles ---- */
+  .sec-head{display:flex; align-items:baseline; gap:12px; margin:44px 0 18px;}
+  .sec-num{font-family:'IBM Plex Mono', monospace; color:var(--gold); font-size:12px; letter-spacing:.1em;}
+  .sec-title{font-family:'Space Grotesk', sans-serif; font-size:19px; font-weight:600;}
+  .sec-head::after{content:""; flex:1; height:1px; background:var(--line); margin-left:6px;}
+
+  /* ---- KPI grid ---- */
+  .kpi-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:14px;}
+  .kpi{
+    border:1px solid var(--line); background:var(--panel); border-radius:4px; padding:20px;
+    position:relative;
+  }
+  .kpi .tag{
+    font-family:'IBM Plex Mono', monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted-2);
+  }
+  .kpi .broker{font-size:13px; color:var(--muted); margin-top:2px;}
+  .kpi .val{font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:600; margin-top:12px;}
+  .kpi .val small{font-size:13px; color:var(--muted); font-weight:400;}
+  .kpi .foot{margin-top:10px; font-size:12px; color:var(--muted-2); border-top:1px dashed var(--line); padding-top:10px;}
+  .kpi.best{border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-dim) inset;}
+  .kpi.best::after{
+    content:"MEJOR TASA"; position:absolute; top:14px; right:14px;
+    font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.08em;
+    color:var(--gold); border:1px solid var(--gold); padding:3px 7px; border-radius:2px;
+  }
+
+  /* ---- Table ---- */
+  .table-wrap{border:1px solid var(--line); border-radius:4px; overflow:hidden; background:var(--panel-solid);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  thead th{
+    text-align:left; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:10.5px;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:13px 16px;
+    background:#0F202B; border-bottom:1px solid var(--line);
+  }
+  tbody td{padding:13px 16px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--text);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#0F202B60;}
+  td.concept{color:var(--muted); font-size:12.8px; max-width:230px;}
+  td.num{font-family:'IBM Plex Mono',monospace; font-size:12.8px;}
+  .flag-critical{background:var(--red-dim);}
+  .flag-critical td{color:#F0C9C0;}
+  .badge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em;
+    padding:2px 7px; border-radius:2px; text-transform:uppercase;
+  }
+  .badge.red{background:var(--red-dim); color:#E7A392; border:1px solid #7A3B30;}
+  .badge.green{background:var(--green-dim); color:#A9D6BB; border:1px solid #3B6B4E;}
+  .badge.amber{background:var(--amber-dim); color:#EBCE8F; border:1px solid #8A6B26;}
+
+  /* ---- Pending / new tags ---- */
+  .pending-banner{
+    display:flex; gap:14px; align-items:flex-start; border:1px dashed var(--amber);
+    background:var(--amber-dim); border-radius:4px; padding:16px 18px; margin-bottom:28px;
+  }
+  .pending-banner .mark{font-family:'IBM Plex Mono',monospace; color:var(--amber); font-size:12px; font-weight:600; white-space:nowrap;}
+  .pending-banner p{font-size:13.5px; color:#EDE0C4; line-height:1.55;}
+  .pending-banner p b{color:#fff;}
+  .new-tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.08em;
+    color:#0C1720; background:var(--gold); padding:2px 8px; border-radius:2px; margin-left:10px; vertical-align:middle;
+  }
+  .broker-block{
+    border:1px solid var(--line); border-radius:4px; margin-bottom:18px; overflow:hidden;
+  }
+  .broker-block .broker-head{
+    background:#0F202B; padding:11px 18px; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--cyan); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:10px;
+  }
+  .broker-block .broker-head .status-ok{color:var(--green);}
+  .broker-block .broker-head .status-pending{color:var(--amber);}
+  .broker-block .broker-body{padding:16px 18px;}
+  .insurer-row{
+    display:flex; gap:14px; padding:12px 0; border-top:1px solid var(--line);
+  }
+  .insurer-row:first-child{border-top:none; padding-top:2px;}
+  .insurer-row .name{
+    width:80px; flex-shrink:0; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:13.5px; color:var(--text);
+  }
+  .insurer-row .desc{font-size:13px; color:var(--muted); line-height:1.55;}
+  .insurer-row .desc b{color:var(--text);}
+
+  /* ---- Redline callout ---- */
+  .callout{
+    margin-top:16px; border-left:3px solid var(--red); background:var(--red-dim);
+    padding:16px 18px; border-radius:0 4px 4px 0; display:flex; gap:14px;
+  }
+  .callout .mark{font-family:'IBM Plex Mono',monospace; color:var(--red); font-size:12px; font-weight:600; white-space:nowrap;}
+  .callout p{font-size:13.5px; color:#EAD4CD; line-height:1.55;}
+  .callout p b{color:#fff;}
+
+  /* ---- Verdict banner ---- */
+  .verdict{
+    display:grid; grid-template-columns:170px 1fr; border:1px solid var(--line); border-radius:4px; overflow:hidden;
+  }
+  .verdict-badge{
+    background:linear-gradient(180deg,#3A2A16,#241A0D); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border-right:1px solid var(--line); padding:20px;
+  }
+  .verdict-badge .stamp{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:20px; color:var(--amber);
+    letter-spacing:.03em; border:2px solid var(--amber); padding:8px 14px; border-radius:3px; transform:rotate(-3deg);
+  }
+  .verdict-body{padding:20px 24px; background:var(--panel-solid);}
+  .verdict-body p{font-size:13.8px; color:var(--muted); line-height:1.6;}
+  .verdict-body ul{margin-top:12px; padding-left:0; list-style:none;}
+  .verdict-body li{
+    font-size:13.5px; color:var(--text); padding:9px 0 9px 22px; border-top:1px solid var(--line); position:relative;
+  }
+  .verdict-body li:first-child{border-top:none;}
+  .verdict-body li::before{content:"▸"; position:absolute; left:0; color:var(--gold);}
+
+  /* ---- Checklist ---- */
+  .checklist{border:1px solid var(--line); border-radius:4px; background:var(--panel-solid); padding:6px 0;}
+  .check-item{
+    display:flex; gap:14px; align-items:flex-start; padding:14px 20px; border-bottom:1px solid var(--line);
+  }
+  .check-item:last-child{border-bottom:none;}
+  .check-item .box{
+    width:16px; height:16px; border:1.5px solid var(--gold); border-radius:3px; margin-top:2px; flex-shrink:0;
+  }
+  .check-item p{font-size:13.5px; line-height:1.5; color:var(--text);}
+  .check-item span.who{
+    display:inline-block; margin-top:6px; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em;
+    color:var(--cyan); text-transform:uppercase;
+  }
+
+  footer{margin-top:60px; padding-top:20px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  footer p{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2);}
+
+  @media (max-width:820px){
+    .kpi-grid{grid-template-columns:1fr;}
+    .verdict{grid-template-columns:1fr;}
+    .verdict-badge{border-right:none; border-bottom:1px solid var(--line); flex-direction:row; gap:12px;}
+    table{font-size:12px;}
+    thead th, tbody td{padding:10px 10px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span>DICTAMEN DE DIRECCIÓN OPERATIVA · EVALUACIÓN FINANCIERA</div>
+    <h1>Renovación Póliza Condominio Habitacional — Torre Uplace</h1>
+    <p class="subline">Comparativo entre broker actual (ARC Expertos en Seguros) y broker alterno (Innovación Segura) sobre las propuestas de renovación 2026–2027 con Zurich, Mapfre y Sura.</p>
+    <div class="meta-row">
+      <div class="meta-item">PÓLIZA VIGENTE<b>112017426 · Zurich</b></div>
+      <div class="meta-item">VENCIMIENTO<b>16/07/2026</b></div>
+      <div class="meta-item">VALOR TOTAL ASEGURADO<b>$1,026,000,000 MXN</b></div>
+      <div class="meta-item">ASEGURADORAS COTIZADAS<b>Zurich · Mapfre · Sura</b></div>
+    </div>
+  </header>
+
+  <div class="pending-banner">
+    <span class="mark">PENDIENTE</span>
+    <p>Aún <b>no contamos con las Condiciones Generales ni Particulares</b> de los seguros ofrecidos por el broker <b>Innovación Segura</b> (Mapfre, Sura). Los hallazgos legales de la sección 04 se verificaron contra las condiciones generales oficiales de cada <b>aseguradora</b> (aplicables sin importar el broker), pero no hemos revisado los endosos o condiciones particulares específicas que Innovación Segura haya negociado. Donde aplique, esto se indica de forma explícita por broker.</p>
+  </div>
+
+  <!-- SECTION 1: KPI PREMIUMS -->
+  <div class="sec-head"><span class="sec-num">01</span><span class="sec-title">Normalización financiera — Prima total por aseguradora</span></div>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="tag">Zurich · vía ARC</div>
+      <div class="broker">Trimestral, sin recargo</div>
+      <div class="val">$735,562<small> MXN</small></div>
+      <div class="foot">$717 por cada $1M asegurado · sismo "sin coaseguro" ⚠ en verificación</div>
+    </div>
+    <div class="kpi best">
+      <div class="tag">Mapfre · vía ARC</div>
+      <div class="broker">Trimestral, con recargo</div>
+      <div class="val">$631,092<small> MXN</small></div>
+      <div class="foot">$615 por cada $1M · ⚠ calderas excluidas</div>
+    </div>
+    <div class="kpi">
+      <div class="tag">Mapfre · vía Innovación Segura</div>
+      <div class="broker">Contado, sin recargo</div>
+      <div class="val">$640,355<small> MXN</small></div>
+      <div class="foot">$624 por cada $1M · calderas amparadas</div>
+    </div>
+    <div class="kpi">
+      <div class="tag">Sura · vía ARC</div>
+      <div class="broker">Trimestral, con recargo</div>
+      <div class="val">$786,190<small> MXN</small></div>
+      <div class="foot">$766 por cada $1M asegurado</div>
+    </div>
+    <div class="kpi best">
+      <div class="tag">Sura · vía Innovación Segura</div>
+      <div class="broker">Contado, sin recargo</div>
+      <div class="val">$702,380<small> MXN</small></div>
+      <div class="foot">$685 por cada $1M · deducibles menores</div>
+    </div>
+    <div class="kpi">
+      <div class="tag">Zurich · vía Innovación Segura</div>
+      <div class="broker">Solo referencial</div>
+      <div class="val">— <small>no cotizado</small></div>
+      <div class="foot">IS no negoció alternativa propia con Zurich</div>
+    </div>
+  </div>
+  <div class="callout">
+    <span class="mark">NOTA</span>
+    <p>La comparación de prima no es 100% homogénea: ARC cotiza en pago <b>trimestral</b> (con recargo financiero en Mapfre y Sura); Innovación Segura cotiza de <b>contado</b>. Si el Comité fracciona el pago, solicitar a IS una cotización trimestral equivalente antes de resolver.</p>
+  </div>
+
+  <!-- SECTION 2: COVERAGE GAP -->
+  <div class="sec-head"><span class="sec-num">02</span><span class="sec-title">Cruce técnico de coberturas — Mapfre, ARC vs. Innovación Segura</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Cobertura</th><th>Mapfre · ARC</th><th>Mapfre · Innovación Segura</th><th>Lectura</th></tr>
+      </thead>
+      <tbody>
+        <tr class="flag-critical">
+          <td class="concept">Calderas y aparatos sujetos a presión</td>
+          <td class="num"><span class="badge red">Excluida</span></td>
+          <td class="num"><span class="badge green">Amparada</span> · $500,000, ded. 1% mín. $5,850</td>
+          <td class="concept">Brecha crítica: calderas Hayward H-Series del edificio quedarían expuestas.</td>
+        </tr>
+        <tr>
+          <td class="concept">RC Actividades e inmuebles</td>
+          <td class="num">10% c/reclamación, mín. 100 UMA (~$11,731)</td>
+          <td class="num">5% s/pérdida, mín. $5,000 MXN</td>
+          <td class="concept"><span class="badge green">IS más favorable</span></td>
+        </tr>
+        <tr>
+          <td class="concept">RC Cruzada</td>
+          <td class="num">15% c/reclamación, mín. 150 UMA (~$17,597)</td>
+          <td class="num">5% s/pérdida, mín. $5,000 MXN</td>
+          <td class="concept"><span class="badge green">IS más favorable</span></td>
+        </tr>
+        <tr>
+          <td class="concept">Equipo Electrónico Fijo (básica)</td>
+          <td class="num">2% s/reposición, mín. 60 UMA (~$7,039)</td>
+          <td class="num">1% s/reposición, mín. $3,500 MXN</td>
+          <td class="concept"><span class="badge green">IS más favorable</span></td>
+        </tr>
+        <tr>
+          <td class="concept">Rotura de Maquinaria</td>
+          <td class="num">2% s/reposición, mín. 100 UMA</td>
+          <td class="num">1% s/reposición, mín. $5,850 MXN</td>
+          <td class="concept"><span class="badge green">IS más favorable</span></td>
+        </tr>
+        <tr>
+          <td class="concept">Prima neta (referencia)</td>
+          <td class="num">$504,200 MXN</td>
+          <td class="num">$550,000 MXN</td>
+          <td class="concept"><span class="badge amber">ARC ~8.3% más barato</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3: ZURICH CATASTROPHIC -->
+  <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">Cobertura catastrófica — Terremoto / Erupción Volcánica</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Aseguradora</th><th>Deducible</th><th>Coaseguro</th><th>Exposición residual</th></tr>
+      </thead>
+      <tbody>
+        <tr class="flag-critical">
+          <td class="concept"><b>Zurich</b> (ARC)</td>
+          <td class="num">2% del indiviso afectado</td>
+          <td class="num"><span class="badge green">Cotización: sin coaseguro</span><br><span class="badge red" style="margin-top:4px;">Condiciones generales: 10–30%</span></td>
+          <td class="concept">⚠ Discrepancia sin resolver — ver hallazgo nuevo en sección 04</td>
+        </tr>
+        <tr>
+          <td class="concept">Mapfre (ambos brokers)</td>
+          <td class="num">2% sobre suma asegurada</td>
+          <td class="num"><span class="badge red">25% coaseguro</span></td>
+          <td class="concept">Costo adicional a cargo del condominio tras deducible</td>
+        </tr>
+        <tr>
+          <td class="concept">Sura (ambos brokers)</td>
+          <td class="num">2% del valor real/reposición</td>
+          <td class="num"><span class="badge red">25% coaseguro</span></td>
+          <td class="concept">Costo adicional a cargo del condominio tras deducible</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3.5: LEGAL VERIFICATION -->
+  <div class="sec-head"><span class="sec-num">04</span><span class="sec-title">Verificación legal — Condiciones generales registradas vs. cotización comercial<span class="new-tag">NUEVO · TRAS REVISAR CONDICIONES GENERALES</span></span></div>
+  <p style="color:var(--muted); font-size:13.5px; margin-bottom:18px; max-width:860px; line-height:1.6;">Se cruzaron las cotizaciones comerciales contra las <b style="color:var(--text)">Condiciones Generales oficiales registradas ante CONDUSEF/CNSF</b> de cada aseguradora (Zurich Multipóliza ZMUL.062024.01, Sura Empresa Máster, Mapfre Seguro Múltiple Empresarial). Estas condiciones son propias de la <b style="color:var(--text)">aseguradora</b>, no del broker, por lo que en principio aplican sin importar quién coloque la póliza — pero solo pudimos contrastarlas contra la cotización de ARC, que es la que incluyó el detalle necesario. Todo lo señalado a continuación es información nueva, no incluida en el dictamen original.</p>
+
+  <div class="broker-block">
+    <div class="broker-head"><span class="status-ok">●</span> BROKER: ARC EXPERTOS EN SEGUROS <span style="color:var(--muted-2); text-transform:none; font-family:'Inter'; font-size:12px; margin-left:4px;">— condiciones generales revisadas y contrastadas</span></div>
+    <div class="broker-body">
+      <div class="insurer-row">
+        <div class="name">ZURICH</div>
+        <div class="desc"><b>Hallazgo crítico — Coaseguro sísmico.</b> ARC reporta Terremoto/Erupción Volcánica <span class="badge green">sin coaseguro</span>, presentado como la ventaja decisiva de Zurich. Las condiciones generales de Zurich (ZMUL.062024.01) establecen coaseguro <b>obligatorio del 10%, 20% o 30%</b> según zona sísmica, además del deducible. <span class="badge red">Debe confirmarse por escrito</span> con ARC el endoso que respalde la excepción; de no existir, la ventaja catastrófica de Zurich no es real.</div>
+      </div>
+      <div class="insurer-row">
+        <div class="name">MAPFRE</div>
+        <div class="desc"><b>Calderas excluidas — confirmado como omisión, no limitación.</b> Las condiciones generales de Mapfre sí incluyen una sección completa de "Calderas y Recipientes Sujetos a Presión" como producto estándar. La exclusión en la cotización de ARC es una omisión de contratación, negociable.</div>
+      </div>
+      <div class="insurer-row">
+        <div class="name">SURA</div>
+        <div class="desc"><b>RC Cruzada — alcance más limitado de lo que sugiere la cotización.</b> En las condiciones generales, "RC Cruzada" ampara daños entre razones sociales afiliadas/subsidiarias o entre distintos asegurados nombrados en la carátula — no entre condóminos individuales automáticamente. Confirmar quién figura como asegurado nombrado en la póliza de ARC.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="broker-block">
+    <div class="broker-head"><span class="status-pending">●</span> BROKER: INNOVACIÓN SEGURA <span style="color:var(--muted-2); text-transform:none; font-family:'Inter'; font-size:12px; margin-left:4px;">— condiciones generales/particulares aún no recibidas</span></div>
+    <div class="broker-body">
+      <div class="insurer-row">
+        <div class="name">MAPFRE</div>
+        <div class="desc">Su cotización ya muestra Calderas <b>amparada</b>, consistente con las condiciones generales del producto — sin brecha detectada aquí. No obstante, no hemos verificado sus condiciones particulares/endosos propios para el resto de coberturas.</div>
+      </div>
+      <div class="insurer-row">
+        <div class="name">SURA</div>
+        <div class="desc">Misma advertencia de RC Cruzada aplica en principio (es condición de la aseguradora, no del broker), pero falta confirmar quién figura como asegurado nombrado en la póliza que negociaría Innovación Segura.</div>
+      </div>
+      <div class="insurer-row">
+        <div class="name">ZURICH</div>
+        <div class="desc">No cotizado por este broker; no aplica verificación.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="mark">IMPACTO</span>
+    <p>El hallazgo del coaseguro sísmico de Zurich es el más relevante de todo el dictamen: <b>invalida potencialmente la razón principal por la que se prefería a Zurich</b> sobre Mapfre/Sura en cobertura catastrófica. No se recomienda dar peso a esa ventaja hasta que ARC confirme por escrito la condición particular aplicable. Este hallazgo es específico de la cotización de ARC; no se ha podido verificar aún si Innovación Segura ofrecería algo distinto en Zurich, ya que no cotiza esa aseguradora.</p>
+  </div>
+
+  <!-- SECTION 4: VERDICT -->
+  <div class="sec-head"><span class="sec-num">05</span><span class="sec-title">Veredicto financiero</span></div>
+  <div class="verdict">
+    <div class="verdict-badge"><div class="stamp">RENEGOCIAR</div></div>
+    <div class="verdict-body">
+      <p>Ninguna de las dos propuestas está lista para firma en su forma actual. Se identifican brechas de cobertura y de condiciones de pago que deben resolverse antes de comparar en igualdad de circunstancias.</p>
+      <ul>
+        <li>ARC ofrece la mejor tasa neta en Mapfre, pero con calderas excluidas y deducibles más altos en RC y Equipo Electrónico.</li>
+        <li>Innovación Segura ofrece mejores deducibles y cobertura completa de calderas, a un sobrecosto de prima que probablemente se compensa en caso de siniestro.</li>
+        <li>Solo ARC ha negociado una renovación real con Zurich; la ventaja de "sismo sin coaseguro" citada para justificar a Zurich <b style="color:#F0C9C0">contradice las condiciones generales registradas</b> de la propia aseguradora (coaseguro obligatorio 10–30% por zona sísmica) — debe confirmarse por escrito antes de usarse como criterio de decisión.</li>
+        <li>La exclusión de Calderas en el paquete Mapfre de ARC no corresponde a una limitación del producto: las condiciones generales de Mapfre sí contemplan esa sección, por lo que es negociable.</li>
+        <li>Innovación Segura no presenta cotización trimestral ni renovación propia con Zurich, limitando la comparación en igualdad de condiciones.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5: ACTION CHECKLIST -->
+  <div class="sec-head"><span class="sec-num">06</span><span class="sec-title">Instrucciones en sitio — Comité de Vigilancia / Administración</span></div>
+  <div class="checklist">
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Solicitar a ARC el endoso o condición particular que respalde "Terremoto sin coaseguro" en Zurich, ya que las condiciones generales registradas exigen coaseguro obligatorio de 10–30% por zona sísmica. Sin este documento, no dar por válida esa ventaja.</p><span class="who">Prioridad crítica · Broker ARC</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Solicitar a ARC aclaración escrita sobre la exclusión de Calderas en Mapfre: las condiciones generales sí incluyen esta sección como producto estándar, por lo que debe cotizarse en lugar de asumirse como no disponible.</p><span class="who">Prioridad crítica · Broker ARC</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Confirmar con ambos brokers qué personas físicas o morales figuran como "Asegurados nombrados" en la carátula de la póliza, ya que RC Cruzada solo protege entre asegurados nombrados o empresas afiliadas — no entre condóminos individuales.</p><span class="who">Ambos brokers</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Solicitar a Innovación Segura cotización trimestral equivalente (no solo de contado) de Mapfre y Sura, para comparar en igualdad de condiciones de pago.</p><span class="who">Broker Innovación Segura</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Solicitar a Innovación Segura una cotización real (no referencial) de renovación con Zurich, dado que actualmente esa negociación depende solo de ARC.</p><span class="who">Broker Innovación Segura</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Solicitar a ambos brokers copia de condiciones generales/particulares de Mapfre y Sura, ya que las cifras de deducibles difieren entre ambos para la misma aseguradora.</p><span class="who">Ambos brokers</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Definir con el Comité el apetito de riesgo sísmico: sismo sin coaseguro vía Zurich (prima mayor) vs. 25% de coaseguro vía Mapfre/Sura (prima menor).</p><span class="who">Decisión del Comité</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Solicitar a Innovación Segura el detalle de su modelo de servicio post-venta (seguimiento de siniestros, atención 24/7, visitas periódicas) para comparar contra el de ARC.</p><span class="who">Broker Innovación Segura</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>DICTAMEN GENERADO PARA COMITÉ DE VIGILANCIA · UPLACE</p>
+    <p>FUENTE: PROPUESTAS ARC EXPERTOS EN SEGUROS (18/06/2026) · INNOVACIÓN SEGURA</p>
+  </footer>
+
+</div>
+</body>
+</html>
