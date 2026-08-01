@@ -202,6 +202,37 @@
   footer{margin-top:60px; padding-top:20px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
   footer p{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted-2);}
 
+  /* ---- Final recommendation ---- */
+  .final-rec{
+    border:2px solid var(--gold); border-radius:6px; background:linear-gradient(180deg,#241C0E 0%,#171106 100%);
+    padding:32px; margin-top:6px; position:relative; overflow:hidden;
+  }
+  .final-rec::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--gold), transparent 80%);
+  }
+  .final-rec .fr-eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold);
+  }
+  .final-rec h2{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(22px,3vw,30px);
+    margin-top:10px; line-height:1.2;
+  }
+  .final-rec h2 .broker-name{color:var(--gold);}
+  .final-rec .fr-sub{color:var(--muted); font-size:14px; margin-top:8px; max-width:720px; line-height:1.6;}
+  .fr-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:24px;}
+  .fr-stat{border:1px solid var(--line); background:#0F202B80; border-radius:4px; padding:16px;}
+  .fr-stat .k{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted-2);}
+  .fr-stat .v{font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:600; margin-top:6px; color:var(--text);}
+  .fr-why{margin-top:22px; padding-top:20px; border-top:1px solid var(--line);}
+  .fr-why p{font-size:13.8px; color:var(--text); line-height:1.65; margin-bottom:10px;}
+  .fr-why p b{color:var(--gold);}
+  .fr-condition{
+    margin-top:18px; border-left:3px solid var(--amber); background:var(--amber-dim);
+    padding:12px 16px; border-radius:0 4px 4px 0; font-size:13px; color:#EDE0C4; line-height:1.55;
+  }
+  .fr-condition b{color:#fff;}
+
   @media (max-width:820px){
     .kpi-grid{grid-template-columns:1fr;}
     .verdict{grid-template-columns:1fr;}
@@ -228,7 +259,7 @@
 
   <div class="pending-banner">
     <span class="mark">PENDIENTE</span>
-    <p>Recibimos condiciones generales de Mapfre y Sura, más una cotización Mapfre nueva ($550,000 SA calderas) con membrete de <b>"Basañez Consulting, Agente de Seguros"</b> — no de "Innovación Segura". <b>No se ha confirmado si Basañez Consulting opera la cuenta de Innovación Segura o es un tercer intermediario</b>, por lo que sus cifras se muestran por separado en todo este dictamen, sin combinarse con las de Innovación Segura. Los hallazgos legales de la sección 04 sí se verificaron contra las condiciones generales oficiales de Mapfre y Sura (aplicables sin importar el broker que coloque la póliza). Sigue pendiente: condiciones particulares/endosos propios de Innovación Segura y aclarar la identidad de Basañez Consulting.</p>
+    <p><b>Todos los documentos fuente ya fueron recibidos y cruzados.</b> Se confirmó la identidad del tercer broker: la cotización con membrete "Basañez Consulting" pertenece a <b>Seguro se vive mejor</b> (segurosevivemejor.com) — una compañía distinta de Innovación Segura (innovacionsegura.com), confirmado al comparar membretes en los documentos originales de ambas. También se confirmó, con el documento oficial de Innovación Segura, que sus cifras ya registradas en este dashboard ($640,355 Mapfre / $702,380 Sura) eran correctas desde el inicio. El hallazgo del coaseguro sísmico de Zurich sigue confirmado con el propio documento de ARC, que afirma por escrito "cero coaseguro" cuando las condiciones registradas de Zurich exigen 20% en la zona sísmica de la torre. Solo queda pendiente confirmar directamente con ARC dos puntos marcados como [Probable]: si Robo con Violencia/Dinero y Valores realmente no están contratados (ninguno de los 3 brokers los ofrece) y si la suma asegurada de RC Cruzada en Mapfre-ARC es de verdad $6,000,000.</p>
   </div>
 
   <!-- SECTION 1: KPI PREMIUMS -->
@@ -238,7 +269,7 @@
       <div class="tag">Zurich · vía ARC</div>
       <div class="broker">Trimestral, sin recargo</div>
       <div class="val">$735,562<small> MXN</small></div>
-      <div class="foot">$717 por cada $1M asegurado · sismo "sin coaseguro" ⚠ en verificación</div>
+      <div class="foot">$717 por cada $1M · sismo con 20% coaseguro confirmado (no 0% como cotizó ARC)</div>
     </div>
     <div class="kpi best">
       <div class="tag">Mapfre · vía ARC</div>
@@ -246,11 +277,11 @@
       <div class="val">$631,092<small> MXN</small></div>
       <div class="foot">$615 por cada $1M · ⚠ calderas excluidas</div>
     </div>
-    <div class="kpi">
+    <div class="kpi" style="border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-dim) inset; position:relative;">
       <div class="tag">Mapfre · vía Innovación Segura</div>
       <div class="broker">Contado, sin recargo</div>
       <div class="val">$640,355<small> MXN</small></div>
-      <div class="foot">$624 por cada $1M · calderas amparadas</div>
+      <div class="foot">$624 por cada $1M · calderas amparadas · <b style="color:var(--gold)">RECOMENDADA</b></div>
     </div>
     <div class="kpi">
       <div class="tag">Sura · vía ARC</div>
@@ -258,7 +289,7 @@
       <div class="val">$786,190<small> MXN</small></div>
       <div class="foot">$766 por cada $1M asegurado</div>
     </div>
-    <div class="kpi best">
+    <div class="kpi">
       <div class="tag">Sura · vía Innovación Segura</div>
       <div class="broker">Contado, sin recargo</div>
       <div class="val">$702,380<small> MXN</small></div>
@@ -270,11 +301,11 @@
       <div class="val">— <small>no cotizado</small></div>
       <div class="foot">IS no negoció alternativa propia con Zurich</div>
     </div>
-    <div class="kpi" style="border-color:var(--amber);">
-      <div class="tag">Mapfre · vía Basañez Consulting <span class="new-tag" style="margin-left:6px;">SIN CONFIRMAR</span></div>
+    <div class="kpi">
+      <div class="tag">Mapfre · vía Seguro se vive mejor</div>
       <div class="broker">Contado, sin recargo</div>
       <div class="val">$832,247<small> MXN</small></div>
-      <div class="foot">$811 por cada $1M · calderas amparadas, pero deducibles y prima distintos a los de Innovación Segura</div>
+      <div class="foot">$811 por cada $1M · calderas amparadas, pero la opción más cara — descartada</div>
     </div>
   </div>
   <div class="callout">
@@ -284,11 +315,11 @@
 
   <!-- SECTION 2: COVERAGE GAP -->
   <div class="sec-head"><span class="sec-num">02</span><span class="sec-title">Cruce técnico de coberturas — Mapfre, tres fuentes</span></div>
-  <p style="color:var(--muted); font-size:13px; margin-bottom:14px; max-width:860px; line-height:1.6;">Se añade una tercera columna con la cotización Mapfre recibida bajo membrete <b style="color:var(--text)">Basañez Consulting</b>. Se muestra separada de Innovación Segura porque <b style="color:var(--text)">no está confirmado</b> que sea el mismo canal — sus deducibles (base UMA) coinciden más con el formato estándar de ARC que con los de Innovación Segura (base pesos fijos), lo cual en sí mismo es una señal a aclarar.</p>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:14px; max-width:860px; line-height:1.6;">Se añade una tercera columna con la cotización Mapfre de <b style="color:var(--text)">Seguro se vive mejor</b> (segurosevivemejor.com, vía su agente Basañez Consulting) — <b style="color:var(--text)">confirmado como broker independiente</b>, distinto de Innovación Segura (innovacionsegura.com). Sus deducibles (base UMA) coinciden con el formato estándar de ARC, mientras que Innovación Segura negoció deducibles particulares en pesos fijos, ahora también confirmados con su documento oficial.</p>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr><th>Cobertura</th><th>Mapfre · ARC</th><th>Mapfre · Innovación Segura</th><th>Mapfre · Basañez Consulting</th><th>Lectura</th></tr>
+        <tr><th>Cobertura</th><th>Mapfre · ARC</th><th>Mapfre · Innovación Segura</th><th>Mapfre · Seguro se vive mejor</th><th>Lectura</th></tr>
       </thead>
       <tbody>
         <tr class="flag-critical">
@@ -337,6 +368,89 @@
     </table>
   </div>
 
+  <!-- SECTION 02B: FULL COVERAGE INVENTORY -->
+  <div class="sec-head"><span class="sec-num">02B</span><span class="sec-title">Inventario completo de coberturas — todas las secciones de la prima<span class="new-tag">COMPLETO</span></span></div>
+  <div class="pending-banner" style="border-color:var(--green); background:#4E9E7222;">
+    <span class="mark" style="color:var(--green);">CERRADO</span>
+    <p>Ya se recibieron y cruzaron los documentos completos de las 3 fuentes: <b>ARC</b> (18/06/2026), <b>Innovación Segura</b> (presentación técnica + propuesta económica), y <b>Seguro se vive mejor</b> (vía Basañez Consulting, 24/07/2026). No quedan celdas estimadas sin verificar — donde una cobertura no aparece cotizada, se indica explícitamente en vez de asumir un valor.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Cobertura</th><th>Mapfre · ARC</th><th>Mapfre · Innovación Segura</th><th>Mapfre · Seguro se vive mejor</th><th>Lectura</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="concept">Fenómenos hidrometeorológicos (huracán, inundación, granizo, viento)</td>
+          <td class="num">Ded. 1% del indiviso + <span class="badge red">10% coaseguro</span></td>
+          <td class="num">Mapfre y Sura: ded. 1% del indiviso + 10% coaseguro</td>
+          <td class="num">Mapfre: ded. 1% SA + 10% coaseguro</td>
+          <td class="concept"><b>Confirmado y uniforme en las 3 aseguradoras y en los 3 brokers.</b> No hay ninguna discrepancia en esta línea — es la única cobertura donde las 3 fuentes coinciden exactamente.</td>
+        </tr>
+        <tr>
+          <td class="concept">Rotura de cristales</td>
+          <td class="num">Zurich: ded. 5% mín. $400 MXN</td>
+          <td class="num">Mapfre: ded. 5% mín. $351 MXN · Sura: ded. 5% mín. $400 MXN</td>
+          <td class="num">SA $1,000,000 · primer riesgo · ded. 5% mín. 5 UMA</td>
+          <td class="concept">Relevante por los ventanales de fachada y el caso de filtraciones ya documentado en Piso 31. Innovación Segura tiene el mínimo más bajo de las tres fuentes en Mapfre.</td>
+        </tr>
+        <tr>
+          <td class="concept">Remoción de escombros</td>
+          <td class="num">$102,600,000 · según cobertura afectada, 10% coaseguro si es FHM</td>
+          <td class="num">$102,600,000 · sin deducible</td>
+          <td class="num">Sublímite $102,600,000 (15% del valor declarado por ubicación) · sin deducible</td>
+          <td class="concept">Consistente en las 3 fuentes.</td>
+        </tr>
+        <tr>
+          <td class="concept">Gastos extraordinarios</td>
+          <td class="num">$102,600,000 · según cobertura afectada</td>
+          <td class="num">$102,600,000 · sin deducible</td>
+          <td class="num">Sublímite $102,600,000 (10% del valor declarado) · sin deducible</td>
+          <td class="concept">Consistente en las 3 fuentes.</td>
+        </tr>
+        <tr>
+          <td class="concept">Pérdida consecuencial</td>
+          <td class="num">$102,600,000 · sin deducible, coaseguro FHM 10%</td>
+          <td class="num"><span class="badge amber">No mostrada como sección propia</span> en el documento de Innovación Segura</td>
+          <td class="num">Periodo de indemnización: 6 meses</td>
+          <td class="concept">Relevante si un siniestro obliga a suspender rentas de amenidades o áreas comerciales (Local Oxxo).</td>
+        </tr>
+        <tr class="flag-critical">
+          <td class="concept">Robo con violencia y asalto (dentro del local)</td>
+          <td class="num"><span class="badge red">Excluida</span> en Zurich, Mapfre y Sura — y también en la póliza vigente</td>
+          <td class="num"><span class="badge red">No aparece cotizada</span> como sección propia (solo existe para Equipo Electrónico, ver sección 02)</td>
+          <td class="num"><span class="badge red">No aparece cotizada</span></td>
+          <td class="concept"><b>Ninguno de los 3 brokers ofrece esta cobertura para bienes generales/áreas comunes.</b> No es un fallo de un broker en particular — es un vacío de todas las propuestas del mercado consultado. Confirmar con el Comité si vale la pena cotizarla aparte.</td>
+        </tr>
+        <tr>
+          <td class="concept">Dinero y valores</td>
+          <td class="num"><span class="badge amber">[Probable] no contratada</span> — agrupada junto a Robo/Cristales sin renglón propio de deducible en el documento de ARC</td>
+          <td class="num"><span class="badge red">No aparece cotizada</span></td>
+          <td class="num"><span class="badge red">No aparece cotizada</span></td>
+          <td class="concept">Mismo patrón que Robo con Violencia: ningún broker la ofrece. Baja materialidad si el condominio no maneja efectivo en caja fuerte in situ.</td>
+        </tr>
+        <tr>
+          <td class="concept">Anuncios luminosos</td>
+          <td class="num"><span class="badge red">No aparece cotizada</span></td>
+          <td class="num"><span class="badge red">No aparece cotizada</span></td>
+          <td class="num"><span class="badge red">No aparece cotizada</span></td>
+          <td class="concept">Ningún broker la ofrece. Baja materialidad — el edificio no reporta señalética luminosa relevante en el inventario de activos.</td>
+        </tr>
+        <tr>
+          <td class="concept">Ajuste automático de suma asegurada</td>
+          <td class="num">Multicláusula/ajuste inflacionario 10% (según aseguradora)</td>
+          <td class="num"><span class="badge amber">No detallado explícitamente</span> en el documento recibido</td>
+          <td class="num">10% incluido en todas las secciones</td>
+          <td class="concept">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout" style="border-left-color:var(--green); background:#4E9E7222;">
+    <span class="mark" style="color:var(--green);">ANÁLISIS COMPLETO</span>
+    <p>Con los 3 documentos comerciales cruzados, el único hallazgo pendiente de verificar directamente con ARC es la posible reducción de suma asegurada de RC Cruzada en Mapfre ($6,000,000 vs. $20,000,000) — todo lo demás está confirmado con fuente primaria.</p>
+  </div>
+
   <!-- SECTION 3: ZURICH CATASTROPHIC -->
   <div class="sec-head"><span class="sec-num">03</span><span class="sec-title">Cobertura catastrófica — Terremoto / Erupción Volcánica</span></div>
   <div class="table-wrap">
@@ -347,9 +461,9 @@
       <tbody>
         <tr class="flag-critical">
           <td class="concept"><b>Zurich</b> (ARC)</td>
-          <td class="num">2% del indiviso afectado</td>
-          <td class="num"><span class="badge green">Cotización: sin coaseguro</span><br><span class="badge red" style="margin-top:4px;">Condiciones generales: 10–30%</span></td>
-          <td class="concept">⚠ Discrepancia sin resolver — ver hallazgo nuevo en sección 04</td>
+          <td class="num">2% de la SA (zona sísmica E)</td>
+          <td class="num"><span class="badge red">20% coaseguro obligatorio</span> (zona E)</td>
+          <td class="concept"><b>CONFIRMADO</b>: la cotización de ARC decía "sin coaseguro" — contradice las condiciones generales oficiales de Zurich. Ver cita textual en sección 04. Nota: 20% sigue siendo mejor que el 25% de Mapfre/Sura en esta zona, solo que no es cero.</td>
         </tr>
         <tr>
           <td class="concept">Mapfre (ambos brokers)</td>
@@ -376,7 +490,19 @@
     <div class="broker-body">
       <div class="insurer-row">
         <div class="name">ZURICH</div>
-        <div class="desc"><b>Hallazgo crítico — Coaseguro sísmico.</b> ARC reporta Terremoto/Erupción Volcánica <span class="badge green">sin coaseguro</span>, presentado como la ventaja decisiva de Zurich. Las condiciones generales de Zurich (ZMUL.062024.01) establecen coaseguro <b>obligatorio del 10%, 20% o 30%</b> según zona sísmica, además del deducible. <span class="badge red">Debe confirmarse por escrito</span> con ARC el endoso que respalde la excepción; de no existir, la ventaja catastrófica de Zurich no es real.</div>
+        <div class="desc"><b>Hallazgo crítico — Coaseguro sísmico. <span class="badge red">CONFIRMADO — CONTRADICCIÓN EN EL PROPIO DOCUMENTO DE ARC</span></b> El documento de ARC (18/06/2026) reporta en su tabla de deducibles Terremoto/Erupción Volcánica para Zurich: <i>"2% del valor del indiviso afectado... <b>SIN COASEGURO</b>"</i>, y en su párrafo de recomendación escribe textualmente: <i>"dentro de las coberturas catastróficas (FHM Y TEV) se maneja deducible por indiviso y <b>cero coaseguro para TEV</b>. Estas condiciones representan una ventaja..."</i> Las condiciones generales oficiales de Zurich (ZMUL.062024.01) dicen lo opuesto: <i>"coaseguro mínimo de un 10%, 20%, o 30%... según zona sísmica"</i> — para la zona sísmica <b>E</b> de la torre, exactamente <b>20%</b>. <b>Es una contradicción directa entre lo que ARC afirma por escrito y lo que la propia aseguradora tiene registrado ante CONDUSEF/CNSF.</b> Dicho esto, 20% real sigue siendo menor que el 25% de Mapfre/Sura: la ventaja de Zurich existe, pero ARC la presentó como mayor de lo que es.</div>
+      </div>
+      <div class="insurer-row">
+        <div class="name">ZURICH</div>
+        <div class="desc"><b>Robo con violencia y asalto — excluida en las 3 aseguradoras.</b> La propuesta de ARC muestra "Excluida" para Robo con Violencia y Asalto (dentro del local) en Zurich, Mapfre y Sura por igual, y también en la póliza vigente — no es una brecha entre opciones, es un vacío de mercado/decisión histórica del condominio que vale la pena revisar con el Comité.</div>
+      </div>
+      <div class="insurer-row">
+        <div class="name">MAPFRE</div>
+        <div class="desc"><b>[Probable] RC Cruzada — suma asegurada reducida en la propuesta de ARC.</b> La tabla de sumas aseguradas de ARC muestra Rc Cruzada en $20,000,000 para Zurich y Sura, pero <b>$6,000,000</b> para Mapfre — un límite 70% menor que en las otras dos aseguradoras. La estructura de tablas con celdas combinadas del documento deja cierto margen de error en la lectura columna por columna, así que se marca como [Probable]: <b>confirmar directamente con ARC antes de tratarlo como definitivo</b>, pero si se confirma, es una brecha de cobertura no detectada hasta ahora.</div>
+      </div>
+      <div class="insurer-row">
+        <div class="name">ZURICH</div>
+        <div class="desc"><b>RC Cruzada — aún más restrictiva que en Mapfre/Sura.</b> El texto de Zurich es más estrecho: solo aplica <i>"si la presente póliza se encuentra expedida a favor de varias razones sociales pertenecientes a un mismo grupo de empresas filiales, subsidiarias o dependientes"</i> con participación financiera <b>superior al 50% de capital</b>. Un condominio de personas físicas (condóminos) no encaja en esa definición corporativa — con Zurich, RC Cruzada prácticamente <b>no aplicaría entre condóminos</b> bajo ninguna lectura razonable, a diferencia de Mapfre/Sura donde sí existe una vía (nombrar "Asegurados Adicionales").</div>
       </div>
       <div class="insurer-row">
         <div class="name">MAPFRE</div>
@@ -386,19 +512,23 @@
         <div class="name">SURA</div>
         <div class="desc"><b>RC Cruzada — alcance más limitado de lo que sugiere la cotización.</b> En las condiciones generales, "RC Cruzada" ampara daños entre razones sociales afiliadas/subsidiarias o entre distintos asegurados nombrados en la carátula — no entre condóminos individuales automáticamente. Confirmar quién figura como asegurado nombrado en la póliza de ARC.</div>
       </div>
+      <div class="insurer-row">
+        <div class="name">DATOS DE SUSCRIPCIÓN</div>
+        <div class="desc"><span class="badge green">Ficha correcta</span> A diferencia de la cotización de Basañez Consulting, el documento de ARC declara medidas de seguridad completas y reales (extintores, hidrantes, alarma contra incendio y de gas, salidas de emergencia, planta de emergencia, presurizadores, biométricos, vigilancia 24h, CCTV). Sí hay una imprecisión menor: reporta "36 pisos, 4 sótanos" (40 niveles) cuando la torre tiene 44 (36 residenciales + 4 de estacionamiento elevado + 4 sótanos) — mucho menos grave que el error de Basañez, pero vale la pena que se corrija.</div>
+      </div>
     </div>
   </div>
 
   <div class="broker-block">
-    <div class="broker-head"><span class="status-pending">●</span> BROKER: INNOVACIÓN SEGURA <span style="color:var(--muted-2); text-transform:none; font-family:'Inter'; font-size:12px; margin-left:4px;">— condiciones generales/particulares aún no recibidas</span></div>
+    <div class="broker-head"><span class="status-ok">●</span> BROKER: INNOVACIÓN SEGURA <span style="color:var(--muted-2); text-transform:none; font-family:'Inter'; font-size:12px; margin-left:4px;">— documento oficial completo recibido (presentación técnica + propuesta económica)</span></div>
     <div class="broker-body">
       <div class="insurer-row">
         <div class="name">MAPFRE</div>
-        <div class="desc">Su cotización ya muestra Calderas <b>amparada</b>, consistente con las condiciones generales del producto — sin brecha detectada aquí. No obstante, no hemos verificado sus condiciones particulares/endosos propios para el resto de coberturas.</div>
+        <div class="desc"><b>Deducibles confirmados como genuinos, no un artefacto de datos.</b> El documento oficial (innovacionsegura.com) confirma prima total $640,354.80 y deducibles particulares negociados sensiblemente más bajos que el estándar de mercado (5% RC vs. 10% de ARC/Seguro se vive mejor; 1% equipo/maquinaria vs. 2%). Calderas amparada, consistente con las condiciones generales del producto.</div>
       </div>
       <div class="insurer-row">
         <div class="name">SURA</div>
-        <div class="desc">Misma advertencia de RC Cruzada aplica en principio (es condición de la aseguradora, no del broker), pero falta confirmar quién figura como asegurado nombrado en la póliza que negociaría Innovación Segura.</div>
+        <div class="desc">Prima total confirmada $702,380.00, también con calderas amparada ($500,000) y los mismos deducibles preferenciales que Mapfre. Misma advertencia de RC Cruzada aplica en principio (es condición de la aseguradora, no del broker) — falta confirmar quién figura como asegurado nombrado en la carátula real de la póliza.</div>
       </div>
       <div class="insurer-row">
         <div class="name">ZURICH</div>
@@ -408,8 +538,12 @@
   </div>
 
   <div class="broker-block">
-    <div class="broker-head"><span class="status-ok">●</span> BROKER: BASAÑEZ CONSULTING <span style="color:var(--muted-2); text-transform:none; font-family:'Inter'; font-size:12px; margin-left:4px;">— cotización Mapfre + condiciones generales Sura recibidas 24/07/2026 · relación con Innovación Segura sin confirmar</span></div>
+    <div class="broker-head"><span class="status-ok">●</span> BROKER: SEGURO SE VIVE MEJOR <span style="color:var(--muted-2); text-transform:none; font-family:'Inter'; font-size:12px; margin-left:4px;">— segurosevivemejor.com, vía agente Basañez Consulting · identidad confirmada como broker independiente de Innovación Segura</span></div>
     <div class="broker-body">
+      <div class="insurer-row">
+        <div class="name">IDENTIDAD</div>
+        <div class="desc"><b>Resuelto.</b> El documento "PRESENTACION_CONDOMINIO_UPLACE" trae membrete y correo <i>segurosevivemejor.com</i> — empresa distinta de <i>innovacionsegura.com</i>. Ya no hay ambigüedad: son dos brokers independientes ofreciendo Mapfre por separado, con resultados muy distintos.</div>
+      </div>
       <div class="insurer-row">
         <div class="name">MAPFRE</div>
         <div class="desc"><b>Calderas amparadas — confirma hallazgo, no lo cambia.</b> Cotización trae Calderas y Aparatos Sujetos a Presión de forma explícita ($550,000 SA, ded. 2% mín. 100 UMA), reforzando que la exclusión de ARC es negociable. <b>Terremoto zona E:</b> deducible 2%, coaseguro 25% — coincide exactamente con la tabla de condiciones generales de Mapfre, sin contradicciones.</div>
@@ -431,7 +565,7 @@
 
   <div class="callout">
     <span class="mark">IMPACTO</span>
-    <p>El hallazgo del coaseguro sísmico de Zurich es el más relevante de todo el dictamen: <b>invalida potencialmente la razón principal por la que se prefería a Zurich</b> sobre Mapfre/Sura en cobertura catastrófica. No se recomienda dar peso a esa ventaja hasta que ARC confirme por escrito la condición particular aplicable. Este hallazgo es específico de la cotización de ARC; no se ha podido verificar aún si Innovación Segura ofrecería algo distinto en Zurich, ya que no cotiza esa aseguradora.</p>
+    <p><b>Actualizado — hallazgo confirmado, no solo sospechado.</b> Zurich sí tiene coaseguro sísmico obligatorio (20% en zona E), verificado con cita textual de sus condiciones generales oficiales. La cotización de ARC debe corregirse o exigir una condición particular por escrito que justifique la excepción. La ventaja de Zurich sobre Mapfre/Sura en esta cobertura sigue existiendo (20% vs. 25%) pero es mucho menor de lo que la cotización sugería — no es motivo suficiente por sí solo para pagar la prima más alta de las tres aseguradoras. Sigue sin verificarse si Innovación Segura ofrecería algo distinto en Zurich, ya que no cotiza esa aseguradora.</p>
   </div>
 
   <!-- SECTION 4: VERDICT -->
@@ -439,15 +573,16 @@
   <div class="verdict">
     <div class="verdict-badge"><div class="stamp">RENEGOCIAR</div></div>
     <div class="verdict-body">
-      <p>Ninguna de las dos propuestas está lista para firma en su forma actual. Se identifican brechas de cobertura y de condiciones de pago que deben resolverse antes de comparar en igualdad de circunstancias.</p>
+      <p><b>Recomendación con las 3 fuentes ya confirmadas: Mapfre vía Innovación Segura.</b> Es la opción con mejor relación costo-cobertura — solo $9,263/año más que la propuesta Mapfre más barata (ARC), pero con calderas incluidas y deducibles genuinamente más bajos (5% RC vs. 10%; 1% equipo/maquinaria vs. 2%), ya verificados con su documento oficial y no como una cifra dudosa. Ninguna de las tres propuestas está lista para firma sin antes corregir lo señalado abajo — por eso el veredicto general se mantiene en RENEGOCIAR, no por duda sobre cuál es la mejor opción.</p>
       <ul>
-        <li>ARC ofrece la mejor tasa neta en Mapfre, pero con calderas excluidas y deducibles más altos en RC y Equipo Electrónico.</li>
-        <li>Innovación Segura ofrece mejores deducibles y cobertura completa de calderas, a un sobrecosto de prima que probablemente se compensa en caso de siniestro.</li>
-        <li>Solo ARC ha negociado una renovación real con Zurich; la ventaja de "sismo sin coaseguro" citada para justificar a Zurich <b style="color:#F0C9C0">contradice las condiciones generales registradas</b> de la propia aseguradora (coaseguro obligatorio 10–30% por zona sísmica) — debe confirmarse por escrito antes de usarse como criterio de decisión.</li>
-        <li>La exclusión de Calderas en el paquete Mapfre de ARC no corresponde a una limitación del producto: las condiciones generales de Mapfre sí contemplan esa sección, por lo que es negociable.</li>
-        <li>Innovación Segura no presenta cotización trimestral ni renovación propia con Zurich, limitando la comparación en igualdad de condiciones.</li>
-        <li>La cotización Mapfre recibida vía "Basañez Consulting" confirma que Calderas es negociable en cualquier canal, pero cuesta ~42% más que la de ARC y ~30% más que la de Innovación Segura — <b style="color:#F0C9C0">no debe usarse como base de decisión hasta confirmar si es el mismo canal que Innovación Segura</b> o una tercera opción independiente.</li>
-        <li>El hallazgo de RC Cruzada se precisa con el texto literal de la póliza Mapfre: la cobertura exige que cada condómino (o el condominio como persona moral) esté nombrado expresamente como "Asegurado" o "Asegurado Adicional" en la carátula — de lo contrario no aplica entre condóminos.</li>
+        <li>ARC ofrece la mejor tasa neta en Mapfre ($631,092), pero con calderas excluidas y deducibles más altos en RC y Equipo Electrónico — solo tiene sentido si ARC accede a igualar esas condiciones.</li>
+        <li><b style="color:#A9D6BB">Mapfre vía Innovación Segura ($640,355) es la recomendación</b>: mejores deducibles y cobertura completa de calderas, confirmados con su documento oficial — el sobrecosto de prima frente a ARC es mínimo y se compensa ampliamente en caso de siniestro.</li>
+        <li>Mapfre vía Seguro se vive mejor / Basañez Consulting ($832,247) queda descartada: es la más cara de las tres y no aporta ninguna ventaja de cobertura sobre Innovación Segura — además su ficha de suscripción tiene errores que deben corregirse antes de considerarla siquiera como respaldo.</li>
+        <li>Solo ARC ha negociado una renovación real con Zurich; la ventaja de "sismo sin coaseguro" citada por ARC para justificar a Zurich <b style="color:#F0C9C0">está confirmada como contradicción</b> con las condiciones generales registradas de la propia aseguradora — el coaseguro real para la zona sísmica E de la torre es <b style="color:#F0C9C0">20%, no 0%</b>. La ventaja sigue siendo real frente a Mapfre/Sura (25%) pero es marginal, no decisiva — no justifica la prima más alta de las tres aseguradoras ($735,562).</li>
+        <li>La exclusión de Calderas en el paquete Mapfre de ARC no corresponde a una limitación del producto: las condiciones generales de Mapfre sí contemplan esa sección, por lo que es negociable — si ARC la iguala y ajusta deducibles, se vuelve competitiva frente a Innovación Segura.</li>
+        <li>Ninguno de los 3 brokers ofrece Robo con Violencia y Asalto ni Dinero y Valores como coberturas independientes — es un vacío de mercado, no una falla de un broker en particular; decisión de apetito de riesgo del Comité.</li>
+        <li>[Probable, confirmar con ARC] La suma asegurada de RC Cruzada en su propuesta Mapfre podría ser de solo $6,000,000 (vs. $20,000,000 en Zurich y Sura) — pendiente de verificación directa antes de tratarlo como definitivo.</li>
+        <li>El hallazgo de RC Cruzada se precisa con el texto literal de la póliza Mapfre: la cobertura exige que cada condómino (o el condominio como persona moral) esté nombrado expresamente como "Asegurado" o "Asegurado Adicional" en la carátula — de lo contrario no aplica entre condóminos. Con Zurich la restricción es aún mayor (solo aplica entre empresas filiales).</li>
       </ul>
     </div>
   </div>
@@ -457,7 +592,7 @@
   <div class="checklist">
     <div class="check-item">
       <div class="box"></div>
-      <div><p>Solicitar a ARC el endoso o condición particular que respalde "Terremoto sin coaseguro" en Zurich, ya que las condiciones generales registradas exigen coaseguro obligatorio de 10–30% por zona sísmica. Sin este documento, no dar por válida esa ventaja.</p><span class="who">Prioridad crítica · Broker ARC</span></div>
+      <div><p>Exigir a ARC la corrección formal de la cotización Zurich: las condiciones generales oficiales confirman coaseguro obligatorio del 20% en zona sísmica E (no "sin coaseguro" como se presentó). Pedir que expliquen el origen del error y, si existe, el endoso que reduzca ese porcentaje.</p><span class="who">Prioridad crítica · Broker ARC</span></div>
     </div>
     <div class="check-item">
       <div class="box"></div>
@@ -489,17 +624,59 @@
     </div>
     <div class="check-item">
       <div class="box"></div>
-      <div><p>Confirmar si "Basañez Consulting" es el agente que opera la cuenta de Innovación Segura o un tercer intermediario independiente. Mientras no se aclare, no combinar sus cifras con las ya registradas de Innovación Segura.</p><span class="who">Prioridad crítica · Aclaración con Innovación Segura / Basañez</span></div>
+      <div><p><span class="badge green">RESUELTO</span> Se confirmó que "Basañez Consulting" opera para "Seguro se vive mejor" (segurosevivemejor.com), un broker independiente de Innovación Segura (innovacionsegura.com). Con esto, formalizar la decisión de descartar esta opción por precio y avanzar la negociación con Innovación Segura como recomendación principal.</p><span class="who">Decisión del Comité</span></div>
     </div>
     <div class="check-item">
       <div class="box"></div>
       <div><p>Solicitar corrección de la ficha de suscripción de la cotización Basañez Consulting: trae "1 piso" y "sin medidas de seguridad" cuando la torre tiene 44 niveles y sí cuenta con CCTV, biométricos y sistema PCI NFPA 20.</p><span class="who">Broker Basañez Consulting</span></div>
     </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>[Probable, confirmar] Verificar directamente con ARC si la suma asegurada de RC Cruzada en la propuesta Mapfre es de $6,000,000 (vs. $20,000,000 en Zurich y Sura) — la tabla del documento tiene celdas combinadas que dejan margen de lectura errónea, pero si se confirma es una brecha de cobertura relevante no detectada hasta ahora.</p><span class="who">Prioridad alta · Broker ARC</span></div>
+    </div>
+    <div class="check-item">
+      <div class="box"></div>
+      <div><p>Confirmar con ARC si Robo con Violencia y Asalto y Dinero y Valores realmente no están contratados en ninguna de las 3 aseguradoras (así aparece en su documento), y decidir con el Comité si vale la pena cotizarlos aparte dado que el condominio maneja áreas comunes y oficina de administración.</p><span class="who">Broker ARC · Decisión del Comité</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 7: FINAL RECOMMENDATION -->
+  <div class="sec-head"><span class="sec-num">07</span><span class="sec-title">Conclusión y recomendación final de Dirección</span></div>
+  <div class="final-rec">
+    <div class="fr-eyebrow">Recomendación de Dirección de Operaciones</div>
+    <h2>Contratar <span class="broker-name">Mapfre, vía el broker Innovación Segura</span></h2>
+    <p class="fr-sub">De las 6 combinaciones aseguradora/broker analizadas con documentación primaria verificada, esta es la que ofrece la mejor relación entre costo, cobertura real y calidad de la documentación entregada.</p>
+
+    <div class="fr-grid">
+      <div class="fr-stat">
+        <div class="k">Prima total anual</div>
+        <div class="v">$640,355 MXN</div>
+      </div>
+      <div class="fr-stat">
+        <div class="k">Costo por $1M asegurado</div>
+        <div class="v">$624</div>
+      </div>
+      <div class="fr-stat">
+        <div class="k">Sobrecosto vs. la más barata</div>
+        <div class="v">+$9,263/año</div>
+      </div>
+    </div>
+
+    <div class="fr-why">
+      <p><b>1. Calderas incluidas, no un extra por negociar.</b> Es la única opción, junto con Seguro se vive mejor, que ampara Calderas y Aparatos Sujetos a Presión desde la cotización base ($500,000 SA) — activo real y operativo del edificio (Hayward H-Series). ARC la excluye por completo en Mapfre.</p>
+      <p><b>2. Los deducibles más bajos del mercado consultado, y ya verificados.</b> RC al 5% (vs. 10% en las otras dos fuentes de Mapfre) y Equipo Electrónico/Rotura de Maquinaria al 1% (vs. 2%). Ya no es una cifra dudosa: se confirmó con el documento oficial de Innovación Segura, no con un resumen de segunda mano.</p>
+      <p><b>3. El sobrecosto es prácticamente irrelevante.</b> $9,263 al año frente a la opción Mapfre más barata (ARC) es menos de lo que cuesta un solo deducible de Equipo Electrónico en un siniestro menor. La diferencia se recupera sola la primera vez que se use la póliza.</p>
+      <p><b>4. Descarta claramente las otras dos alternativas.</b> Zurich vía ARC es la prima más cara ($735,562) y su argumento de venta ("sismo sin coaseguro") quedó desmentido con la propia condición general de Zurich — el coaseguro real es 20%, no 0%. Mapfre vía Seguro se vive mejor ($832,247) es la más cara de las tres Mapfre y no aporta ninguna ventaja de cobertura sobre Innovación Segura, además de traer una ficha de suscripción con errores (pisos y medidas de seguridad mal declarados).</p>
+    </div>
+
+    <div class="fr-condition">
+      <b>Condición para cerrar la firma, no para descartar la recomendación:</b> antes de aprobar formalmente con el Comité, pedir a Innovación Segura la carátula/condición particular por escrito que respalde los deducibles preferenciales (5% y 1%) — es una formalidad de expediente, no una duda sobre si es la mejor opción. En paralelo, dar a ARC la oportunidad de igualar calderas y deducibles en su propuesta Mapfre; si lo hace y su prima sigue siendo menor, vale la pena reabrir la comparación antes de firmar.</div>
   </div>
 
   <footer>
     <p>DICTAMEN GENERADO PARA COMITÉ DE VIGILANCIA · UPLACE</p>
-    <p>FUENTE: ARC EXPERTOS EN SEGUROS (18/06/2026) · INNOVACIÓN SEGURA · BASAÑEZ CONSULTING (24/07/2026, relación con IS sin confirmar)</p>
+    <p>FUENTE: ARC EXPERTOS EN SEGUROS (18/06/2026) · INNOVACIÓN SEGURA (innovacionsegura.com) · SEGURO SE VIVE MEJOR (segurosevivemejor.com, vía Basañez Consulting, 24/07/2026) · Condiciones generales oficiales Zurich/Mapfre/Sura</p>
+    <p>ANÁLISIS DE COBERTURAS COMPLETO — ver sección 02B</p>
   </footer>
 
 </div>
