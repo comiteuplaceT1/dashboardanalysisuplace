@@ -71,19 +71,44 @@
   .frame-wrap{flex:1; position:relative; background:var(--panel-2);}
   iframe{width:100%; height:100%; border:none; display:block;}
 
+  /* ---- Mobile: hamburger + menú lateral off-canvas ---- */
+  .menu-toggle{
+    display:none; align-items:center; justify-content:center; width:34px; height:34px; flex-shrink:0;
+    background:none; border:1px solid var(--line); border-radius:4px; cursor:pointer; margin-right:12px;
+  }
+  .menu-toggle span{display:block; width:16px; height:2px; background:var(--muted); position:relative;}
+  .menu-toggle span::before, .menu-toggle span::after{
+    content:''; position:absolute; left:0; width:16px; height:2px; background:var(--muted);
+  }
+  .menu-toggle span::before{top:-5px;}
+  .menu-toggle span::after{top:5px;}
+
+  .sidebar-overlay{
+    display:none; position:fixed; inset:0; background:rgba(6,12,17,.6); z-index:40;
+  }
+
   @media (max-width:860px){
-    body{flex-direction:column;}
-    aside{width:100%; height:auto; position:relative; border-right:none; border-bottom:1px solid var(--line);}
-    nav{display:flex; overflow-x:auto; padding:8px;}
-    .group-label{display:none;}
-    .tab-btn{white-space:nowrap; width:auto;}
-    .frame-wrap{height:80vh;}
+    body{flex-direction:row;}
+    .menu-toggle{display:flex;}
+    aside{
+      position:fixed; top:0; left:0; width:270px; max-width:82vw; height:100vh; z-index:50;
+      transform:translateX(-100%); transition:transform .22s ease; box-shadow:2px 0 18px rgba(0,0,0,.4);
+    }
+    aside.open{transform:translateX(0);}
+    .sidebar-overlay.open{display:block;}
+    nav{overflow-y:auto; padding:14px 10px;}
+    .group-label{display:block;}
+    .tab-btn{white-space:normal; width:100%;}
+    .topbar{padding:14px 16px;}
+    .frame-wrap{height:auto;}
   }
 </style>
 </head>
 <body>
 
-  <aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <aside id="sidebar">
     <div class="brand">
       <div class="mark">Dirección de Operaciones · Uplace</div>
       <h1>Centro de Dashboards</h1>
@@ -123,9 +148,12 @@
 
   <main>
     <div class="topbar">
-      <div class="title-block">
-        <h2 id="panel-title">Dashboard: Seguro del Edificio</h2>
-        <p id="panel-sub">Renovación de póliza · ARC vs. Innovación Segura</p>
+      <div style="display:flex; align-items:center; min-width:0;">
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú de dashboards"><span></span></button>
+        <div class="title-block">
+          <h2 id="panel-title">Dashboard: Seguro del Edificio</h2>
+          <p id="panel-sub">Renovación de póliza · ARC vs. Innovación Segura</p>
+        </div>
       </div>
       <a class="open-new" id="open-new-tab" href="dashboard_seguros_uplace.html" target="_blank" rel="noopener">Abrir en pestaña nueva ↗</a>
     </div>
@@ -140,6 +168,15 @@
   const titleEl = document.getElementById('panel-title');
   const subEl = document.getElementById('panel-sub');
   const openNew = document.getElementById('open-new-tab');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuToggle = document.getElementById('menu-toggle');
+
+  function openMenu(){ sidebar.classList.add('open'); overlay.classList.add('open'); }
+  function closeMenu(){ sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+
+  menuToggle.addEventListener('click', openMenu);
+  overlay.addEventListener('click', closeMenu);
 
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -150,6 +187,7 @@
       titleEl.textContent = btn.getAttribute('data-title');
       subEl.textContent = btn.getAttribute('data-sub');
       openNew.href = src;
+      closeMenu();
     });
   });
 </script>
