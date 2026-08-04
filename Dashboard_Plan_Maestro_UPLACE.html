@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Maestro Uplace — Dashboard de Auditoría</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0A1628;
+    --navy-900:#0F2038;
+    --navy-800:#16304F;
+    --navy-700:#1F3864;
+    --navy-600:#2E5395;
+    --navy-line:#2A4468;
+    --gold:#C9A227;
+    --gold-soft:#E8CE7B;
+    --white:#F5F7FA;
+    --grey:#8FA3C0;
+    --red:#D64545;
+    --orange:#E8863A;
+    --yellow:#E8C13A;
+    --green:#4E9A5C;
+    --card-bg:#122542;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--navy-950); color:var(--white);
+    font-family:'Space Grotesk',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  a{color:var(--gold-soft);}
+
+  /* ---------- HEADER ---------- */
+  header{
+    padding:48px 6vw 32px; border-bottom:1px solid var(--navy-line);
+    background:linear-gradient(180deg, var(--navy-900) 0%, var(--navy-950) 100%);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--gold); margin-bottom:14px; display:flex; gap:10px; align-items:center;
+  }
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--gold);display:inline-block;}
+  h1{font-size:clamp(28px,4vw,44px); margin:0 0 10px; font-weight:700; letter-spacing:-0.01em;}
+  .subhead{color:var(--grey); font-size:15px; max-width:760px; line-height:1.6;}
+  .meta-row{display:flex; gap:28px; flex-wrap:wrap; margin-top:28px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--grey);}
+  .meta-row b{color:var(--white); font-weight:500;}
+
+  section{padding:40px 6vw;}
+  section.alt{background:var(--navy-900);}
+  .section-title{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:24px;
+  }
+  .section-title h2{font-size:20px; margin:0; font-weight:600;}
+  .section-title .tag{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--gold); border:1px solid var(--navy-line);
+    padding:3px 10px; border-radius:20px; letter-spacing:.05em;
+  }
+  .section-note{color:var(--grey); font-size:13.5px; line-height:1.6; max-width:820px; margin:-8px 0 24px;}
+
+  /* ---------- KPI STRIP ---------- */
+  .kpi-grid{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--navy-line);
+    border:1px solid var(--navy-line);
+  }
+  .kpi{background:var(--navy-900); padding:24px 18px; position:relative;}
+  .kpi .val{font-family:'IBM Plex Mono',monospace; font-size:26px; font-weight:600; margin-bottom:8px;}
+  .kpi .lbl{font-size:11.5px; color:var(--grey); line-height:1.45;}
+  .kpi .flag{
+    position:absolute; top:12px; right:12px; font-size:9px; font-family:'IBM Plex Mono',monospace;
+    color:var(--navy-950); background:var(--gold); padding:1px 6px; border-radius:3px; letter-spacing:.05em;
+  }
+  @media(max-width:1000px){ .kpi-grid{grid-template-columns:repeat(3,1fr);} }
+  @media(max-width:620px){ .kpi-grid{grid-template-columns:repeat(2,1fr);} }
+
+  /* ---------- SEMAFORO ---------- */
+  .risk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  @media(max-width:800px){.risk-grid{grid-template-columns:repeat(2,1fr);}}
+  .risk-card{
+    background:var(--card-bg); border:1px solid var(--navy-line); border-top:4px solid var(--c);
+    padding:20px; border-radius:6px;
+  }
+  .risk-card .n{font-family:'IBM Plex Mono',monospace; font-size:30px; font-weight:600; color:var(--c);}
+  .risk-card .lvl{font-size:14px; font-weight:600; margin:4px 0 10px;}
+  .risk-card .hp{font-size:11.5px; color:var(--grey); font-family:'IBM Plex Mono',monospace; margin-bottom:10px;}
+  .risk-card .ex{font-size:12px; color:var(--grey); line-height:1.5;}
+
+  /* ---------- TABLES / LISTS ---------- */
+  .card{background:var(--card-bg); border:1px solid var(--navy-line); border-radius:6px; padding:22px 24px; margin-bottom:16px;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{
+    text-align:left; font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:10.5px;
+    letter-spacing:.05em; text-transform:uppercase; color:var(--gold); padding:10px 12px; border-bottom:1px solid var(--navy-line);
+  }
+  td{padding:11px 12px; border-bottom:1px solid rgba(42,68,104,0.5); vertical-align:top; color:var(--white); line-height:1.5;}
+  tr:last-child td{border-bottom:none;}
+  .badge{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:600;
+    padding:3px 9px; border-radius:20px; letter-spacing:.03em; white-space:nowrap;
+  }
+  .b-extremo{background:rgba(214,69,69,0.18); color:#FF8B8B; border:1px solid rgba(214,69,69,0.4);}
+  .b-alto{background:rgba(232,134,58,0.18); color:#FFAE6E; border:1px solid rgba(232,134,58,0.4);}
+  .b-medio{background:rgba(232,193,58,0.18); color:#F5D96B; border:1px solid rgba(232,193,58,0.4);}
+  .b-bajo{background:rgba(78,154,92,0.18); color:#8FD79C; border:1px solid rgba(78,154,92,0.4);}
+  .b-inmediata{background:rgba(214,69,69,0.25); color:#FF8B8B;}
+  .b-alta{background:rgba(232,134,58,0.25); color:#FFAE6E;}
+  .b-media{background:rgba(232,193,58,0.25); color:#F5D96B;}
+  .b-programada{background:rgba(78,154,92,0.25); color:#8FD79C;}
+  .b-renegociar{background:rgba(232,193,58,0.25); color:#F5D96B;}
+  .b-urgente{background:rgba(214,69,69,0.25); color:#FF8B8B;}
+  .b-agregar{background:rgba(232,134,58,0.25); color:#FFAE6E;}
+
+  /* two-col layout */
+  .grid2{display:grid; grid-template-columns:1.1fr 0.9fr; gap:18px;}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+
+  /* balance box */
+  .balance-line{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px dashed var(--navy-line); font-size:14px;}
+  .balance-line:last-child{border-bottom:none;}
+  .balance-line .amt{font-family:'IBM Plex Mono',monospace; font-weight:600;}
+  .amt-pos{color:#8FD79C;} .amt-neg{color:#FF8B8B;}
+  .balance-total{font-size:17px; font-weight:700; padding-top:14px; margin-top:6px; border-top:1px solid var(--navy-line);}
+
+  /* bucket cards */
+  .bucket{border-left:3px solid var(--c); background:rgba(255,255,255,0.02); padding:16px 18px; margin-bottom:12px; border-radius:0 6px 6px 0;}
+  .bucket h4{margin:0 0 6px; font-size:14px;}
+  .bucket .assets{font-size:12px; color:var(--gold-soft); margin-bottom:6px; font-family:'IBM Plex Mono',monospace;}
+  .bucket p{margin:0; font-size:12.5px; color:var(--grey); line-height:1.55;}
+
+  /* filter chips */
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;}
+  .chip{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:7px 14px; border-radius:20px;
+    border:1px solid var(--navy-line); background:var(--navy-900); color:var(--grey); cursor:pointer; transition:.15s;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.active{background:var(--gold); color:var(--navy-950); border-color:var(--gold); font-weight:600;}
+  .search-box{
+    font-family:'IBM Plex Mono',monospace; background:var(--navy-900); border:1px solid var(--navy-line); color:var(--white);
+    padding:8px 14px; border-radius:20px; font-size:12.5px; width:220px; outline:none;
+  }
+  .search-box:focus{border-color:var(--gold);}
+  .table-toolbar{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;}
+  .table-scroll{overflow-x:auto;}
+  #assetTable td:nth-child(3){min-width:200px;}
+  #assetTable td:nth-child(9){min-width:220px; color:var(--grey); font-size:12px;}
+  .count-note{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--grey);}
+
+  footer{padding:36px 6vw; border-top:1px solid var(--navy-line); color:var(--grey); font-size:12px; font-family:'IBM Plex Mono',monospace;}
+
+  ::selection{background:var(--gold); color:var(--navy-950);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Dirección de Operaciones, Ingeniería y Finanzas — Uplace Torre 1</div>
+  <h1>Plan Maestro de Mantenimiento — Dashboard de Auditoría</h1>
+  <div class="subhead">Reconstrucción integrada del Plan de Mantenimiento Anual de la administración contra el inventario técnico maestro de la torre (44 niveles, 4 sótanos). Incluye brechas de infraestructura, análisis de frecuencias, correctivos abiertos y balance financiero para presentación al Comité de Vigilancia.</div>
+  <div class="meta-row">
+    <div>FUENTES: <b>inventario_activos_definitivo.md</b> + <b>Plan_de_Mantenimiento_Anual.xlsx</b></div>
+    <div>ACTIVOS AUDITADOS: <b>44</b></div>
+    <div>ESTATUS: <b style="color:#FF8B8B">RIESGO ALTO</b></div>
+  </div>
+</header>
+
+<!-- ================= KPI STRIP ================= -->
+<section>
+  <div class="section-title"><h2>Resumen Ejecutivo</h2></div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val">44</div><div class="lbl">Activos críticos auditados (ingeniería + servicios generales)</div></div>
+    <div class="kpi"><div class="val" style="color:#FF8B8B">17 <span style="font-size:15px;color:var(--grey)">(39%)</span></div><div class="lbl">Activos en riesgo Alto / Extremo — conteo, no HP</div></div>
+    <div class="kpi"><div class="val" style="color:#FFAE6E">9</div><div class="lbl">Correctivos mayores abiertos (Plan de Criticidad)</div></div>
+    <div class="kpi"><div class="val">~60%<span class="flag">EST.</span></div><div class="lbl">Cumplimiento estimado del calendario 2026 — modelado, validar en campo</div></div>
+    <div class="kpi"><div class="val" style="color:#FF8B8B">-$168,176<span class="flag">EST.</span></div><div class="lbl">Costo neto para cerrar brechas — no es ahorro</div></div>
+    <div class="kpi"><div class="val">4.4%</div><div class="lbl">Mantenimiento preventivo como % del presupuesto total</div></div>
+  </div>
+</section>
+
+<!-- ================= SEMAFORO ================= -->
+<section class="alt">
+  <div class="section-title"><h2>Semáforo de Riesgo</h2><span class="tag">44 activos</span></div>
+  <div class="risk-grid">
+    <div class="risk-card" style="--c:#D64545"><div class="n">7</div><div class="lvl">Extremo</div><div class="hp">942.5 HP · 81.2% del HP total</div><div class="ex">Bombas de Alta Presión 60HP (ausente del plan), Achique Sótano 4, Planta Digesa, Sistema PCI completo.</div></div>
+    <div class="risk-card" style="--c:#E8863A"><div class="n">10</div><div class="lvl">Alto</div><div class="hp">52.0 HP · 4.5% del HP total</div><div class="ex">Válvulas Vamex/TIEMME, Bombas de Azotea, Calentadores, Generadores de Vapor, PTAR, Pararrayos, Desazolve, Cisternas, Detección de Humo.</div></div>
+    <div class="risk-card" style="--c:#E8C13A"><div class="n">10</div><div class="lvl">Medio</div><div class="hp">84.0 HP · 7.2% del HP total</div><div class="ex">Elevadores KONE, Calderas/Bombas de Calor, Transformadores E1/E2, CCTV, Fumigación, Instalaciones Eléctricas, Cristales.</div></div>
+    <div class="risk-card" style="--c:#4E9A5C"><div class="n">17</div><div class="lvl">Bajo</div><div class="hp">82.6 HP · 7.1% del HP total</div><div class="ex">Motobombas Sótano 1, Extractores S&P, Plumas CAME, Gimnasio, Tanques Rotoplas, Pinturas, Asadores, Tinacos, Cancelería.</div></div>
+  </div>
+</section>
+
+<!-- ================= CORRECTIVOS + CUMPLIMIENTO ================= -->
+<section>
+  <div class="section-title"><h2>Correctivos Mayores Abiertos</h2><span class="tag">Plan de Criticidad</span></div>
+  <div class="card">
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Sistema</th><th>Acción Requerida</th><th>Prioridad</th></tr></thead>
+      <tbody id="correctivosBody"></tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="grid2">
+    <div>
+      <div class="section-title"><h2>Cumplimiento Estimado 2026</h2><span class="tag">Modelado</span></div>
+      <div class="section-note">[Adivinando] Estimación modelada a partir del nivel de riesgo de cada activo (Bajo≈100%, Medio≈60%, Alto≈25%, Extremo≈10% de cumplimiento supuesto) — no es una medición directa de bitácoras de campo para los 44 activos. Se recomienda auditoría de campo trimestral para reemplazar este estimado por un dato medido.</div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Nivel</th><th>N° Activos</th><th>% Supuesto</th><th>Contribución</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-extremo">Extremo</span></td><td class="mono">7</td><td class="mono">10%</td><td class="mono">1.6 pts</td></tr>
+            <tr><td><span class="badge b-alto">Alto</span></td><td class="mono">10</td><td class="mono">25%</td><td class="mono">5.7 pts</td></tr>
+            <tr><td><span class="badge b-medio">Medio</span></td><td class="mono">10</td><td class="mono">60%</td><td class="mono">13.6 pts</td></tr>
+            <tr><td><span class="badge b-bajo">Bajo</span></td><td class="mono">17</td><td class="mono">100%</td><td class="mono">38.6 pts</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="section-title"><h2>Balance Financiero Neto</h2><span class="tag">Estimado</span></div>
+      <div class="section-note">Ahorros identificados frente a incrementos requeridos para cerrar la Categoría 3 de frecuencias insuficientes.</div>
+      <div class="card">
+        <div class="balance-line"><span>Ahorro — Fumigación (24→12 serv/año)</span><span class="amt amt-pos">+$38,280</span></div>
+        <div class="balance-line"><span>Incremento — Vamex, Cisternas, Desazolve, Detección de Humo</span><span class="amt amt-neg">-$206,456</span></div>
+        <div class="balance-line balance-total"><span>Balance neto estimado</span><span class="amt amt-neg">-$168,176</span></div>
+      </div>
+      <div class="section-note" style="margin-top:10px;">El balance es negativo: cerrar las brechas cuesta más de lo que se ahorra en sobreprecio. Esto no invalida las correcciones — el costo de <i>no</i> hacerlas (inundación, falla de PCI) no está cuantificado aquí y probablemente lo supera por mucho.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COSTO-BENEFICIO ANUAL ================= -->
+<section>
+  <div class="section-title"><h2>¿Por Qué Algunos Activos Quedaron en "Anual"?</h2></div>
+  <div class="section-note">El "Anual" no significa lo mismo en todos los casos. Se separa en cuatro categorías para que el Comité no las trate como equivalentes.</div>
+
+  <div class="bucket" style="--c:#4E9A5C">
+    <h4>Correcto — no es tema de presupuesto</h4>
+    <div class="assets">Transformadores E1/E2 · Pararrayos · Recarga de Extintores · Pinturas · Cristales</div>
+    <p>El anual es la frecuencia técnica correcta (pruebas dieléctricas, degradación lenta del material). Subir la frecuencia sería gasto sin beneficio.</p>
+  </div>
+  <div class="bucket" style="--c:#E8C13A">
+    <h4>Ya se paga mensual — solo la etiqueta está mal</h4>
+    <div class="assets">Elevadores · CCTV/Biométricos · Plumas · Extractores · Planta de Emergencia</div>
+    <p>La "Propuesta Presupuesto" ya cobra cuota mensual por estos 5 servicios. No hay ahorro real detrás del "Anual"; es un descuido de captura en la pestaña resumen que revisa el Comité.</p>
+  </div>
+  <div class="bucket" style="--c:#E8863A">
+    <h4>Requiere decisión de presupuesto real</h4>
+    <div class="assets">Válvulas Vamex (3 de 4 sin gestión) · Lavado de Cisternas · Desazolve de Tuberías · Detección de Humo</div>
+    <p>Ver tabla de costos abajo. Recomendación: negociar una sola ronda semestral de "sistema hidráulico" para reducir el costo marginal por activo adicional.</p>
+  </div>
+  <div class="bucket" style="--c:#D64545">
+    <h4>Falso ahorro — el costo de hacerlo bien es bajo</h4>
+    <div class="assets">Sistema PCI (churn test) · Bombas de Achique (chequeo de electroniveles)</div>
+    <p>El chequeo semanal/mensual lo puede ejecutar personal interno ya en nómina; solo la prueba de flujo anual del PCI ($70,528) requiere proveedor externo, y ya está presupuestada. No hay razón de costo para mantenerlos en "anual".</p>
+  </div>
+
+  <div class="card" style="margin-top:20px;">
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Activo</th><th>Costo actual (1x/año)</th><th>Frecuencia correcta</th><th>Incremento estimado</th></tr></thead>
+      <tbody>
+        <tr><td>Válvulas Reguladoras Vamex (4 unidades)</td><td class="mono">~$16,947 (solo 1 de 4)</td><td>Semestral, las 4 en una sola ronda</td><td class="mono">+$100,000 a +$120,000</td></tr>
+        <tr><td>Lavado de Cisternas (7 unidades)</td><td class="mono">~$40,368</td><td>Semestral</td><td class="mono">+$40,368/año</td></tr>
+        <tr><td>Desazolve de Tuberías</td><td class="mono">~$31,088</td><td>Semestral</td><td class="mono">+$31,088/año</td></tr>
+        <tr><td>Detección de Humo (NFPA 72)</td><td class="mono">Sin partida propia</td><td>Semestral, técnico certificado</td><td class="mono">Cotización nueva</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="section-note" style="margin-top:14px; margin-bottom:0;">[Adivinando — cifras de referencia no verificadas con búsqueda de mercado] Incremento total estimado: $170,000–$200,000 MXN/año si se contrata todo por separado.</div>
+  </div>
+</section>
+
+<!-- ================= GOBERNANZA + HALLAZGOS FASE 1 ================= -->
+<section class="alt">
+  <div class="section-title"><h2>Hallazgo de Gobernanza Documental</h2></div>
+  <div class="card">
+    <p style="margin:0; font-size:13.5px; line-height:1.65; color:var(--white);">
+      <b>5 activos</b> (Elevadores, CCTV/Biométricos, Plumas/Barreras, Extractores, Planta de Emergencia) figuran como <span class="badge b-medio">Anual</span> en la pestaña resumen ("Visualización Trimestral") que revisa el Comité, pero se ejecutan mensualmente en el calendario operativo real y ya se pagan mensualmente en la "Propuesta Presupuesto". La ejecución es correcta; el riesgo es de <b>reporte engañoso al Comité</b>.
+      <br><br>
+      <span style="color:var(--grey); font-size:12.5px;">Nota de corrección: Transformadores E1/E2 y Pararrayos fueron excluidos de esta lista tras revisión — en ambos casos el "Anual" es la frecuencia técnica correcta.</span>
+    </p>
+  </div>
+
+  <div class="section-title" style="margin-top:32px;"><h2>Activos de Ingeniería Pesada Ausentes en el Plan Original</h2></div>
+  <div class="card">
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th>Activo</th><th>Impacto si falla sin mantenimiento</th></tr></thead>
+      <tbody>
+        <tr><td><b>Bombas de Alta Presión Barmesa (60 HP c/u, Sótano 4)</b></td><td>Pérdida de presión en columnas altas o sobreesfuerzo compensatorio en otras bombas.</td></tr>
+        <tr><td><b>Sistema PCI completo</b> (jockey WEG 10HP, multietapa 50HP, motor diésel, panel Clarke Tornatech)</td><td>Invisible en la foto del resumen — solo aparece "Recarga de extintores", que no es el sistema de bombeo contraincendios.</td></tr>
+        <tr><td><b>Válvulas Expulsoras de Aire TIEMME</b></td><td>Golpe de ariete y fatiga prematura de tubería.</td></tr>
+        <tr><td><b>Generadores de Vapor N°1 / Aqua Steam 2</b></td><td>Riesgo de repetir la falla eléctrica ya documentada en spa/sauna.</td></tr>
+        <tr><td><b>Calderas Hayward + Bombas de Calor</b></td><td>Sin deshollinado semestral obligatorio ni inspección de intercambiador de titanio.</td></tr>
+        <tr><td><b>Bombas de Azotea + Tablero Hidroneumático</b></td><td>Sensores de nivel sin verificar — riesgo de vaciado o desborde de los 4 tanques Rotoplas.</td></tr>
+        <tr><td><b>Calentadores de Respaldo Cal-O-Rex</b></td><td>Sin respaldo térmico probado ante falla de calderas principales.</td></tr>
+        <tr><td><b>PTAR (Sótano 4)</b></td><td>Obra inconclusa — riesgo regulatorio por descarga de aguas no tratadas.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VISTA CONSOLIDADA ================= -->
+<section>
+  <div class="section-title"><h2>Vista Consolidada — Matriz Maestra de Activos</h2><span class="tag">44 registros</span></div>
+  <div class="section-note">Filtra por nivel de riesgo o busca por sistema, equipo o marca. Esta es la misma matriz de la pestaña "Vista Consolidada" del Plan Maestro en Excel.</div>
+  <div class="table-toolbar">
+    <div class="chips" id="riskChips">
+      <div class="chip active" data-risk="all">Todos (44)</div>
+      <div class="chip" data-risk="Extremo">Extremo (7)</div>
+      <div class="chip" data-risk="Alto">Alto (10)</div>
+      <div class="chip" data-risk="Medio">Medio (10)</div>
+      <div class="chip" data-risk="Bajo">Bajo (17)</div>
+    </div>
+    <input type="text" class="search-box" id="searchBox" placeholder="Buscar equipo, sistema, marca…">
+  </div>
+  <div class="card">
+    <div class="table-scroll">
+    <table>
+      <thead><tr>
+        <th>ID</th><th>Sistema</th><th>Equipo Crítico</th><th>Cant.</th><th>Ubicación</th>
+        <th>Marca/Modelo</th><th>HP</th><th>Frecuencia</th><th>Observaciones</th><th>Riesgo</th>
+      </tr></thead>
+      <tbody id="assetTable"></tbody>
+    </table>
+    </div>
+    <div class="count-note" id="countNote" style="margin-top:14px;"></div>
+  </div>
+</section>
+
+<footer>
+  Dirección de Operaciones, Ingeniería y Finanzas — Uplace Torre 1 · Dashboard generado a partir de <span class="mono">Plan_Maestro_UPLACE.xlsx</span> · Cifras marcadas [EST.] son estimaciones modeladas, no mediciones de campo.
+</footer>
+
+<script>
+const ASSETS = [
+["U-01","Movilidad Vertical","Elevadores KONE Mini Space","4","Torre 1","KONE Mini Space Mod. 2021","21 c/u","Mensual (contrato OEM)","Exigir certificado de proveedor autorizado KONE. Resumen lo etiqueta 'Anual': corregir inconsistencia.","Medio"],
+["U-02","Hidráulico Agua Potable","Válvulas Reguladoras Vamex","4","Pisos 4,13,23,36","Vamex 30-90 PSI","—","Semestral (Ene/Jul)","Foto la marca 'Anual'; inventario exige semestral en las 4 unidades, no solo la N°1.","Alto"],
+["U-03","Hidráulico Agua Potable","Válvulas Expulsoras de Aire","4","Pisos 4,13,23,36","TIEMME","—","Semestral (Feb/Ago)","Ausente en la foto; cero ejecuciones registradas.","Alto"],
+["U-04","Bombeo Agua Potable","Motobombas Sótano 1","3","Sótano 1","ESPA / Orum-Century / Century","2/2/3","Mensual","Cumple.","Bajo"],
+["U-05","Alta Presión","Bombas Barmesa BMVF42 70 6003","2","Sótano 4","Barmesa","60 c/u","Mensual (AGREGAR)","Ausente por completo en el plan y en la foto; prioridad inmediata.","Extremo"],
+["U-06","Filtración","Filtros Hayward Pro-Series + VariFlo","2","Sótano 1","Hayward","—","Trimestral","Ausente en la foto; retrolavado sin ejecuciones.","Medio"],
+["U-07","Azotea","Tanques Rotoplas","4","Terraza","Rotoplas","—","Semestral (Mar/Sep)","Distinto de Tinacos y Cisternas.","Bajo"],
+["U-08","Azotea","Bombas de Azotea + Tablero Hidroneumático","2+1","Terraza","Marathon/Barnes / NASSAR","1.5 c/u","Mensual (AGREGAR)","Ausente en la foto; cero ejecuciones.","Alto"],
+["U-09","Térmico/Vapor","Calderas Hayward H-Series","2","PB/Alberca","Hayward","—","Semestral (Abr/Oct)","Ausente; hoy agrupada indebidamente con bombas de calor.","Medio"],
+["U-10","Térmico/Vapor","Bombas de Calor Hayward Pro-Series","2","PB/Alberca","Hayward HP 21004T","—","Semestral (Abr/Oct)","Ausente; intercambiador de titanio requiere inspección diferenciada.","Medio"],
+["U-11","Térmico/Vapor","Calentadores de Respaldo Cal-O-Rex","2","PB/Alberca","Cal-O-Rex G-60","—","Mensual (AGREGAR)","Ausente; sin respaldo térmico probado.","Alto"],
+["U-12","Térmico/Vapor","Generadores de Vapor N°1/N°2/Aqua Steam 2","3","PB/Alberca","Aqua Steam / MECHC_MEX","18.77/10/18.77","Mensual","Ausente; N°1 y Aqua Steam 2 con falla eléctrica ya documentada.","Alto"],
+["U-13","Hidrosanitario","Bombas de Cárcamo / Achique Sótano 4","4","Sótano 4","Barmesa / SGV7542LDS","3 c/u","Mensual estricto","Foto la marca 'Anual'; electroniveles dañados, operación manual.","Extremo"],
+["U-14","Hidrosanitario","Planta de Tratamiento PTAR","1","Sótano 4","—","—","Diagnóstico + Anual (Ene)","Obra inconclusa; ausente en la foto.","Alto"],
+["U-15","Eléctrico","Planta de Emergencia Digesa","1","Subestación","Digesa / Motor Scania DC13","670.5","Mensual + Banco de Carga (Nov)","Foto la marca 'Anual' pero se ejecuta mensual; falta banco de carga.","Extremo"],
+["U-16","Eléctrico","Transformador E1","1","Subestación","Continental","—","Anual (May)","Cotizar independiente de E2.","Medio"],
+["U-17","Eléctrico","Transformador E2","1","Subestación","Continental","—","Anual (May)","No agrupar comercialmente con E1.","Medio"],
+["U-18","Eléctrico","Pararrayos + Contador de Descargas","1+1","Terraza/Sótano 1","Total Ground TG-CDA","—","Anual (Jun)","Cero ejecuciones registradas; certificación pendiente.","Alto"],
+["U-19","Ventilación","Extractores de Sótanos S&P","15","Sótanos","S&P","2 c/u","Mensual","Foto la marca 'Anual'; calendario real ejecuta mensual.","Bajo"],
+["U-20","Ventilación","Extractores Verticales S&P","15","Terraza","S&P","2 c/u","Mensual","Ídem U-19.","Bajo"],
+["U-21","Ventilación","Extractor Centrífugo","1","Sótano 1","S&P Serie CM","15","Mensual","Cumple.","Bajo"],
+["U-22","Accesos","Plumas / Barreras CAME","2","Vehicular","CAME","0.32 c/u","Mensual","Foto la marca 'Anual'; calendario real ejecuta mensual.","Bajo"],
+["U-23","PCI","Sistema Clarke Tornatech (NFPA 20)","1","Sótano 4","Clarke Tornatech","5-30","Mensual + Flujo Anual (Mar)","INVISIBLE en la foto; exige churn test semanal (diésel).","Extremo"],
+["U-24","PCI","Panel de Control PCI","1","Sótano 4","Clarke Tornatech JP3-460","50","Mensual","Ligado a U-23; ausente en la foto.","Extremo"],
+["U-25","PCI","Bomba Vertical Jockey WEG","1","Sótano 4","WEG Nema","10","Mensual","Ausente en la foto.","Extremo"],
+["U-26","PCI","Bomba Vertical Multietapa WEG","1","Sótano 4","WEG 99883252","50","Mensual","Ausente en la foto; posible duplicidad con U-05.","Extremo"],
+["U-27","Amenidades","Equipo de Gimnasio (calibración)","30","Interior","—","—","Trimestral","Cumple (foto: Externo/Trimestral).","Bajo"],
+["U-28","Seguridad","CCTV / Biométricos / NVR","182","Torre 1","—","—","Mensual","Foto la marca 'Anual'; calendario real ejecuta mensual.","Medio"],
+["U-29","Hidrosanitario","Desazolve de Tuberías","1","Torre completa","—","—","Semestral (Mar/Sep)","Foto la marca 'Anual'; falla INMEDIATA activa en trampas pluviales.","Alto"],
+["U-30","Servicios Generales","Fumigación","1","Torre completa","—","—","Mensual","Se factura 24 servicios/año (quincenal) — ahorro potencial $38,280/año.","Medio"],
+["U-31","PCI/Seguridad","Recarga de Extintores","43 pzas","Torre completa","—","—","Anual (Ago)","Añadir inspección visual interna mensual.","Bajo"],
+["U-32","Hidrosanitario","Lavado de Cisternas","7","Torre completa","—","—","Semestral (Ene/Jul)","Foto la marca 'Anual'; inventario exige semestral.","Alto"],
+["U-33","Hidrosanitario","Tinacos","N/D","Departamentos","—","—","Mensual (Interno)","Distinto de Tanques Rotoplas y Cisternas.","Bajo"],
+["U-34","Eléctrico","Instalaciones Eléctricas","1","Torre completa","—","—","Mensual (Interno)","Correctivos activos pendientes (filtraciones, tapas faltantes).","Medio"],
+["U-35","Eléctrico","Iluminación","1","Torre completa","—","—","Mensual (Interno)","Cumple.","Bajo"],
+["U-36","Accesos","Cancelería","1","Torre completa","—","—","Mensual (Interno)","Cumple.","Bajo"],
+["U-37","Fachada","Cristales (limpieza en alturas)","1","Fachada 44 niveles","—","—","Anual (Nov)","Gestionado como 'Interno'; recomiendo cuadrilla certificada.","Medio"],
+["U-38","PCI","Detección de Humo","1","Torre completa","—","—","Semestral (Feb/Ago)","Foto la marca 'Anual'/'Interno'; NFPA 72 exige semestral y técnico certificado.","Alto"],
+["U-39","Fachada","Pintura de Muro en Pisos","1","Torre completa","—","—","Anual (Oct)","Cumple.","Bajo"],
+["U-40","Fachada","Pintura en Azotea","1","Terraza","—","—","Anual (Oct)","Cumple; coordinar con impermeabilización.","Bajo"],
+["U-41","Fachada","Pintura en Estacionamiento","1","Estacionamiento","—","—","Anual (Oct)","Cumple.","Bajo"],
+["U-42","Amenidades","Asadores","2","Exteriores","—","—","Mensual (Interno)","Cumple.","Bajo"],
+["U-43","Accesos","Cortinas de Acceso Vehicular","1","Vehicular","—","—","Trimestral (Interno)","Lubricación; cumple.","Bajo"],
+["U-44","Amenidades","Gimnasio de Pesas (limpieza)","1","Interior","—","—","Mensual (Interno)","Complementa calibración externa (U-27).","Bajo"],
+];
+
+const CORRECTIVOS = [
+["Sistema de Accesos y Seguridad","Elevador E1: suministro e instalación de nueva polea de tracción","Inmediata"],
+["Sistema de Conexiones Eléctricas","Planta de Emergencia: carga de Diesel y protocolo de pruebas de arranque con transferencia","Inmediata"],
+["Sistema de Conexiones Eléctricas","Sellado de filtraciones en área eléctrica y colocación de tapas faltantes","Inmediata"],
+["Sistema Hidráulico Agua Potable","Generador de Vapor: reparación o sustitución de equipo por corto circuito","Alta"],
+["Sistema Hidráulico Aguas Negras","Finalización de infraestructura PTAR e instalaciones eléctricas para puesta en marcha","Alta"],
+["Sistema Hidráulico Agua Potable","PCI: pruebas de funcionamiento, carga de combustible y presurización del sistema","Alta"],
+["Sistema Hidráulico Aguas Grises","Bombas de Achique: suministro e instalación de bomba de 7.5 HP, 460V, en cuarto de máquinas","Alta"],
+["Sistema de Estructura y Seguridad","Obra Civil Alberca: sustitución de estructura de plafón dañada en techo","Media"],
+["Sistema Hidráulico Agua Potable","Lavado y desinfección de cisternas y tanques elevados","Programada"],
+];
+
+const riskClass = {Extremo:"b-extremo",Alto:"b-alto",Medio:"b-medio",Bajo:"b-bajo"};
+const prioClass = {Inmediata:"b-inmediata",Alta:"b-alta",Media:"b-media",Programada:"b-programada"};
+
+function renderCorrectivos(){
+  document.getElementById("correctivosBody").innerHTML = CORRECTIVOS.map(r=>`
+    <tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="badge ${prioClass[r[2]]}">${r[2]}</span></td></tr>
+  `).join("");
+}
+
+let currentRisk = "all";
+let currentSearch = "";
+
+function renderAssets(){
+  const body = document.getElementById("assetTable");
+  const filtered = ASSETS.filter(a=>{
+    const riskOk = currentRisk==="all" || a[9]===currentRisk;
+    const hay = (a[1]+" "+a[2]+" "+a[5]+" "+a[0]).toLowerCase();
+    const searchOk = hay.includes(currentSearch.toLowerCase());
+    return riskOk && searchOk;
+  });
+  body.innerHTML = filtered.map(a=>`
+    <tr>
+      <td class="mono">${a[0]}</td><td>${a[1]}</td><td><b>${a[2]}</b></td><td class="mono">${a[3]}</td>
+      <td>${a[4]}</td><td>${a[5]}</td><td class="mono">${a[6]}</td><td>${a[7]}</td><td>${a[8]}</td>
+      <td><span class="badge ${riskClass[a[9]]}">${a[9]}</span></td>
+    </tr>
+  `).join("");
+  document.getElementById("countNote").textContent = `Mostrando ${filtered.length} de ${ASSETS.length} activos.`;
+}
+
+document.querySelectorAll("#riskChips .chip").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    document.querySelectorAll("#riskChips .chip").forEach(c=>c.classList.remove("active"));
+    chip.classList.add("active");
+    currentRisk = chip.dataset.risk;
+    renderAssets();
+  });
+});
+document.getElementById("searchBox").addEventListener("input", (e)=>{
+  currentSearch = e.target.value;
+  renderAssets();
+});
+
+renderCorrectivos();
+renderAssets();
+</script>
+</body>
+</html>

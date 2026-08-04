@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Uplace — Panel de Control Operativo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    --surface-0:#f9f9f7;
+    --surface-1:#ffffff;
+    --surface-2:#f3f2ef;
+    --text-primary:#0b0b0b;
+    --text-secondary:#52514e;
+    --text-muted:#898781;
+    --border:rgba(11,11,11,0.10);
+    --gridline:#e1e0d9;
+
+    --blue:#2a78d6;
+    --blue-soft:#cde2fb;
+    --gray-context:#c3c2b7;
+    --gray-context-fill:#dedcd4;
+
+    --good:#0ca30c;
+    --warning:#fab219;
+    --serious:#ec835a;
+    --critical:#d03b3b;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface-0:#0d0d0d;
+      --surface-1:#1a1a19;
+      --surface-2:#222221;
+      --text-primary:#ffffff;
+      --text-secondary:#c3c2b7;
+      --text-muted:#898781;
+      --border:rgba(255,255,255,0.10);
+      --gridline:#2c2c2a;
+
+      --blue:#3987e5;
+      --blue-soft:#184f95;
+      --gray-context:#383835;
+      --gray-context-fill:#2c2c2a;
+
+      --good:#0ca30c;
+      --warning:#fab219;
+      --serious:#ec835a;
+      --critical:#d03b3b;
+    }
+  }
+  html,body{ background:var(--surface-0); color:var(--text-primary); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .card{ background:var(--surface-1); border:1px solid var(--border); border-radius:14px; }
+  .ink-2{ color:var(--text-secondary); }
+  .ink-muted{ color:var(--text-muted); }
+  .hairline{ border-color:var(--border); }
+
+  .badge{ display:inline-flex; align-items:center; gap:6px; font-weight:600; font-size:12.5px; padding:4px 10px; border-radius:999px; border:1px solid transparent; white-space:nowrap; }
+  .badge-critical{ background:color-mix(in srgb, var(--critical) 14%, transparent); color:var(--critical); border-color:color-mix(in srgb, var(--critical) 35%, transparent); }
+  .badge-warning{ background:color-mix(in srgb, var(--warning) 18%, transparent); color:#8a5a00; border-color:color-mix(in srgb, var(--warning) 45%, transparent); }
+  @media (prefers-color-scheme: dark){ .badge-warning{ color:var(--warning); } }
+  .badge-serious{ background:color-mix(in srgb, var(--serious) 16%, transparent); color:#9c3f1e; border-color:color-mix(in srgb, var(--serious) 40%, transparent); }
+  @media (prefers-color-scheme: dark){ .badge-serious{ color:var(--serious); } }
+  .badge-good{ background:color-mix(in srgb, var(--good) 14%, transparent); color:var(--good); border-color:color-mix(in srgb, var(--good) 35%, transparent); }
+  .badge-neutral{ background:var(--surface-2); color:var(--text-secondary); border-color:var(--border); }
+
+  .meter-track{ height:14px; border-radius:999px; background:var(--surface-2); position:relative; overflow:visible; }
+  .meter-fill{ height:14px; border-radius:999px; position:relative; }
+  .meter-target{ position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--text-primary); opacity:.55; }
+  .meter-target::after{ content:attr(data-label); position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:10.5px; color:var(--text-muted); white-space:nowrap; }
+
+  .bar-track{ background:var(--surface-2); border-radius:999px; height:34px; position:relative; }
+  .bar-fill{ height:34px; border-radius:999px; display:flex; align-items:center; justify-content:flex-end; padding-right:12px; color:#fff; font-weight:700; font-size:13px; transition: filter .15s; }
+  .bar-fill:hover{ filter:brightness(1.06); }
+
+  .tooltip-wrap{ position:relative; }
+  .tooltip{ visibility:hidden; opacity:0; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--text-primary); color:var(--surface-1); font-size:12px; padding:8px 10px; border-radius:8px; white-space:nowrap; z-index:20; transition:opacity .12s; pointer-events:none; }
+  .tooltip-wrap:hover .tooltip{ visibility:visible; opacity:1; }
+
+  th, td{ padding:10px 14px; text-align:left; border-bottom:1px solid var(--gridline); font-size:13.5px; }
+  th{ color:var(--text-muted); font-weight:600; text-transform:uppercase; font-size:11px; letter-spacing:.04em; }
+  tbody tr:last-child td{ border-bottom:none; }
+  .num{ font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- HEADER -->
+<header class="border-b hairline sticky top-0 z-30" style="background:var(--surface-0);">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <p class="text-[11px] uppercase tracking-wider ink-muted font-semibold">Uplace · Real City</p>
+      <h1 class="text-xl font-bold">Panel de Control Operativo</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="badge badge-neutral">Comité de Vigilancia</span>
+      <span class="badge badge-neutral">Corte: 09 jul 2026</span>
+      <span class="badge badge-critical">● Riesgo global: ALTO</span>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-6 py-8 space-y-10">
+
+  <!-- DATA INTEGRITY NOTICE -->
+  <div class="card px-5 py-4 flex gap-3 items-start" style="border-color:color-mix(in srgb, var(--warning) 45%, transparent);">
+    <span class="text-lg leading-none">⚠</span>
+    <p class="text-sm ink-2"><strong class="text-[var(--text-primary)]">Nota de integridad documental:</strong> los archivos <code class="ink-muted">UPALACE PERIFÉRICO-1.pdf</code> y <code class="ink-muted">ARCA.pdf</code> tienen contenido cruzado respecto a su nombre (el primero contiene la cotización de ARCA; el segundo, el reporte técnico de MOPRISA). Este panel está construido sobre el <strong>contenido real</strong> de cada documento, no sobre su nombre de archivo.</p>
+  </div>
+
+  <!-- KPI ROW -->
+  <section>
+    <h2 class="text-sm font-bold uppercase tracking-wide ink-muted mb-3">Inventario del Inmueble</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div class="card p-4"><p class="text-2xl font-bold">44</p><p class="text-xs ink-muted mt-1">Niveles totales</p></div>
+      <div class="card p-4"><p class="text-2xl font-bold">36</p><p class="text-xs ink-muted mt-1">Plantas residenciales</p></div>
+      <div class="card p-4"><p class="text-2xl font-bold">8</p><p class="text-xs ink-muted mt-1">Niveles de estacionamiento</p></div>
+      <div class="card p-4"><p class="text-2xl font-bold">4</p><p class="text-xs ink-muted mt-1">Elevadores KONE</p></div>
+      <div class="card p-4"><p class="text-2xl font-bold">2</p><p class="text-xs ink-muted mt-1">Transformadores E1/E2</p></div>
+      <div class="card p-4 border" style="border-color:color-mix(in srgb, var(--critical) 45%, transparent);">
+        <p class="text-2xl font-bold" style="color:var(--critical);">3</p>
+        <p class="text-xs ink-muted mt-1">Válvulas Vamex en falla</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMERGENCY STATUS -->
+  <section>
+    <div class="flex items-baseline justify-between mb-3">
+      <h2 class="text-sm font-bold uppercase tracking-wide ink-muted">Estatus de Emergencia — Válvulas Reductoras de Presión</h2>
+      <span class="text-xs ink-muted">Fuente: Reporte de hallazgos MOPRISA</span>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <p class="text-sm ink-2"><strong class="text-[var(--text-primary)]">Causa raíz:</strong> sin daño estético en los cuerpos de válvula. La falla está en el <strong>mecanismo de la válvula piloto</strong>, que dejó de estrangular el flujo — confirmado por las 3 cotizaciones, que coinciden en la partida "cambio de piloto reductora 3/8 NTP 200 PSI". Adicionalmente no existe instrumentación de presión por nivel ni válvula de alivio con retorno a tinacos.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+
+      <!-- Nivel 23 - CRITICO -->
+      <div class="card p-5 border" style="border-color:color-mix(in srgb, var(--critical) 45%, transparent);">
+        <div class="flex items-center justify-between mb-1">
+          <p class="font-bold">Nivel 23</p>
+          <span class="badge badge-critical">⛔ Crítico</span>
+        </div>
+        <p class="text-xs ink-muted mb-3">Piloto no regula — entrada = salida</p>
+        <div class="flex items-baseline gap-2 mb-2">
+          <span class="text-3xl font-bold num" style="color:var(--critical);">9</span>
+          <span class="text-sm ink-muted">kg/cm² de salida (entrada 9 kg/cm²)</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" style="width:90%; background:var(--critical);"></div>
+          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
+        </div>
+        <p class="text-xs ink-muted mt-4">214% sobre el límite residencial — riesgo activo de fuga en accesorios de departamentos.</p>
+      </div>
+
+      <!-- Nivel 32 - ALERTA -->
+      <div class="card p-5 border" style="border-color:color-mix(in srgb, var(--warning) 45%, transparent);">
+        <div class="flex items-center justify-between mb-1">
+          <p class="font-bold">Nivel 32</p>
+          <span class="badge badge-warning">⚠ Alerta</span>
+        </div>
+        <p class="text-xs ink-muted mb-3">Piloto reduce parcialmente</p>
+        <div class="flex items-baseline gap-2 mb-2">
+          <span class="text-3xl font-bold num" style="color:#8a5a00;">4</span>
+          <span class="text-sm ink-muted">kg/cm² de salida (entrada 5 kg/cm²)</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" style="width:40%; background:var(--warning);"></div>
+          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
+        </div>
+        <p class="text-xs ink-muted mt-4">Al límite del rango aceptable — vigilar, mecanismo ya degradado.</p>
+      </div>
+
+      <!-- Nivel 7 - MEDIO -->
+      <div class="card p-5 border" style="border-color:color-mix(in srgb, var(--serious) 40%, transparent);">
+        <div class="flex items-center justify-between mb-1">
+          <p class="font-bold">Nivel 7</p>
+          <span class="badge badge-serious">◐ Medio</span>
+        </div>
+        <p class="text-xs ink-muted mb-3">Piloto no regula — presión de entrada ya baja</p>
+        <div class="flex items-baseline gap-2 mb-2">
+          <span class="text-3xl font-bold num" style="color:#9c3f1e;">4</span>
+          <span class="text-sm ink-muted">kg/cm² de salida (entrada 4 kg/cm²)</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" style="width:40%; background:var(--serious);"></div>
+          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
+        </div>
+        <p class="text-xs ink-muted mt-4">Mismo mecanismo fallando, pero menor riesgo inmediato por presión de origen baja.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FINANCIAL COMPARISON -->
+  <section>
+    <div class="flex items-baseline justify-between mb-3">
+      <h2 class="text-sm font-bold uppercase tracking-wide ink-muted">Dictamen Comparativo — Reparar vs. Reemplazar</h2>
+      <span class="text-xs ink-muted">Costo normalizado por estación de válvula</span>
+    </div>
+
+    <div class="card p-6 mb-4">
+      <div class="space-y-4">
+
+        <div class="tooltip-wrap">
+          <div class="flex items-center justify-between text-sm mb-1.5">
+            <span class="font-semibold">CyS Industrial <span class="ink-muted font-normal">— reparación</span></span>
+            <span class="badge badge-warning">Renegociar</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill num" style="width:54.6%; background:var(--gray-context-fill); color:var(--text-primary);">$69,497</div>
+          </div>
+          <div class="tooltip">Incluye repuesto completo Y04 opcional — 75% más caro que la misma partida en ARCA</div>
+        </div>
+
+        <div class="tooltip-wrap">
+          <div class="flex items-center justify-between text-sm mb-1.5">
+            <span class="font-semibold">ARCA <span class="ink-muted font-normal">— reposición like-for-like</span></span>
+            <span class="badge badge-warning">Renegociar</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill num" style="width:45%; background:var(--gray-context-fill); color:var(--text-primary);">$49,254*</div>
+          </div>
+          <div class="tooltip">*Sin IVA especificado (≈$57,135 con IVA). Compuerta 4" 126% más cara que en CyS</div>
+        </div>
+
+        <div class="tooltip-wrap">
+          <div class="flex items-center justify-between text-sm mb-1.5">
+            <span class="font-semibold">PPTO Reductoras (Torre 1) <span class="ink-muted font-normal">— reemplazo total, tecnología nueva</span></span>
+            <span class="badge badge-good">Recomendado</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill num" style="width:33.4%; background:var(--blue);">$42,433</div>
+          </div>
+          <div class="tooltip">Válvula automática Clase 150 + purga de aire Caleffi + empaques — cubre las 3 estaciones a la vez</div>
+        </div>
+
+      </div>
+      <p class="text-xs ink-muted mt-5">Escala: costo por estación instalada, MXN con IVA (salvo donde se indica). Pasar el cursor sobre cada barra para el detalle.</p>
+    </div>
+
+    <div class="card overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr>
+            <th>Proveedor</th>
+            <th>Alcance real</th>
+            <th class="text-right">Total cotizado</th>
+            <th class="text-right">Costo / estación</th>
+            <th>Veredicto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="font-semibold">CyS Industrial</td>
+            <td class="ink-2">2 aliviadoras, 2 compuertas (piso 13), 1 diafragma, 1 piloto + repuesto Y04 opcional</td>
+            <td class="text-right num">$90,841.92</td>
+            <td class="text-right num">$69,497</td>
+            <td><span class="badge badge-warning">Renegociar</span></td>
+          </tr>
+          <tr>
+            <td class="font-semibold">ARCA</td>
+            <td class="ink-2">1 estación completa: aliviadora, compuerta URREA, retiro + reposición válvula Y04, piloto</td>
+            <td class="text-right num">$49,254.40 + IVA</td>
+            <td class="text-right num">≈$57,135</td>
+            <td><span class="badge badge-warning">Renegociar</span></td>
+          </tr>
+          <tr>
+            <td class="font-semibold">PPTO Reductoras</td>
+            <td class="ink-2">3 estaciones completas: válvula automática Clase 150 + empaques Garlock + purga Caleffi</td>
+            <td class="text-right num">$127,298.40</td>
+            <td class="text-right num">$42,433</td>
+            <td><span class="badge badge-good">Recomendado*</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-xs ink-muted px-4 py-3">*Condicionado: cotización vencida (vigencia 10 días desde 26/06/2026, venció ~06/07/2026). Requiere re-ratificación de precios por escrito antes de autorizar pago.</p>
+    </div>
+  </section>
+
+  <!-- RECOMMENDATION -->
+  <section class="card p-6" style="border-color:color-mix(in srgb, var(--blue) 40%, transparent);">
+    <h2 class="text-sm font-bold uppercase tracking-wide mb-3" style="color:var(--blue);">Recomendación de Dirección</h2>
+    <ul class="space-y-2 text-sm ink-2 list-disc pl-5">
+      <li><strong class="text-[var(--text-primary)]">Reemplazar, no reparar</strong>: el costo por estación del reemplazo total ($42,433) es menor que reparar una sola estación con piezas antiguas ($49,254–$69,497), y resuelve las 3 fallas a la vez.</li>
+      <li><strong class="text-[var(--text-primary)]">Mitigación inmediata en Nivel 23</strong> mientras se formaliza el reemplazo: reparación puntual de piloto para bajar de 9 a ~4 kg/cm².</li>
+      <li><strong class="text-[var(--text-primary)]">Re-ratificar por escrito</strong> la cotización PPTO Reductoras antes de pagar — venció el 06/07/2026.</li>
+      <li>Exigir a los 3 proveedores una re-cotización homologada (mismo alcance, garantía por escrito, manómetros e instrumentación por nivel, válvula de alivio con retorno a tinacos).</li>
+    </ul>
+  </section>
+
+  <footer class="text-xs ink-muted pt-4 pb-10 border-t hairline">
+    Generado por el Director de Operaciones e Ingeniería IA · Fuentes: MANTENIMIENTO CORRECTIVO A VALVULAS.pdf (CyS Industrial), PPTO VALVULAS REDUCTORAS DE PRESION 26062026.pdf, UPALACE PERIFÉRICO-1.pdf (ARCA), ARCA.pdf (MOPRISA) · inventario_activos.md
+  </footer>
+
+</main>
+</body>
+</html>

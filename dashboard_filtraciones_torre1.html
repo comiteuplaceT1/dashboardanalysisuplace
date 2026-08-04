@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoría de Filtraciones — Torre 1 | UPLACE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0a0e1a;
+    --navy-800:#0f1626;
+    --navy-700:#151f36;
+    --navy-600:#1c2942;
+    --navy-500:#26375a;
+    --line:#263250;
+    --gold:#c9a24d;
+    --gold-soft:#e3c579;
+    --text-hi:#f2f4f8;
+    --text-mid:#a8b2c7;
+    --text-low:#6c7590;
+    --red:#e2564f;
+    --red-soft:rgba(226,86,79,.12);
+    --amber:#e0a83c;
+    --amber-soft:rgba(224,168,60,.12);
+    --green:#4caf7d;
+    --green-soft:rgba(76,175,125,.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(201,162,77,0.08), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(38,55,90,0.35), transparent 60%),
+      var(--navy-900);
+    color:var(--text-hi);
+    font-family:'IBM Plex Mono', monospace;
+    line-height:1.5;
+    min-height:100vh;
+    padding: 0 0 80px;
+  }
+  h1,h2,h3,.disp{font-family:'Space Grotesk', sans-serif;}
+  a{color:var(--gold-soft);}
+
+  .wrap{max-width:1240px; margin:0 auto; padding:0 28px;}
+
+  /* HEADER */
+  header{
+    border-bottom:1px solid var(--line);
+    padding:36px 0 28px;
+    margin-bottom:32px;
+  }
+  .eyebrow{
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--gold); font-weight:600; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:''; width:22px; height:1px; background:var(--gold);}
+  h1{
+    font-size:clamp(28px,4vw,44px); font-weight:700; letter-spacing:-.01em;
+    color:var(--text-hi); max-width:820px;
+  }
+  .sub{
+    color:var(--text-mid); font-size:14.5px; margin-top:14px; max-width:680px;
+  }
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; align-items:center;
+  }
+  .tag{
+    font-size:11px; letter-spacing:.06em; font-weight:600; padding:6px 12px;
+    border-radius:3px; text-transform:uppercase; border:1px solid transparent;
+  }
+  .tag-renegociar{background:var(--amber-soft); color:var(--amber); border-color:rgba(224,168,60,.3);}
+  .tag-alto{background:var(--red-soft); color:var(--red); border-color:rgba(226,86,79,.3);}
+  .tag-neutral{background:var(--navy-600); color:var(--text-mid); border-color:var(--line);}
+
+  /* KPI STRIP */
+  .kpi-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:8px;
+    overflow:hidden; margin-bottom:40px;
+  }
+  .kpi{background:var(--navy-800); padding:22px 20px;}
+  .kpi .num{font-family:'Space Grotesk'; font-size:32px; font-weight:700; color:var(--gold-soft);}
+  .kpi .num small{font-size:16px; font-weight:600; color:var(--text-mid); margin-left:2px;}
+  .kpi .lbl{font-size:11.5px; color:var(--text-mid); margin-top:6px; letter-spacing:.02em;}
+  .kpi.warn .num{color:var(--red);}
+
+  section{margin-bottom:44px;}
+  .sec-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:18px; gap:16px; flex-wrap:wrap;}
+  .sec-title{font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-mid); font-weight:600;}
+  .sec-title span{color:var(--gold);}
+  .sec-note{font-size:12.5px; color:var(--text-low);}
+
+  .panel{
+    background:var(--navy-800); border:1px solid var(--line); border-radius:8px; padding:24px;
+  }
+  .grid2{display:grid; grid-template-columns:1.3fr 1fr; gap:20px;}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+
+  /* FACADE BARS */
+  .bar-row{display:flex; align-items:center; gap:14px; margin-bottom:16px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-label{width:110px; font-size:12.5px; color:var(--text-mid); flex-shrink:0;}
+  .bar-track{flex:1; height:22px; background:var(--navy-600); border-radius:3px; overflow:hidden; position:relative;}
+  .bar-fill{height:100%; border-radius:3px; display:flex; align-items:center; position:relative;}
+  .bar-fill.sev-hi{background:linear-gradient(90deg,#8a3430,var(--red));}
+  .bar-fill.sev-mid{background:linear-gradient(90deg,#8a6a20,var(--amber));}
+  .bar-num{width:120px; text-align:right; font-size:12px; color:var(--text-mid); flex-shrink:0;}
+  .bar-num b{color:var(--text-hi); font-size:13px;}
+
+  /* type/manifest lists */
+  .stat-list{display:flex; flex-direction:column; gap:12px;}
+  .stat-item{display:flex; align-items:center; gap:12px;}
+  .stat-track{flex:1; height:8px; background:var(--navy-600); border-radius:4px; overflow:hidden;}
+  .stat-fill{height:100%; background:var(--gold); border-radius:4px;}
+  .stat-name{width:190px; font-size:12px; color:var(--text-mid); flex-shrink:0;}
+  .stat-val{width:34px; text-align:right; font-size:12px; color:var(--text-hi); font-weight:600;}
+
+  /* timeline */
+  .timeline{display:flex; align-items:flex-end; gap:14px; height:140px; padding-top:20px;}
+  .tl-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+  .tl-bar{width:100%; max-width:54px; background:linear-gradient(180deg,var(--gold-soft),var(--gold)); border-radius:4px 4px 0 0; position:relative;}
+  .tl-val{font-size:12px; color:var(--text-hi); font-weight:600; margin-bottom:6px; font-family:'Space Grotesk';}
+  .tl-yr{font-size:11px; color:var(--text-low); margin-top:8px;}
+
+  /* legal cards */
+  .legal-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:900px){.legal-grid{grid-template-columns:1fr;}}
+  .legal-card{
+    background:var(--navy-700); border:1px solid var(--line); border-radius:8px; padding:20px;
+    position:relative;
+  }
+  .legal-card.disputed{border-color:rgba(226,86,79,.4);}
+  .legal-card.correct{border-color:rgba(76,175,125,.4);}
+  .legal-yrs{font-family:'Space Grotesk'; font-size:30px; font-weight:700; color:var(--text-hi);}
+  .legal-card.disputed .legal-yrs{color:var(--red);}
+  .legal-card.correct .legal-yrs{color:var(--green);}
+  .legal-cat{font-size:12px; color:var(--gold); margin-top:6px; font-weight:600; letter-spacing:.03em;}
+  .legal-desc{font-size:12px; color:var(--text-mid); margin-top:10px; line-height:1.55;}
+  .legal-badge{position:absolute; top:16px; right:16px; font-size:9.5px; padding:3px 8px; border-radius:3px; letter-spacing:.06em; text-transform:uppercase; font-weight:600;}
+  .legal-badge.rej{background:var(--red-soft); color:var(--red);}
+  .legal-badge.acc{background:var(--green-soft); color:var(--green);}
+
+  .cite{font-size:11px; color:var(--text-low); margin-top:16px; border-top:1px solid var(--line); padding-top:12px; line-height:1.6;}
+
+  /* systemic pattern callout */
+  .callout{
+    background:linear-gradient(135deg, rgba(201,162,77,.08), rgba(201,162,77,.02));
+    border:1px solid rgba(201,162,77,.35); border-radius:8px; padding:22px 24px;
+    display:flex; gap:18px; align-items:flex-start;
+  }
+  .callout .ic{font-size:22px; color:var(--gold); flex-shrink:0; margin-top:2px;}
+  .callout h3{font-size:14.5px; color:var(--gold-soft); margin-bottom:8px; font-weight:600;}
+  .callout p{font-size:13px; color:var(--text-mid); line-height:1.65;}
+  .callout b{color:var(--text-hi);}
+
+  /* table */
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  thead th{
+    text-align:left; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--text-low); font-weight:600; padding:10px 12px; border-bottom:1px solid var(--line);
+    position:sticky; top:0; background:var(--navy-800);
+  }
+  tbody td{padding:11px 12px; border-bottom:1px solid var(--navy-600); color:var(--text-mid); vertical-align:top;}
+  tbody tr:hover{background:var(--navy-700);}
+  tbody td.dep{color:var(--text-hi); font-weight:600;}
+  .table-scroll{max-height:480px; overflow-y:auto; border-radius:6px;}
+  .sev-pill{
+    display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px;
+    border-radius:4px; font-weight:700; font-size:11px;
+  }
+  .sev-5{background:var(--red-soft); color:var(--red);}
+  .sev-4{background:var(--amber-soft); color:var(--amber);}
+  .old-flag{color:var(--red); font-size:10.5px; margin-left:6px;}
+
+  /* checklist */
+  .check-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:800px){.check-grid{grid-template-columns:1fr;}}
+  .check-item{
+    display:flex; gap:12px; align-items:flex-start; background:var(--navy-700);
+    border:1px solid var(--line); border-radius:6px; padding:14px 16px;
+  }
+  .check-box{
+    width:16px; height:16px; border:1.5px solid var(--gold); border-radius:3px; flex-shrink:0; margin-top:2px;
+  }
+  .check-item p{font-size:12.5px; color:var(--text-mid); line-height:1.55;}
+  .check-item b{color:var(--text-hi);}
+
+  footer{
+    max-width:1240px; margin:40px auto 0; padding:20px 28px 0; border-top:1px solid var(--line);
+    color:var(--text-low); font-size:11.5px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Dirección de Operaciones · Comité de Vigilancia</div>
+    <h1>Auditoría de filtraciones de fachada — Torre 1</h1>
+    <p class="sub">Consolidado de 51 reportes ciudadanos (residentes y Administración), analizados para sustentar la negociación de garantía con la constructora. Periodo de detección: mayo 2022 – julio 2026.</p>
+    <div class="meta-row">
+      <span class="tag tag-renegociar">Veredicto — Garantía: renegociar</span>
+      <span class="tag tag-alto">Riesgo: alto por recurrencia sistémica</span>
+      <span class="tag tag-neutral">51 reportes · 4 fachadas + sótano</span>
+    </div>
+  </header>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="num">51</div>
+      <div class="lbl">Reportes totales registrados</div>
+    </div>
+    <div class="kpi warn">
+      <div class="num">26<small>/51</small></div>
+      <div class="lbl">Casos severidad 4–5 (daño visible a estructura/acabados)</div>
+    </div>
+    <div class="kpi">
+      <div class="num">20<small>+</small></div>
+      <div class="lbl">Casos con la misma firma de falla: remate superior de ventana</div>
+    </div>
+    <div class="kpi">
+      <div class="num">3<small> años</small></div>
+      <div class="lbl">Garantía de impermeabilización aplicable — no 1 año</div>
+    </div>
+  </div>
+
+  <!-- SYSTEMIC PATTERN CALLOUT -->
+  <section>
+    <div class="callout">
+      <div class="ic">&#9888;</div>
+      <div>
+        <h3>Hallazgo central: no son fallas aisladas, es un defecto sistémico</h3>
+        <p>Más de <b>20 de los 51 reportes</b> describen literalmente el mismo punto de falla — <b>"esquina superior de ventana" / "unión de remate con muro"</b> — repetido en 4 fachadas distintas y en pisos que van del 6 al 36. Ese patrón replicado, independiente de la unidad o la orientación, es la firma característica de un <b>defecto de diseño o ejecución en el remate/sellado de cancelería</b>, no de mantenimiento individual. Es el argumento técnico más fuerte frente a la constructora.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FACHADAS -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-title">01 · Distribución por <span>fachada</span></div>
+      <div class="sec-note">% de casos en severidad 4–5 sobre el total de esa fachada</div>
+    </div>
+    <div class="panel">
+      <div class="bar-row">
+        <div class="bar-label">Poniente</div>
+        <div class="bar-track"><div class="bar-fill sev-hi" style="width:62%"></div></div>
+        <div class="bar-num"><b>62%</b> severo · 13 casos</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Oriente</div>
+        <div class="bar-track"><div class="bar-fill sev-hi" style="width:55%"></div></div>
+        <div class="bar-num"><b>55%</b> severo · 11 casos</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Norte</div>
+        <div class="bar-track"><div class="bar-fill sev-mid" style="width:50%"></div></div>
+        <div class="bar-num"><b>50%</b> severo · 14 casos</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Sur</div>
+        <div class="bar-track"><div class="bar-fill sev-mid" style="width:50%"></div></div>
+        <div class="bar-num"><b>50%</b> severo · 4 casos</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Sótano / losa</div>
+        <div class="bar-track"><div class="bar-fill sev-mid" style="width:33%"></div></div>
+        <div class="bar-num"><b>33%</b> severo · 9 casos</div>
+      </div>
+      <p style="margin-top:18px; font-size:12px; color:var(--text-low); border-top:1px solid var(--line); padding-top:14px;">
+        <b style="color:var(--text-mid)">[Probable]</b> Poniente concentra la mayor severidad relativa pese a no tener el mayor volumen — consistente con el patrón de tormentas vespertinas de CDMX con componente de viento suroeste. Hipótesis de ingeniería a confirmar con estudio de rosa de vientos, no un hecho comprobado.
+      </p>
+    </div>
+  </section>
+
+  <!-- TIPO Y MANIFESTACION -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-title">02 · Tipo de filtración y <span>manifestación física</span></div>
+      <div class="sec-note">Selección múltiple — base 51 reportes</div>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h3 style="font-size:13px; color:var(--text-hi); margin-bottom:16px; font-weight:600;">Causa reportada</h3>
+        <div class="stat-list">
+          <div class="stat-item"><div class="stat-name">Agua de lluvia</div><div class="stat-track"><div class="stat-fill" style="width:100%"></div></div><div class="stat-val">39</div></div>
+          <div class="stat-item"><div class="stat-name">Viento / corrientes de aire</div><div class="stat-track"><div class="stat-fill" style="width:46%"></div></div><div class="stat-val">18</div></div>
+          <div class="stat-item"><div class="stat-name">Humedad / condensación</div><div class="stat-track"><div class="stat-fill" style="width:23%"></div></div><div class="stat-val">9</div></div>
+          <div class="stat-item"><div class="stat-name">Tubería / instalación (no fachada)</div><div class="stat-track"><div class="stat-fill" style="width:23%"></div></div><div class="stat-val">9</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:13px; color:var(--text-hi); margin-bottom:16px; font-weight:600;">Daño observado</h3>
+        <div class="stat-list">
+          <div class="stat-item"><div class="stat-name">Escurrimiento activo de agua</div><div class="stat-track"><div class="stat-fill" style="width:100%"></div></div><div class="stat-val">32</div></div>
+          <div class="stat-item"><div class="stat-name">Pintura / acabado desprendido</div><div class="stat-track"><div class="stat-fill" style="width:100%"></div></div><div class="stat-val">32</div></div>
+          <div class="stat-item"><div class="stat-name">Mancha de humedad visible</div><div class="stat-track"><div class="stat-fill" style="width:94%"></div></div><div class="stat-val">30</div></div>
+          <div class="stat-item"><div class="stat-name">Deformación / hinchazón material</div><div class="stat-track"><div class="stat-fill" style="width:75%"></div></div><div class="stat-val">24</div></div>
+          <div class="stat-item"><div class="stat-name">Moho con riesgo a salud</div><div class="stat-track"><div class="stat-fill" style="width:9%"></div></div><div class="stat-val">3</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRONOLOGIA -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-title">03 · Cronología de <span>primera detección</span></div>
+      <div class="sec-note">Año en que el residente notó la filtración por primera vez</div>
+    </div>
+    <div class="panel">
+      <div class="timeline">
+        <div class="tl-col"><div class="tl-val">1</div><div class="tl-bar" style="height:8%"></div><div class="tl-yr">2022</div></div>
+        <div class="tl-col"><div class="tl-val">6</div><div class="tl-bar" style="height:22%"></div><div class="tl-yr">2023</div></div>
+        <div class="tl-col"><div class="tl-val">5</div><div class="tl-bar" style="height:18%"></div><div class="tl-yr">2024</div></div>
+        <div class="tl-col"><div class="tl-val">11</div><div class="tl-bar" style="height:40%"></div><div class="tl-yr">2025</div></div>
+        <div class="tl-col"><div class="tl-val">28</div><div class="tl-bar" style="height:100%"></div><div class="tl-yr">2026</div></div>
+      </div>
+      <p style="margin-top:20px; font-size:12px; color:var(--text-low); border-top:1px solid var(--line); padding-top:14px;">
+        <b style="color:var(--text-mid)">[Seguro]</b> 7 casos llevan detectados desde 2022–2023, con evidencia de al menos un intento de reparación fallido (depto 2003: sellado general de fachada en 2024, reincidencia en 2025 y 2026). El problema no está resuelto de raíz, solo mitigado temporalmente.
+      </p>
+    </div>
+  </section>
+
+  <!-- MARCO LEGAL -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-title">04 · Marco de <span>garantía aplicable</span></div>
+      <div class="sec-note">Comparación por categoría de defecto — contexto consumidor/proveedor en México</div>
+    </div>
+    <div class="legal-grid">
+      <div class="legal-card disputed">
+        <span class="legal-badge rej">Posición constructora</span>
+        <div class="legal-yrs">1 año</div>
+        <div class="legal-cat">Acabados menores</div>
+        <div class="legal-desc">Categoría que la constructora está aplicando a las filtraciones. Es la garantía más corta del marco legal — solo aplica a defectos de acabado, no a fallas de la envolvente de impermeabilización.</div>
+      </div>
+      <div class="legal-card correct">
+        <span class="legal-badge acc">Categoría correcta</span>
+        <div class="legal-yrs">3 años</div>
+        <div class="legal-cat">Impermeabilización</div>
+        <div class="legal-desc">Categoría a la que corresponde una filtración de fachada por naturaleza. Contado desde la entrega real de cada unidad — <b>no</b> desde la entrega general de la torre.</div>
+      </div>
+      <div class="legal-card">
+        <span class="legal-badge acc">Si aplica</span>
+        <div class="legal-yrs">5 años</div>
+        <div class="legal-cat">Defecto estructural</div>
+        <div class="legal-desc">Aplicable si el peritaje confirma afectación a losa/anclajes (ej. caso Piso 31 → depto 3003, con deformación visible del remate metálico y la losa).</div>
+      </div>
+    </div>
+    <div class="cite">
+      Marco de referencia: en la relación comprador (consumidor final) – constructora (proveedor), la garantía mínima para cuestiones estructurales es de 5 años y de 3 años para impermeabilización, contados desde la entrega real del bien; para los demás elementos aplica la garantía mínima de 1 año. Adicionalmente, es práctica común en el sector que la constructora emita una póliza de fianza de vicios ocultos con vigencia de 5 a 10 años desde la entrega — se recomienda solicitarla formalmente. <b style="color:var(--text-mid)">[Probable]</b> — sujeto a confirmar contra el contrato de compraventa y escritura específicos de Uplace, y a validación de un abogado.
+    </div>
+  </section>
+
+  <!-- CASOS PRIORITARIOS -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-title">05 · Casos <span>prioritarios</span></div>
+      <div class="sec-note">26 reportes en severidad 4–5, ordenados del más antiguo al más reciente</div>
+    </div>
+    <div class="panel" style="padding:0;">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Unidad</th><th>Fachada</th><th>Piso</th><th>Ambiente</th><th>Sev.</th><th>1ª detección</th><th>Reportado a</th><th>Folio / referencia</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOMENDACIONES -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-title">06 · Instrucciones y <span>términos de negociación</span></div>
+    </div>
+    <div class="check-grid">
+      <div class="check-item"><div class="check-box"></div><p><b>Solicitar acta de entrega individual</b> de cada una de las 51 unidades/áreas reportadas — dato ausente en el formulario actual y necesario para calcular la vigencia de garantía por unidad.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Solicitar la póliza de fianza de vicios ocultos</b> emitida en la entrega de Torre 1, si existe, con su vigencia exacta.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Exigir a la constructora que fundamente</b> por qué clasifica la filtración como "acabado" (1 año) y no como "impermeabilización" (3 años).</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Contratar un peritaje independiente</b> de envolvente/impermeabilización — no depender solo del dictamen de la propia constructora.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Separar el caso del depto 3003</b> (origen en losa de terraza común del Piso 31) del resto — es responsabilidad de área común, no garantía individual.</p></div>
+      <div class="check-item"><div class="check-box"></div><p><b>Reconciliar folios ya existentes</b> (#265, #266, #268, #286, #296, TK0344, TK0434, TK0258, 186) contra el sistema de tickets de la constructora, para probar notificación formal previa dentro de plazo.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>UPLACE Torre 1 — Dirección de Operaciones e Ingeniería</span>
+    <span>Base: Registro_de_Filtraciones_Uplace_Torre_1.xlsx · 51 registros · generado para Comité de Vigilancia</span>
+  </footer>
+</div>
+
+<script>
+const casos = [
+ {dep:"2903", fac:"Norte", piso:"29", amb:"Recámara Principal", sev:5, fecha:"2023-03-08", rep:"A ambos", folio:"No existía ticket"},
+ {dep:"1207", fac:"Oriente", piso:"12", amb:"Recámara Principal", sev:4, fecha:"2023-06-01", rep:"A ambos", folio:"No existían folios en ese tiempo"},
+ {dep:"2606", fac:"Oriente", piso:"26", amb:"Recámara Principal", sev:4, fecha:"2023-07-10", rep:"A ambos", folio:"Correos con arq. Galindo / Amairani"},
+ {dep:"3304", fac:"Norte", piso:"33", amb:"Sala/Comedor", sev:4, fecha:"2023-08-20", rep:"A ambos", folio:"—"},
+ {dep:"3003", fac:"Poniente", piso:"30", amb:"Balcón/Terraza", sev:5, fecha:"2024-05-15", rep:"Constructora", folio:"—"},
+ {dep:"3003", fac:"Poniente", piso:"30", amb:"Sala/Comedor", sev:4, fecha:"2024-05-15", rep:"Constructora", folio:"—"},
+ {dep:"3507", fac:"Sur", piso:"35", amb:"Recámara Principal", sev:5, fecha:"2024-06-25", rep:"A ambos", folio:"#266 (folio actual)"},
+ {dep:"1903", fac:"Poniente", piso:"19", amb:"Cocina", sev:4, fecha:"2025-02-28", rep:"Primer reporte", folio:"—"},
+ {dep:"Admin.", fac:"Sótano/losa", piso:"S1", amb:"Estacionamiento", sev:4, fecha:"2025-06-10", rep:"A ambos", folio:"—"},
+ {dep:"2709", fac:"Oriente", piso:"27", amb:"Sala/Comedor", sev:4, fecha:"2025-06-15", rep:"Constructora", folio:"Carta a garantias@uplace"},
+ {dep:"3306", fac:"Oriente", piso:"33", amb:"Recámara Principal", sev:4, fecha:"2025-06-16", rep:"Constructora", folio:"—"},
+ {dep:"1604", fac:"Norte", piso:"16", amb:"Recámara Principal", sev:5, fecha:"2025-06-26", rep:"Administración", folio:"TK0434"},
+ {dep:"1307", fac:"Oriente", piso:"13", amb:"Recámara Principal", sev:4, fecha:"2025-07-01", rep:"A ambos", folio:"TK0344"},
+ {dep:"Admin.", fac:"Norte", piso:"6", amb:"Gimnasio", sev:4, fecha:"2025-08-12", rep:"Administración", folio:"—"},
+ {dep:"1103", fac:"Poniente", piso:"11", amb:"Baño", sev:4, fecha:"2026-01-09", rep:"Primer reporte", folio:"—"},
+ {dep:"2602", fac:"Poniente", piso:"26", amb:"Sala/Comedor", sev:5, fecha:"2026-04-01", rep:"A ambos", folio:"—"},
+ {dep:"2709", fac:"Sótano/losa", piso:"S1", amb:"Estacionamiento", sev:4, fecha:"2026-05-04", rep:"Administración", folio:"Ticket #286"},
+ {dep:"2301", fac:"Poniente", piso:"23", amb:"Recámara Principal", sev:4, fecha:"2026-05-25", rep:"A ambos", folio:"#268 (Vivook)"},
+ {dep:"2201", fac:"Poniente", piso:"22", amb:"Recámara Principal", sev:4, fecha:"2026-06-04", rep:"Constructora", folio:"WhatsApp arq. Amairani"},
+ {dep:"1807", fac:"Poniente", piso:"18", amb:"Recámara Principal", sev:5, fecha:"2026-06-08", rep:"A ambos", folio:"#267"},
+ {dep:"3504", fac:"Norte", piso:"35", amb:"Sala/Comedor", sev:5, fecha:"2026-06-15", rep:"Primer reporte", folio:"—"},
+ {dep:"1307", fac:"Oriente", piso:"13", amb:"Recámara Principal", sev:4, fecha:"2026-06-15", rep:"A ambos", folio:"Recurrente cada año"},
+ {dep:"3003", fac:"Norte", piso:"30", amb:"3ª Recámara", sev:5, fecha:"2026-06-15", rep:"Constructora", folio:"—"},
+ {dep:"3308", fac:"Sur", piso:"33", amb:"Recámara Sec.", sev:4, fecha:"2026-06-19", rep:"Constructora", folio:"—"},
+ {dep:"2404", fac:"Norte", piso:"24", amb:"Recámara Principal", sev:4, fecha:"2026-07-04", rep:"Constructora", folio:"—"},
+ {dep:"Admin.", fac:"Sótano/losa", piso:"6", amb:"Estacionamiento", sev:4, fecha:"2026-07-09", rep:"A ambos", folio:"—"},
+];
+
+const tbody = document.getElementById('tbody');
+tbody.innerHTML = casos.map(c => {
+  const yr = parseInt(c.fecha.slice(0,4));
+  const flag = yr <= 2023 ? '<span class="old-flag">● &gt;3 años</span>' : '';
+  return `<tr>
+    <td class="dep">${c.dep}</td>
+    <td>${c.fac}</td>
+    <td>${c.piso}</td>
+    <td>${c.amb}</td>
+    <td><span class="sev-pill sev-${c.sev}">${c.sev}</span></td>
+    <td>${c.fecha}${flag}</td>
+    <td>${c.rep}</td>
+    <td>${c.folio}</td>
+  </tr>`;
+}).join('');
+</script>
+
+</body>
+</html>
