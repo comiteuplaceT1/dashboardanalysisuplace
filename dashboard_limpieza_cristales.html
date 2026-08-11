@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparativo — Limpieza de Fachada Anual | Uplace Torre 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#0a0e1a;
+    --navy-800:#0f1524;
+    --navy-700:#151d30;
+    --navy-600:#1c2540;
+    --navy-500:#26305090;
+    --gold:#c9a55c;
+    --gold-light:#e0c584;
+    --gold-dim:#9c8354;
+    --white:#f4f2ee;
+    --grey:#a8adba;
+    --grey-dim:#6b7283;
+    --line:#2a3350;
+    --red:#c0645a;
+    --green:#6ea87f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--navy-900);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(201,165,92,0.06), transparent 45%),
+      radial-gradient(circle at 90% 100%, rgba(201,165,92,0.04), transparent 40%);
+    color:var(--white);
+    font-family:'Space Grotesk', sans-serif;
+    min-height:100vh;
+    padding:48px 5vw 80px;
+  }
+  .header{
+    max-width:1280px;margin:0 auto 40px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:28px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--gold-dim);margin-bottom:10px;
+  }
+  h1{
+    font-size:clamp(24px,3.2vw,36px);font-weight:600;
+    color:var(--white);margin-bottom:8px;letter-spacing:-0.5px;
+  }
+  .subtitle{color:var(--grey);font-size:15px;max-width:720px;line-height:1.5;}
+  .meta-row{
+    display:flex;gap:32px;margin-top:20px;flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace;font-size:12px;color:var(--grey-dim);
+  }
+  .meta-row span b{color:var(--gold);font-weight:500;}
+
+  .container{max-width:1280px;margin:0 auto;}
+
+  .notice{
+    background:var(--navy-700);
+    border:1px solid var(--gold-dim);
+    border-left:3px solid var(--gold);
+    border-radius:6px;
+    padding:22px 26px;
+    margin-bottom:36px;
+    display:flex;gap:18px;align-items:flex-start;
+  }
+  .notice-icon{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:1.5px;
+    color:var(--navy-900);
+    background:var(--gold);
+    border-radius:4px;
+    padding:4px 9px;
+    white-space:nowrap;
+    font-weight:600;
+    margin-top:2px;
+  }
+  .notice-text h3{
+    font-size:15px;color:var(--gold-light);font-weight:600;margin-bottom:6px;
+  }
+  .notice-text p{
+    font-size:13.5px;color:var(--grey);line-height:1.65;max-width:900px;
+  }
+
+  .section-title{
+    font-size:13px;font-family:'IBM Plex Mono',monospace;
+    letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-dim);
+    margin:44px 0 18px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .section-title::after{
+    content:'';flex:1;height:1px;background:var(--line);
+  }
+
+  .cards{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:18px;
+  }
+  .card{
+    background:var(--navy-700);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:26px;
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .card-head{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    border-bottom:1px solid var(--line);
+    padding-bottom:14px;
+  }
+  .provider-name{
+    font-size:19px;font-weight:600;color:var(--gold);letter-spacing:0.2px;
+  }
+  .price-total{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:20px;font-weight:600;color:var(--white);
+  }
+  .price-sub{font-size:11px;color:var(--grey-dim);font-family:'IBM Plex Mono',monospace;text-align:right;margin-top:2px;}
+
+  .card-row{
+    display:flex;justify-content:space-between;font-size:13px;
+    padding:5px 0;border-bottom:1px dashed var(--line);
+  }
+  .card-row:last-of-type{border-bottom:none;}
+  .card-row .label{color:var(--grey-dim);}
+  .card-row .value{color:var(--white);text-align:right;font-family:'IBM Plex Mono',monospace;font-size:12.5px;}
+
+  .scope-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    padding:4px 9px;border-radius:20px;border:1px solid var(--line);
+    color:var(--grey);
+  }
+  .tag.confirmed{border-color:var(--gold-dim);color:var(--gold-light);}
+  .tag.missing{border-color:#4a3535;color:var(--red);}
+  .tag.excluded{border-color:#4a3535;color:var(--red);}
+
+  .desc{font-size:12.5px;color:var(--grey);line-height:1.6;}
+
+  .table-wrap{
+    background:var(--navy-700);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow-x:auto;
+  }
+  table{width:100%;border-collapse:collapse;min-width:760px;}
+  th{
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.8px;
+    text-transform:uppercase;color:var(--gold-dim);text-align:left;
+    padding:14px 18px;border-bottom:1px solid var(--line);
+    background:var(--navy-800);
+  }
+  td{
+    padding:14px 18px;font-size:13px;color:var(--white);
+    border-bottom:1px solid var(--line);
+  }
+  tr:last-child td{border-bottom:none;}
+  td.mono{font-family:'IBM Plex Mono',monospace;font-size:12.5px;}
+  td.name{color:var(--gold);font-weight:600;}
+  .yes{color:var(--green);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+  .no{color:var(--red);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+  .partial{color:var(--gold-light);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+
+  .footnote{
+    margin-top:14px;font-size:11.5px;color:var(--grey-dim);
+    font-family:'IBM Plex Mono',monospace;line-height:1.6;
+    padding:0 4px;
+  }
+
+  .req-box{
+    margin-top:36px;
+    background:var(--navy-700);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:26px 28px;
+  }
+  .req-box h3{
+    font-size:14px;color:var(--white);font-weight:600;margin-bottom:14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .req-box h3::before{
+    content:'§';color:var(--gold);font-size:16px;
+  }
+  .req-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .req-list li{
+    font-size:13px;color:var(--grey);line-height:1.6;
+    padding-left:20px;position:relative;
+  }
+  .req-list li::before{
+    content:'—';position:absolute;left:0;color:var(--gold-dim);
+  }
+
+  footer{
+    max-width:1280px;margin:56px auto 0;
+    border-top:1px solid var(--line);
+    padding-top:20px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;color:var(--grey-dim);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+
+  @media(max-width:640px){
+    body{padding:32px 5vw 60px;}
+    .meta-row{gap:16px;}
+    .notice{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Uplace Torre 1 · Comité de Vigilancia</div>
+  <h1>Comparativo — Limpieza de Fachada Anual</h1>
+  <p class="subtitle">Presentación de las cuatro propuestas recibidas para el servicio de limpieza integral de fachada exterior en altura. Documento informativo de carácter neutral para revisión y decisión del Comité.</p>
+  <div class="meta-row">
+    <span>Elaborado por: <b>Christian Lara</b></span>
+    <span>Fecha de cuadro: <b>10/08/2026</b></span>
+    <span>Propuestas recibidas: <b>4</b></span>
+    <span>Alcance requerido: <b>4 fachadas + balcones/terrazas</b></span>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="notice">
+    <div class="notice-icon">REQUISITO DE ALCANCE</div>
+    <div class="notice-text">
+      <h3>Balcones y terrazas deben incluirse en el alcance de limpieza</h3>
+      <p>Los balcones y terrazas son superficies vidriadas que forman parte de la envolvente exterior del edificio y están expuestos a los mismos agentes de suciedad, polvo y contaminación ambiental que el resto de la fachada. Cualquier propuesta que excluya balcones y/o terrazas deja un porcentaje relevante de la superficie de fachada sin atender, generando una discontinuidad visual entre las áreas limpiadas y las excluidas, y obligando a una segunda contratación independiente para completar el alcance real. Se solicita a los proveedores confirmar por escrito la inclusión de balcones y terrazas dentro del precio cotizado, o en su defecto, presentar el costo adicional correspondiente para su comparación.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Resumen por proveedor</div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-head">
+        <div class="provider-name">STESSO</div>
+        <div>
+          <div class="price-total">$139,461.17</div>
+          <div class="price-sub">precio con IVA</div>
+        </div>
+      </div>
+      <div class="desc">Servicio especial de 20 días — limpieza de vidrios y Alucubond de fachadas externas mediante Rope Access, 3 técnicos verticales certificados.</div>
+      <div class="card-row"><span class="label">Precio total (antes IVA)</span><span class="value">$120,225.15</span></div>
+      <div class="card-row"><span class="label">IVA</span><span class="value">$19,236.02</span></div>
+      <div class="card-row"><span class="label">Tiempo de entrega</span><span class="value">20 días</span></div>
+      <div class="card-row"><span class="label">Condición de pago</span><span class="value">70% anticipo</span></div>
+      <div class="scope-tags">
+        <span class="tag">N° de caras no especificado</span>
+        <span class="tag missing">Terraza N31 — no mencionado</span>
+        <span class="tag missing">Balcones — no mencionado</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="provider-name">PROVILIM</div>
+        <div>
+          <div class="price-total">$88,624.00</div>
+          <div class="price-sub">precio con IVA</div>
+        </div>
+      </div>
+      <div class="desc">Lavado de vidrios y Alucubond exteriores de fachadas de la torre, vidrios de terraza nivel 31 y vidrios de alberca. Personal DC-3, asegurado IMSS.</div>
+      <div class="card-row"><span class="label">Precio total (antes IVA)</span><span class="value">$76,400.00</span></div>
+      <div class="card-row"><span class="label">IVA</span><span class="value">$12,224.00</span></div>
+      <div class="card-row"><span class="label">Tiempo de entrega</span><span class="value">15 días aprox.</span></div>
+      <div class="card-row"><span class="label">Condición de pago</span><span class="value">50% anticipo</span></div>
+      <div class="scope-tags">
+        <span class="tag confirmed">Fachadas de la torre</span>
+        <span class="tag confirmed">Terraza N31 + alberca</span>
+        <span class="tag excluded">Balcones — excluidos explícitamente</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="provider-name">CUIPROLIM</div>
+        <div>
+          <div class="price-total">$110,200.00</div>
+          <div class="price-sub">precio con IVA</div>
+        </div>
+      </div>
+      <div class="desc">Limpieza de vidrios parte exterior en altura, 4 caras, altura 36 pisos. Incluye mano de obra, herramientas, equipo de seguridad y consumibles.</div>
+      <div class="card-row"><span class="label">Precio total (antes IVA)</span><span class="value">$95,000.00</span></div>
+      <div class="card-row"><span class="label">IVA</span><span class="value">$15,200.00</span></div>
+      <div class="card-row"><span class="label">Tiempo de entrega</span><span class="value">10 días hábiles aprox.</span></div>
+      <div class="card-row"><span class="label">Condición de pago</span><span class="value">60% anticipo</span></div>
+      <div class="scope-tags">
+        <span class="tag confirmed">4 caras — 36 pisos</span>
+        <span class="tag missing">Terraza N31 — no mencionado</span>
+        <span class="tag missing">Balcones — no mencionado</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="provider-name">Servicio Ventura</div>
+        <div>
+          <div class="price-total">$98,600.00</div>
+          <div class="price-sub">precio con IVA</div>
+        </div>
+      </div>
+      <div class="desc">Limpieza de cristales exteriores en tres caras del edificio mediante rápel. Cuadrilla de 4 técnicos, equipo certificado PETZL.</div>
+      <div class="card-row"><span class="label">Precio total (antes IVA)</span><span class="value">$85,000.00</span></div>
+      <div class="card-row"><span class="label">IVA</span><span class="value">$13,600.00</span></div>
+      <div class="card-row"><span class="label">Tiempo de entrega</span><span class="value">15 días aprox.</span></div>
+      <div class="card-row"><span class="label">Condición de pago</span><span class="value">50% anticipo</span></div>
+      <div class="scope-tags">
+        <span class="tag missing">Solo 3 de 4 caras</span>
+        <span class="tag missing">Terraza N31 — no mencionado</span>
+        <span class="tag missing">Balcones — no mencionado</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">Tabla comparativa de alcance y condiciones</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Proveedor</th>
+          <th>Precio c/IVA</th>
+          <th>Tiempo</th>
+          <th>Anticipo</th>
+          <th>Caras cubiertas</th>
+          <th>Terraza N31</th>
+          <th>Balcones</th>
+          <th>Certificación / IMSS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name">STESSO</td>
+          <td class="mono">$139,461.17</td>
+          <td class="mono">20 días</td>
+          <td class="mono">70%</td>
+          <td class="partial">No especificado</td>
+          <td class="no">No mencionado</td>
+          <td class="no">No mencionado</td>
+          <td class="partial">"Certificados" (sin detalle)</td>
+        </tr>
+        <tr>
+          <td class="name">PROVILIM</td>
+          <td class="mono">$88,624.00</td>
+          <td class="mono">15 días</td>
+          <td class="mono">50%</td>
+          <td class="yes">4 (torre)</td>
+          <td class="yes">Sí</td>
+          <td class="no">Excluidos</td>
+          <td class="yes">DC-3 + IMSS</td>
+        </tr>
+        <tr>
+          <td class="name">CUIPROLIM</td>
+          <td class="mono">$110,200.00</td>
+          <td class="mono">10 días hábiles</td>
+          <td class="mono">60%</td>
+          <td class="yes">4 (36 pisos)</td>
+          <td class="no">No mencionado</td>
+          <td class="no">No mencionado</td>
+          <td class="partial">No detallado</td>
+        </tr>
+        <tr>
+          <td class="name">Servicio Ventura</td>
+          <td class="mono">$98,600.00</td>
+          <td class="mono">15 días</td>
+          <td class="mono">50%</td>
+          <td class="no">3 de 4</td>
+          <td class="no">No mencionado</td>
+          <td class="no">No mencionado</td>
+          <td class="partial">Equipo PETZL (sin DC-3/IMSS)</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footnote">
+      * Ninguna de las cuatro propuestas detalla metros cuadrados de fachada cotizados. "No mencionado" indica que el punto no aparece en el documento original del proveedor, no que esté confirmado como excluido, salvo en los casos marcados explícitamente como excluidos.
+    </div>
+  </div>
+
+  <div class="req-box">
+    <h3>Puntos a confirmar por escrito con cada proveedor antes de la decisión</h3>
+    <ul class="req-list">
+      <li>Confirmación explícita de inclusión de <b style="color:var(--gold-light)">balcones y terrazas</b> dentro del alcance cotizado, o costo adicional independiente para incorporarlos.</li>
+      <li>Metros cuadrados de fachada considerados en cada cotización, para permitir un cálculo comparable de costo por m².</li>
+      <li>Aclaración de Servicio Ventura sobre la fachada excluida (3 de 4 caras) y motivo técnico, en caso de existir.</li>
+      <li>Confirmación de CUIPROLIM de que "36 pisos" corresponde a la altura total de fachada de cristal del inmueble.</li>
+      <li>Constancias vigentes de capacitación DC-3, aseguramiento IMSS y certificación de equipo de acceso por cuerdas (arneses, líneas de vida, mosquetones) de cada proveedor.</li>
+      <li>Pólizas de responsabilidad civil vigentes para trabajos en altura en torre ocupada.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <span>Uplace Torre 1 — Dirección de Operaciones, Ingeniería y Finanzas</span>
+  <span>Documento informativo — sin recomendación editorial</span>
+</footer>
+
+</body>
+</html>
