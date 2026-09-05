@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoría · Extractores Vapor Húmedo — HomePro COT-20260814-7615</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0a0e1a;
+    --navy-900:#0f1526;
+    --navy-800:#151d33;
+    --navy-700:#1c2640;
+    --navy-600:#283454;
+    --line:#2a3556;
+    --gold:#c9a15a;
+    --gold-bright:#e0bb74;
+    --text-hi:#f1f0ea;
+    --text-mid:#aab2c8;
+    --text-low:#707d9c;
+    --red:#c9694f;
+    --green:#7fae7a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--navy-950);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(201,161,90,0.06), transparent 45%),
+      radial-gradient(circle at 100% 30%, rgba(201,161,90,0.04), transparent 40%);
+    color:var(--text-hi);
+    font-family:'Space Grotesk',sans-serif;
+    line-height:1.5;
+    padding:0 0 80px 0;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+  /* HEADER */
+  header{
+    border-bottom:1px solid var(--line);
+    padding:44px 0 28px 0;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--gold);
+    letter-spacing:0.02em;
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:30px;
+    font-weight:600;
+    margin:0 0 8px 0;
+    letter-spacing:-0.01em;
+    max-width:760px;
+  }
+  .subtitle{
+    color:var(--text-mid);
+    font-size:15px;
+    max-width:640px;
+  }
+
+  /* KPI STRIP */
+  .kpi-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:32px;
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .kpi{
+    background:var(--navy-900);
+    padding:20px 20px;
+  }
+  .kpi-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-low);
+    margin-bottom:8px;
+  }
+  .kpi-value{
+    font-size:19px;
+    font-weight:600;
+  }
+  .kpi-value.gold{color:var(--gold-bright);}
+  .kpi-value.red{color:var(--red);}
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    padding:3px 9px;
+    border-radius:3px;
+    border:1px solid;
+  }
+  .tag-renegociar{color:var(--gold-bright);border-color:rgba(224,187,116,0.4);background:rgba(224,187,116,0.08);}
+  .tag-medio{color:var(--gold-bright);border-color:rgba(224,187,116,0.4);background:rgba(224,187,116,0.08);}
+
+  /* SECTIONS */
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:26px;
+  }
+  .sec-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--gold);
+    border:1px solid var(--line);
+    padding:2px 8px;
+    border-radius:3px;
+  }
+  h2{
+    font-size:21px;
+    font-weight:600;
+    margin:0;
+  }
+  p{color:var(--text-mid);font-size:15px;max-width:700px;}
+  strong{color:var(--text-hi);font-weight:600;}
+
+  /* DIAGRAM */
+  .diagram-box{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:28px;
+    margin-bottom:28px;
+  }
+  .room{
+    position:relative;
+    border:1.5px dashed var(--line);
+    border-radius:4px;
+    height:230px;
+    display:grid;
+    grid-template-columns:1fr 1fr 0.7fr 0.7fr 0.7fr 0.7fr 0.9fr;
+    gap:8px;
+    padding:16px;
+  }
+  .cell{
+    border:1px solid var(--navy-600);
+    border-radius:4px;
+    background:var(--navy-800);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--text-low);
+    text-align:center;
+    padding:6px;
+    position:relative;
+  }
+  .cell.steam{border-color:rgba(201,105,79,0.5);background:rgba(201,105,79,0.08);color:var(--text-mid);}
+  .cell .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--gold-bright);
+    margin-bottom:6px;
+    box-shadow:0 0 8px rgba(224,187,116,0.6);
+  }
+  .cell.steam .dot{background:var(--red);box-shadow:0 0 8px rgba(201,105,79,0.6);}
+  .win-tag{
+    position:absolute;
+    top:-11px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    background:var(--navy-950);
+    color:var(--gold-bright);
+    padding:0 6px;
+  }
+  .flow-row{
+    grid-column:1/8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    color:var(--text-low);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.15em;
+  }
+  .legend{
+    display:flex;
+    gap:24px;
+    margin-top:18px;
+    flex-wrap:wrap;
+  }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--text-mid);
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .legend-dot{width:8px;height:8px;border-radius:50%;}
+
+  /* CARDS for extractor function */
+  .ext-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-top:8px;
+  }
+  .ext-card{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px;
+  }
+  .ext-card .num{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--gold);
+    font-size:12px;
+    margin-bottom:10px;
+  }
+  .ext-card h3{
+    font-size:15.5px;
+    margin:0 0 8px 0;
+    font-weight:600;
+  }
+  .ext-card p{font-size:13.5px;margin:0;max-width:none;}
+
+  .callout{
+    border-left:3px solid var(--red);
+    background:rgba(201,105,79,0.07);
+    border-radius:0 6px 6px 0;
+    padding:16px 20px;
+    margin-top:24px;
+  }
+  .callout .callout-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--red);
+    margin-bottom:6px;
+  }
+  .callout p{color:var(--text-mid);font-size:14px;max-width:none;}
+
+  /* TABLE */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:8px;
+    font-size:13.5px;
+  }
+  th{
+    text-align:left;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-low);
+    font-weight:500;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  td{
+    padding:14px;
+    border-bottom:1px solid var(--navy-700);
+    color:var(--text-mid);
+    vertical-align:top;
+  }
+  td.concept{color:var(--text-hi);font-weight:500;width:26%;}
+  tr:last-child td{border-bottom:none;}
+
+  /* cost comparison */
+  .cost-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-top:8px;
+  }
+  .cost-box{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:22px;
+  }
+  .cost-box .cost-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-low);
+    margin-bottom:10px;
+  }
+  .cost-box .cost-value{
+    font-size:26px;
+    font-weight:600;
+    color:var(--text-hi);
+  }
+  .cost-box.market .cost-value{color:var(--gold-bright);font-size:17px;line-height:1.4;}
+  .cost-box .cost-note{font-size:12.5px;color:var(--text-low);margin-top:8px;}
+
+  /* checklist */
+  .checklist{list-style:none;padding:0;margin:8px 0 0 0;}
+  .checklist li{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--navy-700);
+    font-size:14.5px;
+    color:var(--text-mid);
+  }
+  .checklist li:last-child{border-bottom:none;}
+  .checkbox{
+    flex-shrink:0;
+    width:16px;height:16px;
+    border:1.5px solid var(--gold);
+    border-radius:3px;
+    margin-top:2px;
+  }
+
+  /* TdR block */
+  .tdr-box{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:24px 26px;
+    margin-top:8px;
+    position:relative;
+  }
+  .tdr-box p{
+    font-size:14px;
+    color:var(--text-mid);
+    max-width:none;
+    font-style:italic;
+  }
+  .copy-btn{
+    position:absolute;
+    top:16px;right:16px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--gold-bright);
+    background:transparent;
+    border:1px solid rgba(224,187,116,0.4);
+    padding:6px 12px;
+    border-radius:4px;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .copy-btn:hover{background:rgba(224,187,116,0.1);}
+
+  footer{
+    padding:28px 0 0 0;
+    color:var(--text-low);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+  }
+
+  @media(max-width:760px){
+    .kpi-strip{grid-template-columns:repeat(2,1fr);}
+    .ext-grid{grid-template-columns:1fr;}
+    .cost-grid{grid-template-columns:1fr;}
+    .room{grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;height:auto;}
+    .flow-row{grid-column:1/5;order:-1;}
+    h1{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">DICTAMEN DE DIRECCIÓN OPERATIVA · MANTENIMIENTO / INGENIERÍA</div>
+    <h1>Extracción mecánica — Vapor Húmedo y Vestidores (Sauna Mujeres)</h1>
+    <div class="subtitle">Cotización HomePro COT-20260814-7615 · 13 de agosto de 2026 · Cotizador: Daniel Lampert</div>
+
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">ESTATUS TÉCNICO</div>
+        <div class="kpi-value">Evaluación Financiera</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">NIVEL DE RIESGO</div>
+        <div class="kpi-value"><span class="tag tag-medio">MEDIO</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">VEREDICTO FINANCIERO</div>
+        <div class="kpi-value"><span class="tag tag-renegociar">RENEGOCIAR</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">COSTO PROPUESTO (C/IVA)</div>
+        <div class="kpi-value gold">$20,546.76</div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>Esquema de extracción — lectura de ingeniería</h2>
+    </div>
+    <p>Los tres equipos son extractores (succión), no inyectores — ninguno empuja aire hacia otro. El diseño es de <strong>ventilación cruzada con tres puntos de succión independientes</strong>. La corriente horizontal que muestra el plano es aire de reposición inducido por los Extractores 1 y 2, no el trabajo del Extractor 3.</p>
+
+    <div class="diagram-box">
+      <div class="room">
+        <div class="win-tag" style="left:0;">VENTANA 1</div>
+        <div class="cell"><div class="dot"></div>Lockers /<br>Vestidores</div>
+        <div class="cell steam"><div class="dot"></div>Área Vapor<br>Húmedo</div>
+        <div class="cell">Sanitario</div>
+        <div class="cell">Regadera 1</div>
+        <div class="cell">Regadera 2</div>
+        <div class="cell">Regadera 3</div>
+        <div class="cell" style="position:relative;">
+          <div class="win-tag" style="right:0;left:auto;">VENTANA 2</div>
+          Regadera 4
+        </div>
+        <div class="flow-row">SUCCIÓN 1 ← &nbsp; · · aire de reposición · · &nbsp; → SUCCIÓN 2</div>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--gold-bright);"></span> Extractor 1 / 2 — succión de ventana (perimetral)</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--red);"></span> Extractor 3 — succión de punto, cabina de vapor</div>
+      </div>
+    </div>
+
+    <div class="ext-grid">
+      <div class="ext-card">
+        <div class="num">EXTRACTOR 1</div>
+        <h3>Ventana 1 · Vestidores</h3>
+        <p>Succiona la zona seca. Funciona además como entrada de aire de reposición para el resto del circuito, siempre que exista holgura o rejilla en la puerta.</p>
+      </div>
+      <div class="ext-card">
+        <div class="num">EXTRACTOR 2</div>
+        <h3>Ventana 2 · Extremo de regaderas</h3>
+        <p>Succiona al final del recorrido, sobre el bloque húmedo (sanitario + 4 regaderas). Cierra el circuito de aire de reposición junto con el Extractor 1.</p>
+      </div>
+      <div class="ext-card">
+        <div class="num">EXTRACTOR 3</div>
+        <h3>Cabina de Vapor Húmedo</h3>
+        <p>Extracción de punto, alta capacidad, dedicada a la fuente de mayor concentración de vapor. Necesaria porque esperar a que el vapor viaje hasta las ventanas sería insuficiente.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">DATO FALTANTE — CRÍTICO</div>
+      <p>El plano no especifica hacia dónde descarga el ducto del Extractor 3. Si descarga al exterior, el diseño es correcto; si descarga al plafón sin salida, se recircula humedad y vapor caliente hacia la losa — el error más común en cabinas de vapor mal instaladas. Debe confirmarse por escrito con HomePro antes de autorizar instalación.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Evaluación económica y de mercado</h2>
+    </div>
+    <p>La cotización no presenta sobreprecio flagrante en el total, pero tampoco permite validar que sea precio justo: está redactada sin unidades, capacidades ni marca — no cumple el estándar mínimo de auditabilidad.</p>
+
+    <div class="cost-grid">
+      <div class="cost-box">
+        <div class="cost-label">COSTO PROPUESTO — SOLO BAÑOS DE MUJERES</div>
+        <div class="cost-value">$17,712.72 <span style="font-size:14px;color:var(--text-low);font-weight:400;">subtotal</span></div>
+        <div class="cost-note">$20,546.76 con IVA (16%) · 2 días de labor · técnico adicional incluido · markup 15% declarado</div>
+      </div>
+      <div class="cost-box market">
+        <div class="cost-label">REFERENCIA DE MERCADO (VALIDADA POR BÚSQUEDA)</div>
+        <div class="cost-value">$1,800 – $5,000 MXN por unidad, según capacidad y resistencia a humedad</div>
+        <div class="cost-note">Instalación con ductería (cuando el equipo no descarga directo a muro/ventana) añade mano de obra y materiales adicionales no reflejados en la cotización actual.</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>Concepto</th><th>Problema detectado</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="concept">Sin desglose por unidad</td>
+          <td>Monto global por "extractores" (plural) sin indicar cuántos equipos son, marca, modelo, HP/Watts ni caudal (m³/h). No permite calcular costo por equipo ni comparar contra mercado.</td>
+        </tr>
+        <tr>
+          <td class="concept">Sin especificación de descarga</td>
+          <td>No indica si el ducto del Extractor 3 sale al exterior — punto crítico de ingeniería (ver Sección 01).</td>
+        </tr>
+        <tr>
+          <td class="concept">Alcance incompleto</td>
+          <td>Solo cubre baños de mujeres. Falta cotización paralela para vestidores/vapor de hombres, sistema espejo independiente según inventario.</td>
+        </tr>
+        <tr>
+          <td class="concept">Garantía corta</td>
+          <td>30 días sobre mano de obra es insuficiente: la falla relevante (extracción insuficiente) se manifiesta por acumulación de humedad a mediano plazo, no de inmediato.</td>
+        </tr>
+        <tr>
+          <td class="concept">Markup sin base verificable</td>
+          <td>15% declarado y transparente, pero no verificable sin el desglose de equipos sobre el que se aplica.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>Instrucciones en sitio — Cristian / Karla</h2>
+    </div>
+    <ul class="checklist">
+      <li><span class="checkbox"></span>No autorizar arranque de obra hasta recibir de HomePro el desglose por equipo (cantidad, marca, modelo, capacidad m³/h, HP/W).</li>
+      <li><span class="checkbox"></span>Exigir por escrito la trayectoria de descarga del Extractor 3: confirmar salida a exterior, no a plafón cerrado.</li>
+      <li><span class="checkbox"></span>Verificar en sitio que exista o se contemple entrada de aire de reposición (rejilla u holgura bajo puerta).</li>
+      <li><span class="checkbox"></span>Solicitar cotización espejo para el lado de hombres, para evaluar ambos alcances de forma conjunta.</li>
+      <li><span class="checkbox"></span>Documentar fotográficamente el punto de descarga una vez instalado, como evidencia antes del pago final.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>Términos de referencia — HomePro</h2>
+    </div>
+    <div class="tdr-box">
+      <button class="copy-btn" onclick="
+        navigator.clipboard.writeText(document.getElementById('tdr-text').innerText);
+        this.innerText='Copiado';
+        setTimeout(()=>{this.innerText='Copiar'},1500);
+      ">Copiar</button>
+      <p id="tdr-text">Favor de complementar la cotización COT-20260814-7615 con: (1) desglose por unidad — cantidad, marca, modelo, capacidad (m³/h o CFM) y potencia (W/HP) de cada extractor incluido, especificando si contempla los 3 puntos de extracción del plano (Ventana 1, Ventana 2 y cabina de Vapor Húmedo) o solo dos; (2) especificación de la ruta y punto de descarga de cada ducto, confirmando salida a exterior; (3) cotización espejo para el área equivalente de hombres; (4) condiciones de garantía sobre el desempeño de extracción (no solo mano de obra), dado que la falla relevante en este tipo de instalación se manifiesta como humedad acumulada a mediano plazo.</p>
+    </div>
+  </section>
+
+  <footer>
+    UPLACE TORRE 1 · DIRECCIÓN DE OPERACIONES, INGENIERÍA Y FINANZAS — DICTAMEN INTERNO, USO COMITÉ DE VIGILANCIA
+  </footer>
+
+</div>
+</body>
+</html>
