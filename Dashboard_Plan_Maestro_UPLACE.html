@@ -159,12 +159,15 @@
   #calTable td.month, #calTable th.month{text-align:center; width:46px;}
   #calTable td.month{font-family:'IBM Plex Mono',monospace; font-size:13px;}
   #calTable td.mark{color:var(--gold-soft); font-weight:600;}
-  #calTable td.mark-star{color:var(--gold); font-weight:700;}
   #calTable td.mark-empty{color:var(--navy-line);}
-  #calTable td:nth-child(3){min-width:220px;}
+  #calTable td:nth-child(2){min-width:220px;}
+  .cal-star-box{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:30px; height:24px; padding:0 4px; background:#FFFFFF; color:var(--gold);
+    border-radius:4px; font-weight:700; font-size:12.5px; box-shadow:0 0 0 1px var(--gold);
+  }
   .cal-legend{display:flex; gap:22px; flex-wrap:wrap; font-size:12px; color:var(--grey); margin-top:14px; font-family:'IBM Plex Mono',monospace;}
   .cal-legend span.mark{color:var(--gold-soft); font-weight:700; margin-right:5px;}
-  .cal-legend span.mark-star{color:var(--gold); font-weight:700; margin-right:5px;}
 
   footer{padding:36px 6vw; border-top:1px solid var(--navy-line); color:var(--grey); font-size:12px; font-family:'IBM Plex Mono',monospace;}
 
@@ -382,7 +385,7 @@
     </div>
     <div class="cal-legend">
       <div><span class="mark">X</span>Mantenimiento programado</div>
-      <div><span class="mark-star">X★</span>Hito crítico anual (prueba de carga / prueba de flujo)</div>
+      <div><span class="cal-star-box" style="margin-right:6px;">X★</span>Hito crítico anual (prueba de carga / prueba de flujo)</div>
     </div>
     <div class="count-note" id="calCountNote" style="margin-top:12px;"></div>
   </div>
@@ -504,7 +507,7 @@ const CALENDARIO = [
 let currentMonth = "all";
 
 function markCell(v){
-  if(v==="X★") return `<td class="month mark-star">X★</td>`;
+  if(v==="X★") return `<td class="month"><span class="cal-star-box">X★</span></td>`;
   if(v==="X") return `<td class="month mark">X</td>`;
   return `<td class="month mark-empty">·</td>`;
 }
@@ -512,7 +515,7 @@ function markCell(v){
 function renderCalendario(){
   const head = document.getElementById("calHeadRow");
   const body = document.getElementById("calBody");
-  const base = ["ID","Sistema","Equipo Crítico","Frecuencia"];
+  const base = ["Sistema","Equipo Crítico","Frecuencia"];
   const months = currentMonth==="all" ? MONTH_NAMES : [MONTH_NAMES[currentMonth]];
 
   head.innerHTML = base.map(h=>`<th>${h}</th>`).join("") + months.map(m=>`<th class="month">${m}</th>`).join("");
@@ -522,7 +525,7 @@ function renderCalendario(){
 
   body.innerHTML = rows.map(r=>{
     const cells = idx===null ? r[4].map(markCell).join("") : markCell(r[4][idx]);
-    return `<tr><td class="mono">${r[0]}</td><td>${r[1]}</td><td><b>${r[2]}</b></td><td class="mono">${r[3]}</td>${cells}</tr>`;
+    return `<tr><td>${r[1]}</td><td><b>${r[2]}</b></td><td class="mono">${r[3]}</td>${cells}</tr>`;
   }).join("");
 
   document.getElementById("calCountNote").textContent = currentMonth==="all"
