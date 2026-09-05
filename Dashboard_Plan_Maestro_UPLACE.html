@@ -148,6 +148,24 @@
   #assetTable td:nth-child(9){min-width:220px; color:var(--grey); font-size:12px;}
   .count-note{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--grey);}
 
+  /* ---------- CALENDARIO ANUAL ---------- */
+  .month-chips{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px;}
+  .mchip{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; padding:6px 12px; border-radius:20px;
+    border:1px solid var(--navy-line); background:var(--navy-900); color:var(--grey); cursor:pointer; transition:.15s;
+  }
+  .mchip:hover{border-color:var(--gold);}
+  .mchip.active{background:var(--gold); color:var(--navy-950); border-color:var(--gold); font-weight:600;}
+  #calTable td.month, #calTable th.month{text-align:center; width:46px;}
+  #calTable td.month{font-family:'IBM Plex Mono',monospace; font-size:13px;}
+  #calTable td.mark{color:var(--gold-soft); font-weight:600;}
+  #calTable td.mark-star{color:var(--gold); font-weight:700;}
+  #calTable td.mark-empty{color:var(--navy-line);}
+  #calTable td:nth-child(3){min-width:220px;}
+  .cal-legend{display:flex; gap:22px; flex-wrap:wrap; font-size:12px; color:var(--grey); margin-top:14px; font-family:'IBM Plex Mono',monospace;}
+  .cal-legend span.mark{color:var(--gold-soft); font-weight:700; margin-right:5px;}
+  .cal-legend span.mark-star{color:var(--gold); font-weight:700; margin-right:5px;}
+
   footer{padding:36px 6vw; border-top:1px solid var(--navy-line); color:var(--grey); font-size:12px; font-family:'IBM Plex Mono',monospace;}
 
   ::selection{background:var(--gold); color:var(--navy-950);}
@@ -334,6 +352,42 @@
   </div>
 </section>
 
+<!-- ================= CALENDARIO ANUAL ================= -->
+<section class="alt">
+  <div class="section-title"><h2>Calendario Anual de Mantenimiento</h2><span class="tag">44 activos × 12 meses</span></div>
+  <div class="section-note">Generado automáticamente según la frecuencia de cada activo — misma matriz de la pestaña "Calendario Anual" del Plan Maestro en Excel. Filtra por mes para ver solo lo que debe ejecutarse ese mes, o consulta el año completo con "Todos".</div>
+  <div class="table-toolbar">
+    <div class="month-chips" id="monthChips">
+      <div class="mchip active" data-month="all">Todos</div>
+      <div class="mchip" data-month="0">Ene</div>
+      <div class="mchip" data-month="1">Feb</div>
+      <div class="mchip" data-month="2">Mar</div>
+      <div class="mchip" data-month="3">Abr</div>
+      <div class="mchip" data-month="4">May</div>
+      <div class="mchip" data-month="5">Jun</div>
+      <div class="mchip" data-month="6">Jul</div>
+      <div class="mchip" data-month="7">Ago</div>
+      <div class="mchip" data-month="8">Sep</div>
+      <div class="mchip" data-month="9">Oct</div>
+      <div class="mchip" data-month="10">Nov</div>
+      <div class="mchip" data-month="11">Dic</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="table-scroll">
+    <table id="calTable">
+      <thead><tr id="calHeadRow"></tr></thead>
+      <tbody id="calBody"></tbody>
+    </table>
+    </div>
+    <div class="cal-legend">
+      <div><span class="mark">X</span>Mantenimiento programado</div>
+      <div><span class="mark-star">X★</span>Hito crítico anual (prueba de carga / prueba de flujo)</div>
+    </div>
+    <div class="count-note" id="calCountNote" style="margin-top:12px;"></div>
+  </div>
+</section>
+
 <footer>
   Dirección de Operaciones, Ingeniería y Finanzas — Uplace Torre 1 · Dashboard generado a partir de <span class="mono">Plan_Maestro_UPLACE.xlsx</span> · Cifras marcadas [EST.] son estimaciones modeladas, no mediciones de campo.
 </footer>
@@ -398,6 +452,93 @@ const CORRECTIVOS = [
 ["Sistema Hidráulico Agua Potable","Lavado y desinfección de cisternas y tanques elevados","Programada"],
 ];
 
+const MONTH_NAMES = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+// [ID, Sistema, Equipo, Frecuencia, [12 valores: "", "X" o "X★"]]
+const CALENDARIO = [
+["U-01","Movilidad Vertical","Elevadores KONE Mini Space","Mensual (contrato OEM)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-02","Hidráulico Agua Potable","Válvulas Reguladoras Vamex","Semestral (Ene/Jul)",["X","","","","","","X","","","","",""]],
+["U-03","Hidráulico Agua Potable","Válvulas Expulsoras de Aire","Semestral (Feb/Ago)",["","X","","","","","","X","","","",""]],
+["U-04","Bombeo Agua Potable","Motobombas Sótano 1","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-05","Alta Presión","Bombas Barmesa BMVF42 70 6003","Mensual (AGREGAR AL PLAN)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-06","Filtración","Filtros Hayward Pro-Series + VariFlo","Trimestral",["X","","","X","","","X","","","X","",""]],
+["U-07","Azotea","Tanques Rotoplas","Semestral (Mar/Sep)",["","","X","","","","","","X","","",""]],
+["U-08","Azotea","Bombas de Azotea + Tablero Hidroneumático","Mensual (AGREGAR AL PLAN)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-09","Térmico/Vapor","Calderas Hayward H-Series","Semestral (Abr/Oct)",["","","","X","","","","","","X","",""]],
+["U-10","Térmico/Vapor","Bombas de Calor Hayward Pro-Series","Semestral (Abr/Oct)",["","","","X","","","","","","X","",""]],
+["U-11","Térmico/Vapor","Calentadores de Respaldo Cal-O-Rex","Mensual (AGREGAR AL PLAN)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-12","Térmico/Vapor","Generadores de Vapor N°1/N°2/Aqua Steam 2","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-13","Hidrosanitario","Bombas de Cárcamo / Achique Sótano 4","Mensual estricto",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-14","Hidrosanitario","Planta de Tratamiento PTAR","Diagnóstico inmediato + Anual (Ene)",["X","","","","","","","","","","",""]],
+["U-15","Eléctrico","Planta de Emergencia Digesa","Mensual + Banco de Carga (Nov)",["X","X","X","X","X","X","X","X","X","X","X★","X"]],
+["U-16","Eléctrico","Transformador E1","Anual (May)",["","","","","X","","","","","","",""]],
+["U-17","Eléctrico","Transformador E2","Anual (May)",["","","","","X","","","","","","",""]],
+["U-18","Eléctrico","Pararrayos + Contador de Descargas","Anual (Jun)",["","","","","","X","","","","","",""]],
+["U-19","Ventilación","Extractores de Sótanos S&P","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-20","Ventilación","Extractores Verticales S&P","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-21","Ventilación","Extractor Centrífugo","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-22","Accesos","Plumas / Barreras CAME","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-23","PCI","Sistema Clarke Tornatech (NFPA 20)","Mensual + Flujo Anual (Mar)",["X","X","X★","X","X","X","X","X","X","X","X","X"]],
+["U-24","PCI","Panel de Control PCI","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-25","PCI","Bomba Vertical Jockey WEG","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-26","PCI","Bomba Vertical Multietapa WEG","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-27","Amenidades","Equipo de Gimnasio (calibración)","Trimestral",["X","","","X","","","X","","","X","",""]],
+["U-28","Seguridad","CCTV / Biométricos / NVR","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-29","Hidrosanitario","Desazolve de Tuberías","Semestral (Mar/Sep)",["","","X","","","","","","X","","",""]],
+["U-30","Servicios Generales","Fumigación","Mensual",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-31","PCI/Seguridad","Recarga de Extintores","Anual (Ago)",["","","","","","","","X","","","",""]],
+["U-32","Hidrosanitario","Lavado de Cisternas","Semestral (Ene/Jul)",["X","","","","","","X","","","","",""]],
+["U-33","Hidrosanitario","Tinacos","Mensual (Interno)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-34","Eléctrico","Instalaciones Eléctricas (inspección general)","Mensual (Interno)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-35","Eléctrico","Iluminación","Mensual (Interno)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-36","Accesos","Cancelería","Mensual (Interno)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-37","Fachada","Cristales (limpieza en alturas)","Anual (Nov)",["","","","","","","","","","","X",""]],
+["U-38","PCI","Detección de Humo","Semestral (Feb/Ago)",["","X","","","","","","X","","","",""]],
+["U-39","Fachada","Pintura de Muro en Pisos","Anual (Oct)",["","","","","","","","","","X","",""]],
+["U-40","Fachada","Pintura en Azotea","Anual (Oct)",["","","","","","","","","","X","",""]],
+["U-41","Fachada","Pintura en Estacionamiento","Anual (Oct)",["","","","","","","","","","X","",""]],
+["U-42","Amenidades","Asadores","Mensual (Interno)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+["U-43","Accesos","Cortinas de Acceso Vehicular","Trimestral (Interno)",["X","","","X","","","X","","","X","",""]],
+["U-44","Amenidades","Gimnasio de Pesas (limpieza uso diario)","Mensual (Interno)",["X","X","X","X","X","X","X","X","X","X","X","X"]],
+];
+
+let currentMonth = "all";
+
+function markCell(v){
+  if(v==="X★") return `<td class="month mark-star">X★</td>`;
+  if(v==="X") return `<td class="month mark">X</td>`;
+  return `<td class="month mark-empty">·</td>`;
+}
+
+function renderCalendario(){
+  const head = document.getElementById("calHeadRow");
+  const body = document.getElementById("calBody");
+  const base = ["ID","Sistema","Equipo Crítico","Frecuencia"];
+  const months = currentMonth==="all" ? MONTH_NAMES : [MONTH_NAMES[currentMonth]];
+
+  head.innerHTML = base.map(h=>`<th>${h}</th>`).join("") + months.map(m=>`<th class="month">${m}</th>`).join("");
+
+  const idx = currentMonth==="all" ? null : parseInt(currentMonth,10);
+  const rows = CALENDARIO.filter(r => idx===null || r[4][idx]!=="");
+
+  body.innerHTML = rows.map(r=>{
+    const cells = idx===null ? r[4].map(markCell).join("") : markCell(r[4][idx]);
+    return `<tr><td class="mono">${r[0]}</td><td>${r[1]}</td><td><b>${r[2]}</b></td><td class="mono">${r[3]}</td>${cells}</tr>`;
+  }).join("");
+
+  document.getElementById("calCountNote").textContent = currentMonth==="all"
+    ? `Mostrando los 44 activos con su calendario completo del año.`
+    : `${rows.length} activos con mantenimiento programado en ${MONTH_NAMES[idx]}.`;
+}
+
+document.querySelectorAll("#monthChips .mchip").forEach(chip=>{
+  chip.addEventListener("click", ()=>{
+    document.querySelectorAll("#monthChips .mchip").forEach(c=>c.classList.remove("active"));
+    chip.classList.add("active");
+    currentMonth = chip.dataset.month;
+    renderCalendario();
+  });
+});
+
 const riskClass = {Extremo:"b-extremo",Alto:"b-alto",Medio:"b-medio",Bajo:"b-bajo"};
 const prioClass = {Inmediata:"b-inmediata",Alta:"b-alta",Media:"b-media",Programada:"b-programada"};
 
@@ -443,6 +584,7 @@ document.getElementById("searchBox").addEventListener("input", (e)=>{
 
 renderCorrectivos();
 renderAssets();
+renderCalendario();
 </script>
 </body>
 </html>
