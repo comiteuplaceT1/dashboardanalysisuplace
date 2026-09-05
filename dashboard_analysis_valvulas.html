@@ -1,299 +1,535 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Uplace — Panel de Control Operativo</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uplace — Válvulas Reductoras de Presión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --surface-0:#f9f9f7;
-    --surface-1:#ffffff;
-    --surface-2:#f3f2ef;
-    --text-primary:#0b0b0b;
-    --text-secondary:#52514e;
-    --text-muted:#898781;
-    --border:rgba(11,11,11,0.10);
-    --gridline:#e1e0d9;
-
-    --blue:#2a78d6;
-    --blue-soft:#cde2fb;
-    --gray-context:#c3c2b7;
-    --gray-context-fill:#dedcd4;
-
-    --good:#0ca30c;
-    --warning:#fab219;
-    --serious:#ec835a;
-    --critical:#d03b3b;
+    --navy-950:#0a0e1a;
+    --navy-900:#0f1526;
+    --navy-800:#151d33;
+    --navy-700:#1c2640;
+    --navy-600:#283454;
+    --line:#2a3556;
+    --gold:#c9a15a;
+    --gold-bright:#e0bb74;
+    --text-hi:#f1f0ea;
+    --text-mid:#aab2c8;
+    --text-low:#707d9c;
+    --red:#c9694f;
+    --green:#7fae7a;
   }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --surface-0:#0d0d0d;
-      --surface-1:#1a1a19;
-      --surface-2:#222221;
-      --text-primary:#ffffff;
-      --text-secondary:#c3c2b7;
-      --text-muted:#898781;
-      --border:rgba(255,255,255,0.10);
-      --gridline:#2c2c2a;
-
-      --blue:#3987e5;
-      --blue-soft:#184f95;
-      --gray-context:#383835;
-      --gray-context-fill:#2c2c2a;
-
-      --good:#0ca30c;
-      --warning:#fab219;
-      --serious:#ec835a;
-      --critical:#d03b3b;
-    }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--navy-950);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(201,161,90,0.06), transparent 45%),
+      radial-gradient(circle at 100% 30%, rgba(201,161,90,0.04), transparent 40%);
+    color:var(--text-hi);
+    font-family:'Space Grotesk',sans-serif;
+    line-height:1.5;
+    padding:0 0 80px 0;
   }
-  html,body{ background:var(--surface-0); color:var(--text-primary); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
-  .card{ background:var(--surface-1); border:1px solid var(--border); border-radius:14px; }
-  .ink-2{ color:var(--text-secondary); }
-  .ink-muted{ color:var(--text-muted); }
-  .hairline{ border-color:var(--border); }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
 
-  .badge{ display:inline-flex; align-items:center; gap:6px; font-weight:600; font-size:12.5px; padding:4px 10px; border-radius:999px; border:1px solid transparent; white-space:nowrap; }
-  .badge-critical{ background:color-mix(in srgb, var(--critical) 14%, transparent); color:var(--critical); border-color:color-mix(in srgb, var(--critical) 35%, transparent); }
-  .badge-warning{ background:color-mix(in srgb, var(--warning) 18%, transparent); color:#8a5a00; border-color:color-mix(in srgb, var(--warning) 45%, transparent); }
-  @media (prefers-color-scheme: dark){ .badge-warning{ color:var(--warning); } }
-  .badge-serious{ background:color-mix(in srgb, var(--serious) 16%, transparent); color:#9c3f1e; border-color:color-mix(in srgb, var(--serious) 40%, transparent); }
-  @media (prefers-color-scheme: dark){ .badge-serious{ color:var(--serious); } }
-  .badge-good{ background:color-mix(in srgb, var(--good) 14%, transparent); color:var(--good); border-color:color-mix(in srgb, var(--good) 35%, transparent); }
-  .badge-neutral{ background:var(--surface-2); color:var(--text-secondary); border-color:var(--border); }
+  /* HEADER */
+  header{
+    border-bottom:1px solid var(--line);
+    padding:44px 0 28px 0;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--gold);
+    letter-spacing:0.02em;
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:30px;
+    font-weight:600;
+    margin:0 0 8px 0;
+    letter-spacing:-0.01em;
+    max-width:760px;
+  }
+  .subtitle{
+    color:var(--text-mid);
+    font-size:15px;
+    max-width:640px;
+  }
 
-  .meter-track{ height:14px; border-radius:999px; background:var(--surface-2); position:relative; overflow:visible; }
-  .meter-fill{ height:14px; border-radius:999px; position:relative; }
-  .meter-target{ position:absolute; top:-4px; bottom:-4px; width:2px; background:var(--text-primary); opacity:.55; }
-  .meter-target::after{ content:attr(data-label); position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:10.5px; color:var(--text-muted); white-space:nowrap; }
+  /* KPI STRIP */
+  .kpi-strip{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:32px;
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .kpi{
+    background:var(--navy-900);
+    padding:20px 20px;
+  }
+  .kpi-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-low);
+    margin-bottom:8px;
+  }
+  .kpi-value{
+    font-size:19px;
+    font-weight:600;
+  }
+  .kpi-value.gold{color:var(--gold-bright);}
+  .kpi-value.red{color:var(--red);}
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    padding:3px 9px;
+    border-radius:3px;
+    border:1px solid;
+  }
+  .tag-critico{color:var(--red);border-color:rgba(201,105,79,0.4);background:rgba(201,105,79,0.08);}
+  .tag-alerta{color:var(--gold-bright);border-color:rgba(224,187,116,0.4);background:rgba(224,187,116,0.08);}
+  .tag-medio{color:var(--gold-bright);border-color:rgba(224,187,116,0.4);background:rgba(224,187,116,0.08);}
+  .tag-recomendado{color:var(--green);border-color:rgba(127,174,122,0.4);background:rgba(127,174,122,0.08);}
+  .tag-renegociar{color:var(--gold-bright);border-color:rgba(224,187,116,0.4);background:rgba(224,187,116,0.08);}
 
-  .bar-track{ background:var(--surface-2); border-radius:999px; height:34px; position:relative; }
-  .bar-fill{ height:34px; border-radius:999px; display:flex; align-items:center; justify-content:flex-end; padding-right:12px; color:#fff; font-weight:700; font-size:13px; transition: filter .15s; }
-  .bar-fill:hover{ filter:brightness(1.06); }
+  /* SECTIONS */
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:26px;
+    justify-content:space-between;
+    flex-wrap:wrap;
+  }
+  .sec-head-left{display:flex;align-items:baseline;gap:14px;}
+  .sec-num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--gold);
+    border:1px solid var(--line);
+    padding:2px 8px;
+    border-radius:3px;
+  }
+  h2{
+    font-size:21px;
+    font-weight:600;
+    margin:0;
+  }
+  .sec-source{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--text-low);
+  }
+  p{color:var(--text-mid);font-size:15px;max-width:700px;}
+  strong{color:var(--text-hi);font-weight:600;}
 
-  .tooltip-wrap{ position:relative; }
-  .tooltip{ visibility:hidden; opacity:0; position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--text-primary); color:var(--surface-1); font-size:12px; padding:8px 10px; border-radius:8px; white-space:nowrap; z-index:20; transition:opacity .12s; pointer-events:none; }
-  .tooltip-wrap:hover .tooltip{ visibility:visible; opacity:1; }
+  /* CALLOUT (integrity notice) */
+  .callout{
+    border-left:3px solid var(--gold);
+    background:rgba(201,161,90,0.07);
+    border-radius:0 6px 6px 0;
+    padding:16px 20px;
+    margin-bottom:40px;
+  }
+  .callout.red{border-left-color:var(--red);background:rgba(201,105,79,0.07);}
+  .callout .callout-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--gold-bright);
+    margin-bottom:6px;
+  }
+  .callout.red .callout-label{color:var(--red);}
+  .callout p{color:var(--text-mid);font-size:14px;max-width:none;}
 
-  th, td{ padding:10px 14px; text-align:left; border-bottom:1px solid var(--gridline); font-size:13.5px; }
-  th{ color:var(--text-muted); font-weight:600; text-transform:uppercase; font-size:11px; letter-spacing:.04em; }
-  tbody tr:last-child td{ border-bottom:none; }
-  .num{ font-variant-numeric: tabular-nums; }
+  /* KPI GRID (inventory) */
+  .inv-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+  }
+  .inv-card{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px 20px;
+  }
+  .inv-card.flag{border-color:rgba(201,105,79,0.5);background:rgba(201,105,79,0.06);}
+  .inv-num{font-size:26px;font-weight:600;}
+  .inv-card.flag .inv-num{color:var(--red);}
+  .inv-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-low);margin-top:6px;}
+
+  /* ROOT CAUSE BOX */
+  .root-box{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px 22px;
+    margin-bottom:24px;
+  }
+  .root-box p{max-width:none;font-size:14.5px;}
+
+  /* LEVEL CARDS */
+  .level-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+  }
+  .level-card{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:20px;
+  }
+  .level-card.critico{border-color:rgba(201,105,79,0.5);}
+  .level-card.alerta{border-color:rgba(224,187,116,0.4);}
+  .level-card.medio{border-color:rgba(224,187,116,0.3);}
+  .level-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:6px;
+  }
+  .level-head .level-name{font-weight:600;font-size:15px;}
+  .level-sub{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--text-low);margin-bottom:14px;}
+  .level-reading{display:flex;align-items:baseline;gap:8px;margin-bottom:12px;}
+  .level-reading .val{font-size:28px;font-weight:600;}
+  .level-reading .unit{font-size:13px;color:var(--text-low);}
+  .meter-track{height:8px;border-radius:99px;background:var(--navy-700);position:relative;overflow:visible;}
+  .meter-fill{height:8px;border-radius:99px;}
+  .meter-target{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text-hi);opacity:0.5;}
+  .meter-target::after{content:attr(data-label);position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--text-low);white-space:nowrap;}
+  .level-note{font-size:12.5px;color:var(--text-low);margin-top:16px;}
+
+  /* BARS (financial comparison) */
+  .bars-box{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:24px 26px;
+    margin-bottom:24px;
+  }
+  .bar-row{margin-bottom:22px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13.5px;}
+  .bar-top .bar-title{font-weight:600;}
+  .bar-top .bar-sub{color:var(--text-low);font-weight:400;font-size:12.5px;}
+  .bar-track{background:var(--navy-700);border-radius:99px;height:30px;position:relative;}
+  .bar-fill{height:30px;border-radius:99px;display:flex;align-items:center;justify-content:flex-end;padding-right:14px;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--navy-950);}
+  .bar-fill.neutral{background:var(--navy-600);color:var(--text-hi);}
+  .bar-fill.rec{background:var(--gold-bright);}
+  .bar-note{font-size:12px;color:var(--text-low);margin-top:6px;font-family:'IBM Plex Mono',monospace;}
+  .bars-caption{font-size:12.5px;color:var(--text-low);margin-top:20px;max-width:none;}
+
+  /* TABLE */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:8px;
+    font-size:13.5px;
+  }
+  th{
+    text-align:left;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--text-low);
+    font-weight:500;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  td{
+    padding:14px;
+    border-bottom:1px solid var(--navy-700);
+    color:var(--text-mid);
+    vertical-align:top;
+  }
+  td.concept{color:var(--text-hi);font-weight:500;}
+  td.num{text-align:right;font-family:'IBM Plex Mono',monospace;color:var(--text-hi);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  .table-box{
+    background:var(--navy-900);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 18px;
+    overflow-x:auto;
+  }
+  .table-foot-note{font-size:12.5px;color:var(--text-low);padding:12px 4px 6px 4px;max-width:none;}
+
+  /* RECOMMENDATION LIST */
+  .rec-box{
+    background:var(--navy-900);
+    border:1px solid rgba(201,161,90,0.35);
+    border-radius:8px;
+    padding:24px 26px;
+  }
+  .rec-list{list-style:none;padding:0;margin:8px 0 0 0;}
+  .rec-list li{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--navy-700);
+    font-size:14.5px;
+    color:var(--text-mid);
+    max-width:700px;
+  }
+  .rec-list li:last-child{border-bottom:none;}
+  .rec-dot{
+    flex-shrink:0;
+    width:6px;height:6px;
+    border-radius:50%;
+    background:var(--gold-bright);
+    margin-top:8px;
+  }
+
+  footer{
+    padding:28px 0 0 0;
+    color:var(--text-low);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+  }
+
+  @media(max-width:760px){
+    .kpi-strip{grid-template-columns:repeat(2,1fr);}
+    .inv-grid{grid-template-columns:repeat(2,1fr);}
+    .level-grid{grid-template-columns:1fr;}
+    h1{font-size:24px;}
+  }
 </style>
 </head>
-<body class="min-h-screen">
+<body>
+<div class="wrap">
 
-<!-- HEADER -->
-<header class="border-b hairline sticky top-0 z-30" style="background:var(--surface-0);">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <p class="text-[11px] uppercase tracking-wider ink-muted font-semibold">Uplace · Real City</p>
-      <h1 class="text-xl font-bold">Panel de Control Operativo</h1>
+  <header>
+    <div class="eyebrow">DICTAMEN DE DIRECCIÓN OPERATIVA · MANTENIMIENTO / INGENIERÍA</div>
+    <h1>Válvulas Reductoras de Presión — Columnas de la Torre</h1>
+    <div class="subtitle">Comité de Vigilancia · Corte: 09 de julio de 2026</div>
+
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">ESTATUS TÉCNICO</div>
+        <div class="kpi-value">Crítico</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">RIESGO GLOBAL</div>
+        <div class="kpi-value"><span class="tag tag-critico">ALTO</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">VÁLVULAS EN FALLA</div>
+        <div class="kpi-value red">3 <span style="font-size:13px;color:var(--text-low);font-weight:400;">de 4</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">VEREDICTO ECONÓMICO</div>
+        <div class="kpi-value"><span class="tag tag-recomendado">REEMPLAZO TOTAL</span></div>
+      </div>
     </div>
-    <div class="flex items-center gap-3">
-      <span class="badge badge-neutral">Comité de Vigilancia</span>
-      <span class="badge badge-neutral">Corte: 09 jul 2026</span>
-      <span class="badge badge-critical">● Riesgo global: ALTO</span>
-    </div>
-  </div>
-</header>
+  </header>
 
-<main class="max-w-7xl mx-auto px-6 py-8 space-y-10">
-
-  <!-- DATA INTEGRITY NOTICE -->
-  <div class="card px-5 py-4 flex gap-3 items-start" style="border-color:color-mix(in srgb, var(--warning) 45%, transparent);">
-    <span class="text-lg leading-none">⚠</span>
-    <p class="text-sm ink-2"><strong class="text-[var(--text-primary)]">Nota de integridad documental:</strong> los archivos <code class="ink-muted">UPALACE PERIFÉRICO-1.pdf</code> y <code class="ink-muted">ARCA.pdf</code> tienen contenido cruzado respecto a su nombre (el primero contiene la cotización de ARCA; el segundo, el reporte técnico de MOPRISA). Este panel está construido sobre el <strong>contenido real</strong> de cada documento, no sobre su nombre de archivo.</p>
-  </div>
-
-  <!-- KPI ROW -->
   <section>
-    <h2 class="text-sm font-bold uppercase tracking-wide ink-muted mb-3">Inventario del Inmueble</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      <div class="card p-4"><p class="text-2xl font-bold">44</p><p class="text-xs ink-muted mt-1">Niveles totales</p></div>
-      <div class="card p-4"><p class="text-2xl font-bold">36</p><p class="text-xs ink-muted mt-1">Plantas residenciales</p></div>
-      <div class="card p-4"><p class="text-2xl font-bold">8</p><p class="text-xs ink-muted mt-1">Niveles de estacionamiento</p></div>
-      <div class="card p-4"><p class="text-2xl font-bold">4</p><p class="text-xs ink-muted mt-1">Elevadores KONE</p></div>
-      <div class="card p-4"><p class="text-2xl font-bold">2</p><p class="text-xs ink-muted mt-1">Transformadores E1/E2</p></div>
-      <div class="card p-4 border" style="border-color:color-mix(in srgb, var(--critical) 45%, transparent);">
-        <p class="text-2xl font-bold" style="color:var(--critical);">3</p>
-        <p class="text-xs ink-muted mt-1">Válvulas Vamex en falla</p>
+    <div class="callout">
+      <div class="callout-label">NOTA DE INTEGRIDAD DOCUMENTAL</div>
+      <p>Los archivos <strong>UPALACE PERIFÉRICO-1.pdf</strong> y <strong>ARCA.pdf</strong> tienen contenido cruzado respecto a su nombre (el primero contiene la cotización de ARCA; el segundo, el reporte técnico de MOPRISA). Este panel está construido sobre el contenido real de cada documento, no sobre su nombre de archivo.</p>
+    </div>
+
+    <div class="sec-head">
+      <div class="sec-head-left">
+        <span class="sec-num">01</span>
+        <h2>Inventario del inmueble</h2>
+      </div>
+    </div>
+    <div class="inv-grid">
+      <div class="inv-card"><div class="inv-num">44</div><div class="inv-label">NIVELES TOTALES</div></div>
+      <div class="inv-card"><div class="inv-num">36</div><div class="inv-label">PLANTAS RESIDENCIALES</div></div>
+      <div class="inv-card"><div class="inv-num">8</div><div class="inv-label">NIVELES DE ESTACIONAMIENTO</div></div>
+      <div class="inv-card"><div class="inv-num">4</div><div class="inv-label">ELEVADORES KONE</div></div>
+      <div class="inv-card"><div class="inv-num">2</div><div class="inv-label">TRANSFORMADORES E1/E2</div></div>
+      <div class="inv-card flag"><div class="inv-num">3</div><div class="inv-label">VÁLVULAS VAMEX EN FALLA</div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="sec-head-left">
+        <span class="sec-num">02</span>
+        <h2>Estatus de emergencia — válvulas reductoras</h2>
+      </div>
+      <span class="sec-source">FUENTE: REPORTE DE HALLAZGOS MOPRISA</span>
+    </div>
+
+    <div class="root-box">
+      <p><strong>Causa raíz:</strong> sin daño estético en los cuerpos de válvula. La falla está en el mecanismo de la <strong>válvula piloto</strong>, que dejó de estrangular el flujo — confirmado por las 3 cotizaciones, que coinciden en la partida "cambio de piloto reductora 3/8 NTP 200 PSI". Adicionalmente no existe instrumentación de presión por nivel ni válvula de alivio con retorno a tinacos.</p>
+    </div>
+
+    <div class="level-grid">
+      <div class="level-card critico">
+        <div class="level-head">
+          <span class="level-name">Nivel 23</span>
+          <span class="tag tag-critico">⛔ Crítico</span>
+        </div>
+        <div class="level-sub">Piloto no regula — entrada = salida</div>
+        <div class="level-reading">
+          <span class="val" style="color:var(--red);">9</span>
+          <span class="unit">kg/cm² de salida (entrada 9 kg/cm²)</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" style="width:90%;background:var(--red);"></div>
+          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
+        </div>
+        <p class="level-note">214% sobre el límite residencial — riesgo activo de fuga en accesorios de departamentos.</p>
+      </div>
+
+      <div class="level-card alerta">
+        <div class="level-head">
+          <span class="level-name">Nivel 32</span>
+          <span class="tag tag-alerta">⚠ Alerta</span>
+        </div>
+        <div class="level-sub">Piloto reduce parcialmente</div>
+        <div class="level-reading">
+          <span class="val" style="color:var(--gold-bright);">4</span>
+          <span class="unit">kg/cm² de salida (entrada 5 kg/cm²)</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" style="width:40%;background:var(--gold-bright);"></div>
+          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
+        </div>
+        <p class="level-note">Al límite del rango aceptable — vigilar, mecanismo ya degradado.</p>
+      </div>
+
+      <div class="level-card medio">
+        <div class="level-head">
+          <span class="level-name">Nivel 7</span>
+          <span class="tag tag-medio">◐ Medio</span>
+        </div>
+        <div class="level-sub">Piloto no regula — presión de entrada ya baja</div>
+        <div class="level-reading">
+          <span class="val" style="color:var(--gold);">4</span>
+          <span class="unit">kg/cm² de salida (entrada 4 kg/cm²)</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" style="width:40%;background:var(--gold);"></div>
+          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
+        </div>
+        <p class="level-note">Mismo mecanismo fallando, pero menor riesgo inmediato por presión de origen baja.</p>
       </div>
     </div>
   </section>
 
-  <!-- EMERGENCY STATUS -->
   <section>
-    <div class="flex items-baseline justify-between mb-3">
-      <h2 class="text-sm font-bold uppercase tracking-wide ink-muted">Estatus de Emergencia — Válvulas Reductoras de Presión</h2>
-      <span class="text-xs ink-muted">Fuente: Reporte de hallazgos MOPRISA</span>
+    <div class="sec-head">
+      <div class="sec-head-left">
+        <span class="sec-num">03</span>
+        <h2>Dictamen comparativo — reparar vs. reemplazar</h2>
+      </div>
+      <span class="sec-source">COSTO NORMALIZADO POR ESTACIÓN DE VÁLVULA</span>
     </div>
 
-    <div class="card p-5 mb-4">
-      <p class="text-sm ink-2"><strong class="text-[var(--text-primary)]">Causa raíz:</strong> sin daño estético en los cuerpos de válvula. La falla está en el <strong>mecanismo de la válvula piloto</strong>, que dejó de estrangular el flujo — confirmado por las 3 cotizaciones, que coinciden en la partida "cambio de piloto reductora 3/8 NTP 200 PSI". Adicionalmente no existe instrumentación de presión por nivel ni válvula de alivio con retorno a tinacos.</p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-4">
-
-      <!-- Nivel 23 - CRITICO -->
-      <div class="card p-5 border" style="border-color:color-mix(in srgb, var(--critical) 45%, transparent);">
-        <div class="flex items-center justify-between mb-1">
-          <p class="font-bold">Nivel 23</p>
-          <span class="badge badge-critical">⛔ Crítico</span>
+    <div class="bars-box">
+      <div class="bar-row">
+        <div class="bar-top">
+          <span class="bar-title">CyS Industrial <span class="bar-sub">— reparación</span></span>
+          <span class="tag tag-renegociar">Renegociar</span>
         </div>
-        <p class="text-xs ink-muted mb-3">Piloto no regula — entrada = salida</p>
-        <div class="flex items-baseline gap-2 mb-2">
-          <span class="text-3xl font-bold num" style="color:var(--critical);">9</span>
-          <span class="text-sm ink-muted">kg/cm² de salida (entrada 9 kg/cm²)</span>
+        <div class="bar-track">
+          <div class="bar-fill neutral" style="width:54.6%;">$69,497</div>
         </div>
-        <div class="meter-track">
-          <div class="meter-fill" style="width:90%; background:var(--critical);"></div>
-          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
-        </div>
-        <p class="text-xs ink-muted mt-4">214% sobre el límite residencial — riesgo activo de fuga en accesorios de departamentos.</p>
+        <div class="bar-note">Incluye repuesto completo Y04 opcional — 75% más caro que la misma partida en ARCA</div>
       </div>
 
-      <!-- Nivel 32 - ALERTA -->
-      <div class="card p-5 border" style="border-color:color-mix(in srgb, var(--warning) 45%, transparent);">
-        <div class="flex items-center justify-between mb-1">
-          <p class="font-bold">Nivel 32</p>
-          <span class="badge badge-warning">⚠ Alerta</span>
+      <div class="bar-row">
+        <div class="bar-top">
+          <span class="bar-title">ARCA <span class="bar-sub">— reposición like-for-like</span></span>
+          <span class="tag tag-renegociar">Renegociar</span>
         </div>
-        <p class="text-xs ink-muted mb-3">Piloto reduce parcialmente</p>
-        <div class="flex items-baseline gap-2 mb-2">
-          <span class="text-3xl font-bold num" style="color:#8a5a00;">4</span>
-          <span class="text-sm ink-muted">kg/cm² de salida (entrada 5 kg/cm²)</span>
+        <div class="bar-track">
+          <div class="bar-fill neutral" style="width:45%;">$49,254*</div>
         </div>
-        <div class="meter-track">
-          <div class="meter-fill" style="width:40%; background:var(--warning);"></div>
-          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
-        </div>
-        <p class="text-xs ink-muted mt-4">Al límite del rango aceptable — vigilar, mecanismo ya degradado.</p>
+        <div class="bar-note">*Sin IVA especificado (≈$57,135 con IVA). Compuerta 4" 126% más cara que en CyS</div>
       </div>
 
-      <!-- Nivel 7 - MEDIO -->
-      <div class="card p-5 border" style="border-color:color-mix(in srgb, var(--serious) 40%, transparent);">
-        <div class="flex items-center justify-between mb-1">
-          <p class="font-bold">Nivel 7</p>
-          <span class="badge badge-serious">◐ Medio</span>
+      <div class="bar-row">
+        <div class="bar-top">
+          <span class="bar-title">PPTO Reductoras (Torre 1) <span class="bar-sub">— reemplazo total, tecnología nueva</span></span>
+          <span class="tag tag-recomendado">Recomendado</span>
         </div>
-        <p class="text-xs ink-muted mb-3">Piloto no regula — presión de entrada ya baja</p>
-        <div class="flex items-baseline gap-2 mb-2">
-          <span class="text-3xl font-bold num" style="color:#9c3f1e;">4</span>
-          <span class="text-sm ink-muted">kg/cm² de salida (entrada 4 kg/cm²)</span>
+        <div class="bar-track">
+          <div class="bar-fill rec" style="width:33.4%;">$42,433</div>
         </div>
-        <div class="meter-track">
-          <div class="meter-fill" style="width:40%; background:var(--serious);"></div>
-          <div class="meter-target" style="left:42%;" data-label="límite 4.2"></div>
-        </div>
-        <p class="text-xs ink-muted mt-4">Mismo mecanismo fallando, pero menor riesgo inmediato por presión de origen baja.</p>
+        <div class="bar-note">Válvula automática Clase 150 + purga de aire Caleffi + empaques — cubre las 3 estaciones a la vez</div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- FINANCIAL COMPARISON -->
-  <section>
-    <div class="flex items-baseline justify-between mb-3">
-      <h2 class="text-sm font-bold uppercase tracking-wide ink-muted">Dictamen Comparativo — Reparar vs. Reemplazar</h2>
-      <span class="text-xs ink-muted">Costo normalizado por estación de válvula</span>
+      <p class="bars-caption">Escala: costo por estación instalada, MXN con IVA (salvo donde se indica).</p>
     </div>
 
-    <div class="card p-6 mb-4">
-      <div class="space-y-4">
-
-        <div class="tooltip-wrap">
-          <div class="flex items-center justify-between text-sm mb-1.5">
-            <span class="font-semibold">CyS Industrial <span class="ink-muted font-normal">— reparación</span></span>
-            <span class="badge badge-warning">Renegociar</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill num" style="width:54.6%; background:var(--gray-context-fill); color:var(--text-primary);">$69,497</div>
-          </div>
-          <div class="tooltip">Incluye repuesto completo Y04 opcional — 75% más caro que la misma partida en ARCA</div>
-        </div>
-
-        <div class="tooltip-wrap">
-          <div class="flex items-center justify-between text-sm mb-1.5">
-            <span class="font-semibold">ARCA <span class="ink-muted font-normal">— reposición like-for-like</span></span>
-            <span class="badge badge-warning">Renegociar</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill num" style="width:45%; background:var(--gray-context-fill); color:var(--text-primary);">$49,254*</div>
-          </div>
-          <div class="tooltip">*Sin IVA especificado (≈$57,135 con IVA). Compuerta 4" 126% más cara que en CyS</div>
-        </div>
-
-        <div class="tooltip-wrap">
-          <div class="flex items-center justify-between text-sm mb-1.5">
-            <span class="font-semibold">PPTO Reductoras (Torre 1) <span class="ink-muted font-normal">— reemplazo total, tecnología nueva</span></span>
-            <span class="badge badge-good">Recomendado</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill num" style="width:33.4%; background:var(--blue);">$42,433</div>
-          </div>
-          <div class="tooltip">Válvula automática Clase 150 + purga de aire Caleffi + empaques — cubre las 3 estaciones a la vez</div>
-        </div>
-
-      </div>
-      <p class="text-xs ink-muted mt-5">Escala: costo por estación instalada, MXN con IVA (salvo donde se indica). Pasar el cursor sobre cada barra para el detalle.</p>
-    </div>
-
-    <div class="card overflow-x-auto">
-      <table class="w-full">
+    <div class="table-box">
+      <table>
         <thead>
           <tr>
             <th>Proveedor</th>
             <th>Alcance real</th>
-            <th class="text-right">Total cotizado</th>
-            <th class="text-right">Costo / estación</th>
+            <th style="text-align:right;">Total cotizado</th>
+            <th style="text-align:right;">Costo / estación</th>
             <th>Veredicto</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="font-semibold">CyS Industrial</td>
-            <td class="ink-2">2 aliviadoras, 2 compuertas (piso 13), 1 diafragma, 1 piloto + repuesto Y04 opcional</td>
-            <td class="text-right num">$90,841.92</td>
-            <td class="text-right num">$69,497</td>
-            <td><span class="badge badge-warning">Renegociar</span></td>
+            <td class="concept">CyS Industrial</td>
+            <td>2 aliviadoras, 2 compuertas (piso 13), 1 diafragma, 1 piloto + repuesto Y04 opcional</td>
+            <td class="num">$90,841.92</td>
+            <td class="num">$69,497</td>
+            <td><span class="tag tag-renegociar">Renegociar</span></td>
           </tr>
           <tr>
-            <td class="font-semibold">ARCA</td>
-            <td class="ink-2">1 estación completa: aliviadora, compuerta URREA, retiro + reposición válvula Y04, piloto</td>
-            <td class="text-right num">$49,254.40 + IVA</td>
-            <td class="text-right num">≈$57,135</td>
-            <td><span class="badge badge-warning">Renegociar</span></td>
+            <td class="concept">ARCA</td>
+            <td>1 estación completa: aliviadora, compuerta URREA, retiro + reposición válvula Y04, piloto</td>
+            <td class="num">$49,254.40 + IVA</td>
+            <td class="num">≈$57,135</td>
+            <td><span class="tag tag-renegociar">Renegociar</span></td>
           </tr>
           <tr>
-            <td class="font-semibold">PPTO Reductoras</td>
-            <td class="ink-2">3 estaciones completas: válvula automática Clase 150 + empaques Garlock + purga Caleffi</td>
-            <td class="text-right num">$127,298.40</td>
-            <td class="text-right num">$42,433</td>
-            <td><span class="badge badge-good">Recomendado*</span></td>
+            <td class="concept">PPTO Reductoras</td>
+            <td>3 estaciones completas: válvula automática Clase 150 + empaques Garlock + purga Caleffi</td>
+            <td class="num">$127,298.40</td>
+            <td class="num">$42,433</td>
+            <td><span class="tag tag-recomendado">Recomendado*</span></td>
           </tr>
         </tbody>
       </table>
-      <p class="text-xs ink-muted px-4 py-3">*Condicionado: cotización vencida (vigencia 10 días desde 26/06/2026, venció ~06/07/2026). Requiere re-ratificación de precios por escrito antes de autorizar pago.</p>
+      <p class="table-foot-note">*Condicionado: cotización vencida (vigencia 10 días desde 26/06/2026, venció ~06/07/2026). Requiere re-ratificación de precios por escrito antes de autorizar pago.</p>
     </div>
   </section>
 
-  <!-- RECOMMENDATION -->
-  <section class="card p-6" style="border-color:color-mix(in srgb, var(--blue) 40%, transparent);">
-    <h2 class="text-sm font-bold uppercase tracking-wide mb-3" style="color:var(--blue);">Recomendación de Dirección</h2>
-    <ul class="space-y-2 text-sm ink-2 list-disc pl-5">
-      <li><strong class="text-[var(--text-primary)]">Reemplazar, no reparar</strong>: el costo por estación del reemplazo total ($42,433) es menor que reparar una sola estación con piezas antiguas ($49,254–$69,497), y resuelve las 3 fallas a la vez.</li>
-      <li><strong class="text-[var(--text-primary)]">Mitigación inmediata en Nivel 23</strong> mientras se formaliza el reemplazo: reparación puntual de piloto para bajar de 9 a ~4 kg/cm².</li>
-      <li><strong class="text-[var(--text-primary)]">Re-ratificar por escrito</strong> la cotización PPTO Reductoras antes de pagar — venció el 06/07/2026.</li>
-      <li>Exigir a los 3 proveedores una re-cotización homologada (mismo alcance, garantía por escrito, manómetros e instrumentación por nivel, válvula de alivio con retorno a tinacos).</li>
-    </ul>
+  <section>
+    <div class="sec-head">
+      <div class="sec-head-left">
+        <span class="sec-num">04</span>
+        <h2>Recomendación de dirección</h2>
+      </div>
+    </div>
+    <div class="rec-box">
+      <ul class="rec-list">
+        <li><span class="rec-dot"></span><span><strong>Reemplazar, no reparar:</strong> el costo por estación del reemplazo total ($42,433) es menor que reparar una sola estación con piezas antiguas ($49,254–$69,497), y resuelve las 3 fallas a la vez.</span></li>
+        <li><span class="rec-dot"></span><span><strong>Mitigación inmediata en Nivel 23</strong> mientras se formaliza el reemplazo: reparación puntual de piloto para bajar de 9 a ~4 kg/cm².</span></li>
+        <li><span class="rec-dot"></span><span><strong>Re-ratificar por escrito</strong> la cotización PPTO Reductoras antes de pagar — venció el 06/07/2026.</span></li>
+        <li><span class="rec-dot"></span><span>Exigir a los 3 proveedores una re-cotización homologada (mismo alcance, garantía por escrito, manómetros e instrumentación por nivel, válvula de alivio con retorno a tinacos).</span></li>
+      </ul>
+    </div>
   </section>
 
-  <footer class="text-xs ink-muted pt-4 pb-10 border-t hairline">
-    Generado por el Director de Operaciones e Ingeniería IA · Fuentes: MANTENIMIENTO CORRECTIVO A VALVULAS.pdf (CyS Industrial), PPTO VALVULAS REDUCTORAS DE PRESION 26062026.pdf, UPALACE PERIFÉRICO-1.pdf (ARCA), ARCA.pdf (MOPRISA) · inventario_activos.md
+  <footer>
+    UPLACE TORRE 1 · DIRECCIÓN DE OPERACIONES, INGENIERÍA Y FINANZAS · Fuentes: MANTENIMIENTO CORRECTIVO A VALVULAS.pdf (CyS Industrial), PPTO VALVULAS REDUCTORAS DE PRESION 26062026.pdf, UPALACE PERIFÉRICO-1.pdf (ARCA), ARCA.pdf (MOPRISA) · inventario_activos.md
   </footer>
 
-</main>
+</div>
 </body>
 </html>
