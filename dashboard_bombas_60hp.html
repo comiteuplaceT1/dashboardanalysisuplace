@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uplace — Mantenimiento Mayor Bombas 60 HP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0a0e1a;
+    --navy-900:#0f1526;
+    --navy-800:#151d33;
+    --navy-700:#1c2640;
+    --navy-600:#283454;
+    --line:#2a3556;
+    --gold:#c9a15a;
+    --gold-bright:#e0bb74;
+    --text-hi:#f1f0ea;
+    --text-mid:#aab2c8;
+    --text-low:#707d9c;
+    --red:#c9694f;
+    --green:#7fae7a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--navy-950);
+    background-image:
+      radial-gradient(circle at 15% 0%, rgba(201,161,90,0.06), transparent 45%),
+      radial-gradient(circle at 100% 30%, rgba(201,161,90,0.04), transparent 40%);
+    color:var(--text-hi);
+    font-family:'Space Grotesk',sans-serif;
+    line-height:1.5;
+    padding:0 0 80px 0;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
+
+  header{border-bottom:1px solid var(--line);padding:44px 0 28px 0;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--gold);letter-spacing:0.02em;margin-bottom:10px;}
+  h1{font-size:30px;font-weight:600;margin:0 0 8px 0;letter-spacing:-0.01em;max-width:760px;}
+  .subtitle{color:var(--text-mid);font-size:15px;max-width:660px;}
+
+  .kpi-strip{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);
+    margin-top:32px;border-radius:6px;overflow:hidden;
+  }
+  .kpi{background:var(--navy-900);padding:20px 20px;}
+  .kpi-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-low);margin-bottom:8px;}
+  .kpi-value{font-size:19px;font-weight:600;}
+  .kpi-value.gold{color:var(--gold-bright);}
+  .kpi-value.red{color:var(--red);}
+  .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:3px;border:1px solid;}
+  .tag-renegociar{color:var(--gold-bright);border-color:rgba(224,187,116,0.4);background:rgba(224,187,116,0.08);}
+  .tag-alto{color:var(--red);border-color:rgba(201,105,79,0.4);background:rgba(201,105,79,0.08);}
+
+  section{padding:52px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:26px;}
+  .sec-num{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold);border:1px solid var(--line);padding:2px 8px;border-radius:3px;}
+  h2{font-size:21px;font-weight:600;margin:0;}
+  p{color:var(--text-mid);font-size:15px;max-width:700px;}
+  strong{color:var(--text-hi);font-weight:600;}
+
+  /* VENDOR CARDS */
+  .vendor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px;}
+  .vendor-card{background:var(--navy-900);border:1px solid var(--line);border-radius:8px;padding:20px;}
+  .vendor-card .vname{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:12px;margin-bottom:10px;letter-spacing:0.03em;}
+  .vendor-card h3{font-size:16.5px;margin:0 0 4px 0;font-weight:600;}
+  .vendor-card .vprice{font-size:22px;font-weight:600;color:var(--gold-bright);margin:6px 0 12px 0;}
+  .vendor-card .vprice span{font-size:12px;color:var(--text-low);font-weight:400;}
+  .vendor-card ul{list-style:none;padding:0;margin:0;}
+  .vendor-card li{font-size:13px;color:var(--text-mid);padding:6px 0;border-bottom:1px solid var(--navy-700);display:flex;gap:8px;}
+  .vendor-card li:last-child{border-bottom:none;}
+  .ok{color:var(--green);}
+  .warn{color:var(--gold-bright);}
+  .no{color:var(--red);}
+
+  /* TABLE */
+  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px;}
+  th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-low);font-weight:500;padding:10px 14px;border-bottom:1px solid var(--line);}
+  td{padding:14px;border-bottom:1px solid var(--navy-700);color:var(--text-mid);vertical-align:top;}
+  td.concept{color:var(--text-hi);font-weight:500;width:22%;}
+  tr:last-child td{border-bottom:none;}
+
+  /* verdict cards */
+  .verdict-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px;}
+  .verdict-box{background:var(--navy-900);border:1px solid var(--line);border-radius:8px;padding:20px;}
+  .verdict-box .vlabel{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-low);margin-bottom:8px;}
+  .verdict-box .vamount{font-size:19px;font-weight:600;color:var(--text-hi);margin-bottom:10px;}
+
+  .callout{border-left:3px solid var(--gold);background:rgba(201,161,90,0.07);border-radius:0 6px 6px 0;padding:16px 20px;margin-top:24px;}
+  .callout.red{border-left-color:var(--red);background:rgba(201,105,79,0.07);}
+  .callout .callout-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold-bright);margin-bottom:6px;}
+  .callout.red .callout-label{color:var(--red);}
+  .callout p{color:var(--text-mid);font-size:14px;max-width:none;}
+
+  .checklist{list-style:none;padding:0;margin:8px 0 0 0;}
+  .checklist li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--navy-700);font-size:14.5px;color:var(--text-mid);}
+  .checklist li:last-child{border-bottom:none;}
+  .checkbox{flex-shrink:0;width:16px;height:16px;border:1.5px solid var(--gold);border-radius:3px;margin-top:2px;}
+
+  .reco-box{background:var(--navy-900);border:1px solid var(--line);border-radius:8px;padding:24px 26px;margin-top:8px;}
+  .reco-box p{max-width:none;font-size:14.5px;}
+
+  footer{padding:28px 0 0 0;color:var(--text-low);font-family:'IBM Plex Mono',monospace;font-size:11.5px;}
+
+  @media(max-width:760px){
+    .kpi-strip{grid-template-columns:repeat(2,1fr);}
+    .vendor-grid{grid-template-columns:1fr;}
+    .verdict-grid{grid-template-columns:1fr;}
+    h1{font-size:24px;}
+    table{font-size:12px;}
+    td.concept{width:auto;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">DICTAMEN DE DIRECCIÓN OPERATIVA · MANTENIMIENTO / INGENIERÍA</div>
+    <h1>Mantenimiento Mayor — Bombas Verticales 60 HP Barmesa</h1>
+    <div class="subtitle">Comparativo de 3 cotizaciones · AQUAINGENIA (HOMEPRO) · JV Ingeniería · CyS Industrial · Sistema hidroneumático, Sótano 4</div>
+
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">ESTATUS TÉCNICO</div>
+        <div class="kpi-value">Evaluación Financiera</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">NIVEL DE RIESGO</div>
+        <div class="kpi-value"><span class="tag tag-alto">ALTO</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">VEREDICTO FINANCIERO</div>
+        <div class="kpi-value"><span class="tag tag-renegociar">RENEGOCIAR (X3)</span></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">RANGO COTIZADO (BOMBAS+TABLERO)</div>
+        <div class="kpi-value gold">$47,500 – $73,688</div>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>Comparativo normalizado — mismo alcance (2 bombas 60HP + tablero)</h2>
+    </div>
+    <p>Las 3 propuestas cotizan el mismo equipo del inventario: 2 Bombas Barmesa BMVF42 70 6003, 60 HP, 230-440V, Sótano 4. Se normaliza al alcance común antes de comparar precio.</p>
+
+    <div class="vendor-grid">
+      <div class="vendor-card">
+        <div class="vname">AQUAINGENIA · L2609-09</div>
+        <h3>Ing. y Equipos Aqua</h3>
+        <div class="vprice">$64,310 <span>antes de IVA</span></div>
+        <ul>
+          <li><span class="ok">✓</span> Refacciones incluidas — confirmado por escrito</li>
+          <li><span class="no">✗</span> Garantía: "NO APLICA"</li>
+          <li><span class="warn">–</span> Vigencia corta: 15 días</li>
+        </ul>
+      </div>
+      <div class="vendor-card">
+        <div class="vname">JV INGENIERÍA · 26.1197</div>
+        <h3>JV Mantenimiento de Edificios</h3>
+        <div class="vprice">$47,500 <span>antes de IVA, sin válvula</span></div>
+        <ul>
+          <li><span class="warn">–</span> Material no especificado</li>
+          <li><span class="ok">✓</span> Garantía 6 meses</li>
+          <li><span class="ok">✓</span> Incluye válvula check (+$20,000)</li>
+        </ul>
+      </div>
+      <div class="vendor-card">
+        <div class="vname">CyS INDUSTRIAL</div>
+        <h3>Conservación y Servicio Industrial</h3>
+        <div class="vprice">$73,688 <span>antes de IVA</span></div>
+        <ul>
+          <li><span class="warn">–</span> Material no especificado</li>
+          <li><span class="no">✗</span> Garantía no declarada</li>
+          <li><span class="ok">✓</span> Diagnóstico técnico adicional (RCA)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Cruce detallado por proveedor</h2>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Concepto</th><th>AQUAINGENIA</th><th>JV INGENIERÍA</th><th>CyS INDUSTRIAL</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="concept">Refacciones (sello/baleros)</td>
+          <td><span class="ok">Incluidas</span> — "SI incluye mano de obra y material"</td>
+          <td><span class="warn">No especifica</span></td>
+          <td><span class="warn">No especifica</span></td>
+        </tr>
+        <tr>
+          <td class="concept">Válvula check</td>
+          <td>No cotizada</td>
+          <td><span class="ok">Incluida</span> — $20,000 (2 unidades)</td>
+          <td>No cotizada en esta partida</td>
+        </tr>
+        <tr>
+          <td class="concept">Calibración tablero</td>
+          <td>$3,448.27</td>
+          <td>$3,500.00</td>
+          <td>Incluida en partida de bombas</td>
+        </tr>
+        <tr>
+          <td class="concept">Garantía</td>
+          <td><span class="no">NO APLICA</span></td>
+          <td><span class="ok">6 meses</span></td>
+          <td><span class="no">No declarada</span></td>
+        </tr>
+        <tr>
+          <td class="concept">Vigencia cotización</td>
+          <td>15 días</td>
+          <td>30 días</td>
+          <td>No especificada</td>
+        </tr>
+        <tr>
+          <td class="concept">Alcance adicional</td>
+          <td>Ninguno</td>
+          <td>Ninguno</td>
+          <td>Cárcamos achique + hidroneumático azotea + arrancadores suaves (opcional, $102,363.13)</td>
+        </tr>
+        <tr>
+          <td class="concept">Diagnóstico técnico</td>
+          <td>Ninguno</td>
+          <td>Ninguno</td>
+          <td>Detecta falta de protección por bajo nivel de cisterna en tablero</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout red">
+      <div class="callout-label">DATO FALTANTE — CRÍTICO</div>
+      <p>Ninguna de las 3 cotizaciones especifica marca/modelo exacto del sello mecánico ni del balero a instalar, ni confirma disponibilidad real de refacciones para el modelo Barmesa BMVF42 70 6003. Este punto debe cerrarse por escrito con los 3 proveedores antes de adjudicar, para descartar de forma definitiva el riesgo de descontinuación reportado por el supervisor.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>Veredicto financiero por proveedor</h2>
+    </div>
+    <div class="verdict-grid">
+      <div class="verdict-box">
+        <div class="vlabel">AQUAINGENIA</div>
+        <div class="vamount">$74,600 <span style="font-size:12px;color:var(--text-low);">c/IVA</span></div>
+        <span class="tag tag-renegociar">RENEGOCIAR</span>
+        <p style="margin-top:10px;font-size:13px;">Refacciones confirmadas, pero garantía "NO APLICA" es inaceptable en mantenimiento mayor de 60HP. Exigir garantía como condición de firma.</p>
+      </div>
+      <div class="verdict-box">
+        <div class="vlabel">JV INGENIERÍA</div>
+        <div class="vamount">$78,300 <span style="font-size:12px;color:var(--text-low);">c/IVA, con válvula</span></div>
+        <span class="tag tag-renegociar">RENEGOCIAR</span>
+        <p style="margin-top:10px;font-size:13px;">Precio base más bajo y mejor garantía, pero requiere aclarar por escrito si incluye material — de no incluirlo, el costo real puede superar a AQUAINGENIA.</p>
+      </div>
+      <div class="verdict-box">
+        <div class="vlabel">CyS INDUSTRIAL</div>
+        <div class="vamount">$341,867 <span style="font-size:12px;color:var(--text-low);">c/IVA, alcance total</span></div>
+        <span class="tag tag-renegociar">RENEGOCIAR</span>
+        <p style="margin-top:10px;font-size:13px;">La más cara para el alcance puntual de bombas+tablero. Su valor está en el diagnóstico técnico (RCA), no en el precio de esta partida.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">RECOMENDACIÓN OPERATIVA</div>
+      <p>Si la prioridad es certeza sobre refacciones, <strong>AQUAINGENIA</strong> tiene hoy el mejor respaldo documental en ese punto específico, condicionado a resolver garantía. El precio de <strong>JV ($47,500)</strong> es la palanca de negociación frente a AQUAINGENIA — la diferencia de $16,810 es el margen real a negociar. La observación de <strong>CyS</strong> sobre protección por bajo nivel de cisterna debe llevarse al Comité como mejora de causa raíz, independientemente del proveedor adjudicado.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>Instrucciones en sitio — Cristian / Karla</h2>
+    </div>
+    <ul class="checklist">
+      <li><span class="checkbox"></span>Exigir a JV y CyS aclaración por escrito: ¿el precio incluye sello mecánico y baleros como material, o es mano de obra pura?</li>
+      <li><span class="checkbox"></span>Exigir a AQUAINGENIA garantía mínima de 3–6 meses por escrito como condición de firma.</li>
+      <li><span class="checkbox"></span>Exigir a CyS garantía explícita y corregir el error de ubicación ("Sótano 6" → Sótano 4) en su propuesta.</li>
+      <li><span class="checkbox"></span>Solicitar a los 3 proveedores marca/modelo exacto de sello y balero, y confirmación de existencia real en México.</li>
+      <li><span class="checkbox"></span>Si se considera la válvula check de JV o los arrancadores suaves de CyS, cotizar por separado con un 4° proveedor antes de aceptarlos empaquetados.</li>
+      <li><span class="checkbox"></span>Coordinar con Karla ventana de corte de presión y aviso a residentes — las 3 propuestas requieren detener el sistema hidroneumático de columnas.</li>
+    </ul>
+  </section>
+
+  <footer>
+    UPLACE TORRE 1 · DIRECCIÓN DE OPERACIONES, INGENIERÍA Y FINANZAS — DICTAMEN INTERNO, USO COMITÉ DE VIGILANCIA
+  </footer>
+
+</div>
+</body>
+</html>
