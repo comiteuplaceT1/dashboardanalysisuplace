@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparativo de Propuestas de Mantenimiento · U Place Torre 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1222; --panel:#101b33; --panel2:#15223f; --line:#243458;
+  --gold:#d8ae4f; --tx:#e8ecf4; --mut:#93a3c2;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.5;font-size:15px}
+.wrap{max-width:1180px;margin:0 auto;padding:36px 20px 72px}
+.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+h1{font-size:clamp(26px,4.2vw,40px);line-height:1.12;margin:10px 0 12px;font-weight:700;letter-spacing:-.01em}
+.lede{color:var(--mut);max-width:820px;margin:0 0 6px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut)}
+.meta b{color:var(--tx);font-weight:500}
+hr.rule{border:0;border-top:1px solid var(--line);margin:28px 0}
+
+.legend{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}
+.badge{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid var(--gold);color:var(--gold);border-radius:6px;font-family:'IBM Plex Mono',monospace;font-weight:500;margin-right:10px}
+.card h3{margin:0 0 6px;font-size:16px;display:flex;align-items:center}
+.card p{margin:0;color:var(--mut);font-size:13.5px}
+
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.kpi .lab{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.kpi .big{font-size:34px;font-weight:700;margin:6px 0 2px;letter-spacing:-.01em}
+.kpi .row{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:8px;margin-top:8px;font-size:13.5px;color:var(--mut)}
+.kpi .row b{color:var(--tx);font-weight:500;font-family:'IBM Plex Mono',monospace}
+
+section{margin-top:44px}
+h2{display:flex;align-items:baseline;gap:14px;font-size:22px;margin:0 0 6px;font-weight:600}
+h2 .n{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold);letter-spacing:.1em}
+.sub{color:var(--mut);margin:0 0 16px;font-size:14px;max-width:860px}
+
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;min-width:820px}
+th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:13.5px}
+thead th{background:var(--panel2);font-weight:600;font-size:13px;position:sticky;top:0}
+thead th .badge{width:24px;height:24px;font-size:12px;margin-right:8px}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+tbody th{font-weight:500;color:var(--mut);width:19%;font-size:13px}
+td.num,th.num{font-family:'IBM Plex Mono',monospace}
+td.num{font-size:14px}
+tr.hl td,tr.hl th{background:rgba(216,174,79,.06)}
+.t{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);color:var(--mut);border-radius:4px;padding:0 6px;margin-left:4px;white-space:nowrap}
+.note{color:var(--mut);font-size:12.5px;margin:10px 2px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+ul.tight{margin:8px 0 0;padding-left:18px;color:var(--mut);font-size:13.5px}
+ul.tight li{margin:4px 0}
+ul.tight b{color:var(--tx);font-weight:500}
+.delta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.delta .card .v{font-family:'IBM Plex Mono',monospace;font-size:22px;margin-top:4px}
+.foot{margin-top:48px;border-top:1px solid var(--line);padding-top:18px;color:var(--mut);font-size:12.5px}
+.foot p{margin:6px 0}
+
+@media (max-width:820px){
+  .legend,.kpis,.grid2,.grid3,.delta{grid-template-columns:1fr}
+  .wrap{padding:26px 16px 56px}
+  .kpi .big{font-size:30px}
+}
+@media print{
+  :root{--bg:#fff;--panel:#fff;--panel2:#f2f4f8;--line:#c9d1e2;--tx:#111;--mut:#4a5670;--gold:#8a6512}
+  .tw{overflow:visible} table{min-width:0} thead th{position:static}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Comité de Vigilancia · Torre 1 · U Place Periférico</div>
+  <h1>Comparativo de propuestas de mantenimiento con personal cautivo</h1>
+  <p class="lede">Presentación factual en paralelo de tres opciones, con los mismos criterios para cada una. No incluye ponderaciones, calificaciones ni recomendación.</p>
+  <div class="meta">
+    <span>Corte: <b>30-sep-2026</b></span>
+    <span>Importes en <b>MXN, sin IVA</b> salvo indicación</span>
+    <span>IVA: <b>16%</b></span>
+  </div>
+
+  <div class="legend">
+    <div class="card"><h3><span class="badge">A</span>HomePro · 1 técnico</h3><p>En operación desde el 01-ago-2026. Se presentan las condiciones del <b>contrato firmado</b>; donde difieren de su propuesta del 04-jun-2026 se indica.</p></div>
+    <div class="card"><h3><span class="badge">B</span>HomePro · 2 técnicos</h3><p>Propuesta del 03-jun-2026. Sin contrato. Alcance, informes, KPIs y penalizaciones igualados a los de A por indicación de la administración; la propuesta no los declara.</p></div>
+    <div class="card"><h3><span class="badge">C</span>RBO Servicios · 2 personas</h3><p>Propuesta técnico-económica del 30-sep-2026, revisión inicial “0”. Sin contrato.</p></div>
+  </div>
+</header>
+
+<!-- 01 -->
+<section>
+  <h2><span class="n">01</span>Resumen económico</h2>
+  <p class="sub">Costo por hora-hombre = mensualidad ÷ horas-hombre estimadas (técnicos × 8 h × 26 días de lunes a sábado).</p>
+  <div class="kpis">
+    <div class="card kpi"><div class="lab">A · HomePro 1 técnico</div><div class="big mono">$52,000</div><div>por mes sin IVA</div>
+      <div class="row"><span>Costo por hora</span><b>$250</b></div><div class="row"><span>Horas-hombre / mes</span><b>208</b></div><div class="row"><span>Anualizado</span><b>$624,000</b></div></div>
+    <div class="card kpi"><div class="lab">B · HomePro 2 técnicos</div><div class="big mono">$97,500</div><div>por mes sin IVA</div>
+      <div class="row"><span>Costo por hora</span><b>$234</b></div><div class="row"><span>Horas-hombre / mes</span><b>416</b></div><div class="row"><span>Anualizado</span><b>$1,170,000</b></div></div>
+    <div class="card kpi"><div class="lab">C · RBO 2 personas</div><div class="big mono">$47,100</div><div>por mes sin IVA</div>
+      <div class="row"><span>Costo por hora</span><b>$113</b></div><div class="row"><span>Horas-hombre / mes</span><b>416</b></div><div class="row"><span>Anualizado</span><b>$565,200</b></div></div>
+  </div>
+  <div class="delta">
+    <div class="card"><div class="lab mono" style="font-size:11.5px;color:var(--mut)">DIFERENCIA MENSUAL B − A</div><div class="v">$45,500</div></div>
+    <div class="card"><div class="lab mono" style="font-size:11.5px;color:var(--mut)">DIFERENCIA MENSUAL B − C</div><div class="v">$50,400</div></div>
+    <div class="card"><div class="lab mono" style="font-size:11.5px;color:var(--mut)">DIFERENCIA MENSUAL A − C</div><div class="v">$4,900</div></div>
+  </div>
+
+  <div class="tw" style="margin-top:18px"><table>
+    <thead><tr><th></th><th><span class="badge">A</span>HomePro 1 técnico</th><th><span class="badge">B</span>HomePro 2 técnicos</th><th><span class="badge">C</span>RBO 2 personas</th></tr></thead>
+    <tbody>
+      <tr><th>Documento base</th><td>Contrato firmado 01-ago-2026 (propuesta 04-jun-2026)</td><td>Propuesta 03-jun-2026</td><td>Propuesta 30-sep-2026, rev. 0</td></tr>
+      <tr><th>Estatus</th><td>En operación</td><td>Sin contratar. Vigencia de la propuesta: 15 días naturales (hasta 18-jun-2026)</td><td>Sin contratar. Costos válidos solo para el año 2026</td></tr>
+      <tr><th>Personal</th><td>1 técnico polivalente</td><td>2 técnicos polivalentes (matutino y vespertino)</td><td>1 técnico electromecánico ($24,600) + 1 oficial de conservación ($22,500)</td></tr>
+      <tr class="hl"><th>Mensualidad sin IVA</th><td class="num">$52,000</td><td class="num">$97,500</td><td class="num">$47,100</td></tr>
+      <tr><th>Mensualidad con IVA</th><td class="num">$60,320</td><td class="num">$113,100</td><td class="num">$54,636</td></tr>
+      <tr><th>Anualizado sin IVA</th><td class="num">$624,000</td><td class="num">$1,170,000</td><td class="num">$565,200</td></tr>
+      <tr class="hl"><th>Costo por hora-hombre</th><td class="num">$250.00</td><td class="num">$234.38</td><td class="num">$113.22</td></tr>
+      <tr><th>Costo por departamento (208)</th><td class="num">$250.00</td><td class="num">$468.75</td><td class="num">$226.44</td></tr>
+      <tr><th>Descuento por plazo</th><td>No aparece en el contrato (la propuesta ofrecía 4% a 24 meses)</td><td>No ofrece</td><td>No ofrece</td></tr>
+      <tr><th>Consumibles incluidos</th><td>Hasta $3,000 por mes</td><td>La tabla dice “Incluido”; el texto dice hasta $5,000 por mes</td><td>Lista de consumibles, sin tope declarado</td></tr>
+      <tr><th>Materiales y refacciones</th><td>Cotización previa y aprobación por escrito. Se facturan aparte los que excedan el tope o superen $500 por unidad. Sin cargo indirecto declarado</td><td>Igual que A</td><td>Cotización y orden de compra. Cargo indirecto de 10% sobre los costos presupuestados</td></tr>
+      <tr><th>Facturación y pago</th><td>Mensualidad anticipada el primer día hábil; pago a 30 días naturales</td><td>Igual que A</td><td>Trabajos especiales facturados a mes vencido. Plazo de pago de la iguala no declarado</td></tr>
+      <tr><th>Ajuste de precio</th><td>INPC, tope de 8%, desde el 2.º año y en cada renovación, con autorización escrita del Cliente</td><td>No declarado</td><td>Revisión en enero de 2027 (INPC, salario mínimo, carga social y otros), sin tope</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 02 -->
+<section>
+  <h2><span class="n">02</span>Modelo de servicio y emergencias</h2>
+  <p class="sub">Lo que cada documento declara sobre cobertura, horarios, tiempos de respuesta y costo de emergencias.</p>
+  <div class="tw"><table>
+    <thead><tr><th></th><th><span class="badge">A</span>HomePro 1 técnico</th><th><span class="badge">B</span>HomePro 2 técnicos</th><th><span class="badge">C</span>RBO 2 personas</th></tr></thead>
+    <tbody>
+      <tr><th>Horario de mantenimiento</th><td>Lunes a sábado, turno matutino, 8 h diarias (horario a coordinar con la administración)</td><td>Lunes a sábado, dos turnos de 8 h (horario a coordinar). El resumen de la propuesta menciona “turno continuo L–D”</td><td>Lunes a sábado. Electromecánico 07:00–15:00; oficial de conservación 14:00–22:00. Domingo, descanso</td></tr>
+      <tr><th>Cobertura de ausencias</th><td>Personal de reemplazo sin costo adicional</td><td>Técnico de reemplazo disponible</td><td>Incluida en la iguala (faltas, incapacidades y permisos)</td></tr>
+      <tr><th>Supervisión</th><td>Incluida, sin frecuencia declarada. Supervisor asignado “a designar” (Anexo C)</td><td>Igual que A</td><td>Ingeniero coordinador con visitas semanales y personal administrativo de apoyo</td></tr>
+      <tr><th>Emergencias: días y horario</th><td>Lunes a domingo. Horas del día no especificadas</td><td>Lunes a domingo. Horas del día no especificadas</td><td>No declara guardia ni horario. Apoyo con cuadrilla y unidades motorizadas</td></tr>
+      <tr class="hl"><th>Tiempos de respuesta</th><td>Falla crítica 4 h · Urgencia operativa 6 h · Correctivo urgente 8 h. Se cuentan desde la notificación (Vivook o WhatsApp) al supervisor</td><td>Igual que A</td><td>“Menor tiempo posible”, según distancia y tráfico. Sin cifra. Recomendado si se contrata: 4 / 6 / 8 h como A (ver sección 04)</td></tr>
+      <tr><th>Costo de atender emergencias</th><td>La propuesta decía “Incluido”; el contrato no lo repite <span class="t">Por confirmar</span></td><td>“Incluido”</td><td>Sin costo extra por cuadrilla y unidades. Refacciones y materiales aparte</td></tr>
+      <tr><th>Tiempos de resolución de correctivos</th><td>Crítico 24 h · Urgente 48 h hábiles · Ordinario 5 días hábiles</td><td>Igual que A</td><td>No declarados. Recomendado si se contrata: los de A (ver sección 04)</td></tr>
+      <tr><th>Cotización de trabajos adicionales</th><td>Valoración inicial sin costo y cotización en máximo 48 h hábiles. Aprobación por WhatsApp o correo</td><td>Igual que A</td><td>Presupuesto previo a la autorización. Plazo no declarado</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 03 -->
+<section>
+  <h2><span class="n">03</span>Alcance frente al inventario de activos</h2>
+  <p class="sub">Sistemas del inventario de la torre y lo que cada documento declara sobre ellos. “Sin declarar” significa que el documento no lo menciona.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Sistema</th><th><span class="badge">A</span>HomePro 1 técnico (contrato)</th><th><span class="badge">B</span>HomePro 2 técnicos</th><th><span class="badge">C</span>RBO 2 personas</th></tr></thead>
+    <tbody>
+      <tr><th>Planta de emergencia Digesa 500 kW</th><td>Sin declarar</td>
+      <td>Sin declarar</td><td>Atención primaria: limpieza, lecturas, niveles y pruebas en vacío y con carga (previa programación), emergencias y bitácora. Excluye mantenimiento mayor, programación del tablero y transferencias</td></tr>
+      <tr><th>Transformadores E1 (750 kVA) y E2 (300 kVA), subestación</th><td>Excluidos (subestaciones y acometidas)</td>
+      <td>Excluidos (subestaciones y acometidas)</td><td>Transformadores hasta 30 kVA. Subestación: revisión visual y limpieza en condiciones seguras. Excluye mantenimientos preventivos y correctivos</td></tr>
+      <tr><th>Tableros eléctricos</th><td>Secundarios y de distribución de áreas comunes (reemplazo de pastillas). Excluye los mayores a 220 V</td>
+      <td>Secundarios y de distribución de áreas comunes (reemplazo de pastillas). Excluye los mayores a 220 V</td><td>Secundarios menores a 480 V. Excluye tableros generales y principales</td></tr>
+      <tr><th>Bombas de hasta 2 HP (ESPA, Orum, azotea)</th><td>Sin declarar, salvo la exclusión de bombeo sofisticado (hidroneumáticos, presión constante, recirculación de alberca)</td>
+      <td>Sin declarar, salvo la exclusión de bombeo sofisticado (hidroneumáticos, presión constante, recirculación de alberca)</td><td>Incluidas (equipos menores a 3 HP)</td></tr>
+      <tr><th>Bombas de 3 HP (Century y cárcamos)</th><td>Cárcamos excluidos (espacios confinados)</td>
+      <td>Cárcamos excluidos (espacios confinados)</td><td>Redacción ambigua: “menores a 3 HP” en lo programado y “que no excedan 3 HP” en lo correctivo <span class="t">Por confirmar</span>. Cárcamos: solo revisión y lavado hasta 1 m³ con EPP a cargo del sitio</td></tr>
+      <tr><th>Hidroneumático y alta presión (Barmesa 60 HP)</th><td>Excluido (bombeo sofisticado)</td>
+      <td>Excluido (bombeo sofisticado)</td><td>Bombas mayores a 3 HP fuera de alcance. Tableros de control de bombeo: revisión y correcciones, sin programación</td></tr>
+      <tr><th>Cisternas y tinacos</th><td>Excluidos (espacios confinados)</td>
+      <td>Excluidos (espacios confinados)</td><td>Niveles, flotadores y válvulas hasta 2 pulgadas. Lavado mecánico anual sujeto a condiciones</td></tr>
+      <tr><th>Calderas, bombas de calor y generadores de vapor</th><td>Sin declarar. HVAC centralizado excluido</td>
+      <td>Sin declarar. HVAC centralizado excluido</td><td>Calderas y calentadores: revisión y correcciones menores. Excluye intercambiador, flautas y quemadores. Bombas de calor y generadores de vapor: sin declarar</td></tr>
+      <tr><th>Extractores S&amp;P (30 + 1)</th><td>Revisión de circuitos de motores de 220 V</td>
+      <td>Revisión de circuitos de motores de 220 V</td><td>Incluidos, con limpieza y cambio de motores o bandas. Excluye trabajos a más de 3 m</td></tr>
+      <tr><th>Protección contra incendio (NFPA 20)</th><td>Excluida (proveedores certificados)</td>
+      <td>Excluida (proveedores certificados)</td><td>Bombas menores a 3 HP, hidrantes y extintores (revisión). Mantenimiento mayor con especialista</td></tr>
+      <tr><th>Elevadores KONE</th><td>Sin declarar</td>
+      <td>Sin declarar</td><td>Apoyo primario (forros y atención a elevador detenido con capacitación). Excluye mantenimiento</td></tr>
+      <tr><th>CCTV, control de acceso y plumas</th><td>Excluidos</td>
+      <td>Excluidos</td><td>Apoyo primario y reporte al especialista. Excluye mantenimiento</td></tr>
+      <tr><th>Pararrayos y tierra física</th><td>Sin declarar</td>
+      <td>Sin declarar</td><td>Limpieza, conexiones y correcciones menores. Excluye estudios y resistencia óhmica</td></tr>
+      <tr><th>Gas natural y LP (incluye Piso 31)</th><td>Verificación visual de trayectorias y reporte. Sin intervención en redes presurizadas</td>
+      <td>Verificación visual de trayectorias y reporte. Sin intervención en redes presurizadas</td><td>Sin declarar</td></tr>
+      <tr><th>Acabados, luminarias y sanitarios</th><td>Incluidos (pintura, tablaroca, resanes, luminarias LED, sanitarios)</td>
+      <td>Incluidos (pintura, tablaroca, resanes, luminarias LED, sanitarios)</td><td>Incluidos. Áreas mayores a 5 m² excluidas en acabados</td></tr>
+      <tr><th>Trabajos en altura</th><td>Excluidos por encima de 4 m</td>
+      <td>Excluidos por encima de 4 m</td><td>Excluidos por encima de 3 m</td></tr>
+      <tr><th>Planta de tratamiento (PTAR)</th><td>Sin declarar</td>
+      <td>Sin declarar</td><td>Sin declarar (cisternas de agua tratada: niveles y lavado anual)</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">El alcance de B se presenta igual al de A por indicación de la administración (la propuesta B no incluye lista de exclusiones). Ninguna de las tres opciones sustituye a los especialistas externos de la matriz de compliance del inventario (banco de carga, dieléctricas, NFPA 20, elevadores, calderas, entre otros).</p>
+</section>
+
+<!-- 04 -->
+<section>
+  <h2><span class="n">04</span>Informes, KPIs y penalizaciones</h2>
+  <p class="sub">Elementos de gestión y control. En B se presentan iguales a A. En C se añaden, marcadas como recomendadas, las condiciones equivalentes a A para el caso de contratarla.</p>
+  <div class="tw"><table>
+    <thead><tr><th></th><th><span class="badge">A</span>HomePro 1 técnico (contrato)</th><th><span class="badge">B</span>HomePro 2 técnicos</th><th><span class="badge">C</span>RBO 2 personas</th></tr></thead>
+    <tbody>
+      <tr><th>Reporte mensual</th><td>Primer día hábil del mes siguiente: trabajos, fotos antes y después, hallazgos, estado de instalaciones y recomendaciones</td><td>Igual que A</td><td>Informe mensual con reporte fotográfico, informe estadístico y resumen ejecutivo. Informe mensual de correctivos, presupuestos y materiales</td></tr>
+      <tr><th>Bitácora y evidencia</th><td>Bitácora digital por turno y por área. Fotos antes y después</td><td>Igual que A</td><td>Check lists y órdenes de trabajo. Software propio con acceso web</td></tr>
+      <tr><th>Programa preventivo</th><td>No contiene programa anual. Incluye “trabajos preventivos realizables dentro de la jornada”</td><td>Igual que A</td><td>Programa anual presentado a 30 días del inicio, con evaluación mensual de cumplimiento y revisión anual</td></tr>
+      <tr class="hl"><th>KPIs</th><td>10 KPIs definidos (Anexo D, detalle abajo)</td><td>Igual que A</td><td>Propone implementar KPIs “fundados en SLA” en reuniones mensuales, sin definirlos. Recomendado si se contrata: los 10 KPIs del Anexo D de A</td></tr>
+      <tr><th>SLA con cifras</th><td>Sí: emergencias y resolución de correctivos</td><td>Igual que A</td><td>No. Recomendado si se contrata: el SLA de A</td></tr>
+      <tr class="hl"><th>Penalizaciones</th><td>3 niveles por KPI (detalle abajo) y descuento por horas no cubiertas, sin fórmula (Cl. 8)</td><td>Igual que A</td><td>No incluye. Recomendado si se contrata: los 3 niveles de A con importes recalculados y descuento por horas no cubiertas</td></tr>
+      <tr><th>Reuniones cliente–proveedor</th><td>No se mencionan</td><td>No se mencionan</td><td>Mensuales</td></tr>
+      <tr><th>Documentación laboral y fiscal</th><td>Mensual, en los primeros 10 días hábiles: REPSE, IMSS e INFONAVIT, retenciones de ISR e IVA. Aviso de 5 días hábiles ante cambio de técnico</td><td>Igual que A</td><td>Entregables mensuales: lista de asistencia, pago de seguro social, IVA e ISR, opinión de cumplimiento. No declara número REPSE</td></tr>
+      <tr><th>Registro REPSE</th><td>AR192868/2025</td><td>AR192868/2025</td><td>No declarado en la propuesta</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="grid2" style="margin-top:18px">
+    <div>
+      <h3 style="font-size:15px;margin:0 0 8px">Opción A · KPIs del Anexo D</h3>
+      <div class="tw"><table style="min-width:0">
+        <thead><tr><th>KPI</th><th>Meta</th></tr></thead>
+        <tbody>
+          <tr><td>Tasa de resolución en tiempo</td><td class="num">≥ 80% dentro del SLA</td></tr>
+          <tr><td>Tiempo promedio de resolución (ordinarios)</td><td class="num">≤ 5 días hábiles</td></tr>
+          <tr><td>Backlog al cierre del mes</td><td class="num">≤ 8 tickets con más de 5 días hábiles</td></tr>
+          <tr><td>Tasa de reapertura</td><td class="num">≤ 10% en menos de 15 días</td></tr>
+          <tr><td>Cobertura de jornada</td><td class="num">≥ 96% de días hábiles</td></tr>
+          <tr><td>Cumplimiento de reporte mensual</td><td class="num">100% en el primer día hábil</td></tr>
+          <tr><td>Respuesta a emergencias</td><td class="num">≥ 90% dentro de la Cláusula Cuarta</td></tr>
+          <tr><td>Evidencia fotográfica</td><td class="num">≥ 90% de los trabajos</td></tr>
+          <tr><td>Documentación REPSE/IMSS</td><td class="num">100% en 10 días hábiles</td></tr>
+          <tr><td>Incidencias sin respuesta formal</td><td class="num">≤ 2 por mes (sin acuse en 4 h hábiles)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3 style="font-size:15px;margin:0 0 8px">Opción A · Niveles de penalización</h3>
+      <div class="tw"><table style="min-width:0">
+        <thead><tr><th>Nivel</th><th>Disparador</th><th>Consecuencia</th></tr></thead>
+        <tbody>
+          <tr><td>Alerta</td><td>3 o más KPIs incumplidos en un mes</td><td>Plan de acción en 5 días hábiles</td></tr>
+          <tr><td>Descuento</td><td>4 o más KPIs en 2 meses consecutivos, sin plan de acción aceptado</td><td class="num">10% de la mensualidad del segundo mes ($5,200 sin IVA)</td></tr>
+          <tr><td>Rescisión</td><td>4 o más KPIs en 3 meses consecutivos, o 2 incumplimientos graves de correctivos de 24 h en un mes</td><td>Rescisión con 15 días de aviso</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">El Anexo D no define quién mide, con qué fuente ni con qué fecha de corte.</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:16px;margin:30px 0 4px">Opción C · KPIs, SLA y penalizaciones recomendados si se contrata</h3>
+  <p class="sub" style="margin-bottom:12px">Equivalentes a los de A (Anexo D y Cláusulas 4 y 5), con los importes recalculados sobre la mensualidad de C. No figuran en la propuesta de RBO: requieren su aceptación por escrito.</p>
+  <div class="grid2">
+    <div>
+      <div class="tw"><table style="min-width:0">
+        <thead><tr><th>KPI</th><th>Meta</th></tr></thead>
+        <tbody>
+          <tr><td>Tasa de resolución en tiempo</td><td class="num">≥ 80% dentro del SLA</td></tr>
+          <tr><td>Tiempo promedio de resolución (ordinarios)</td><td class="num">≤ 5 días hábiles</td></tr>
+          <tr><td>Backlog al cierre del mes</td><td class="num">≤ 8 tickets con más de 5 días hábiles</td></tr>
+          <tr><td>Tasa de reapertura</td><td class="num">≤ 10% en menos de 15 días</td></tr>
+          <tr><td>Cobertura de jornada (ambos perfiles)</td><td class="num">≥ 96% de días hábiles</td></tr>
+          <tr><td>Cumplimiento de reporte mensual</td><td class="num">100% en el primer día hábil</td></tr>
+          <tr><td>Respuesta a emergencias</td><td class="num">≥ 90% dentro del SLA</td></tr>
+          <tr><td>Evidencia fotográfica</td><td class="num">≥ 90% de los trabajos</td></tr>
+          <tr><td>Documentación REPSE/IMSS</td><td class="num">100% en 10 días hábiles</td></tr>
+          <tr><td>Incidencias sin respuesta formal</td><td class="num">≤ 2 por mes (sin acuse en 4 h hábiles)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <div class="tw"><table style="min-width:0">
+        <thead><tr><th>Nivel</th><th>Disparador</th><th>Consecuencia</th></tr></thead>
+        <tbody>
+          <tr><td>Alerta</td><td>3 o más KPIs incumplidos en un mes</td><td>Plan de acción en 5 días hábiles</td></tr>
+          <tr><td>Descuento</td><td>4 o más KPIs en 2 meses consecutivos, sin plan de acción aceptado</td><td class="num">10% de la mensualidad del segundo mes ($4,710 sin IVA)</td></tr>
+          <tr><td>Rescisión</td><td>4 o más KPIs en 3 meses consecutivos, o 2 incumplimientos graves de correctivos de 24 h en un mes</td><td>Rescisión con 15 días de aviso</td></tr>
+          <tr><td>Horas no cubiertas</td><td>Hora-hombre no cubierta y sin reemplazo</td><td class="num">Descuento de $113.22 por hora ($47,100 ÷ 416), por nota de crédito</td></tr>
+        </tbody>
+      </table></div>
+      <div class="tw" style="margin-top:14px"><table style="min-width:0">
+        <thead><tr><th>SLA de referencia (igual que A)</th><th>Tiempo</th></tr></thead>
+        <tbody>
+          <tr><td>Emergencia: falla crítica (lunes a domingo)</td><td class="num">4 h</td></tr>
+          <tr><td>Emergencia: urgencia operativa (lunes a domingo)</td><td class="num">6 h</td></tr>
+          <tr><td>Emergencia: correctivo urgente (lunes a domingo)</td><td class="num">8 h</td></tr>
+          <tr><td>Resolución: correctivo crítico</td><td class="num">24 h</td></tr>
+          <tr><td>Resolución: correctivo urgente</td><td class="num">48 h hábiles</td></tr>
+          <tr><td>Resolución: correctivo ordinario</td><td class="num">5 días hábiles</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+  <p class="note">Los tiempos se cuentan desde la notificación por el canal directo con el supervisor asignado. RBO propone además una evaluación mensual del programa preventivo, que puede sumarse como KPI 11. La fuente de medición y la fecha de corte deben definirse en el contrato (en el Anexo D de A tampoco están definidas).</p>
+</section>
+
+<!-- 05 -->
+<section>
+  <h2><span class="n">05</span>Condiciones contractuales</h2>
+  <p class="sub">Vigencia, renovación, terminación, seguros y datos del documento.</p>
+  <div class="tw"><table>
+    <thead><tr><th></th><th><span class="badge">A</span>HomePro 1 técnico (contrato)</th><th><span class="badge">B</span>HomePro 2 técnicos</th><th><span class="badge">C</span>RBO 2 personas</th></tr></thead>
+    <tbody>
+      <tr><th>Inicio</th><td>01-ago-2026</td><td>No definido</td><td>15 días naturales después de la aprobación</td></tr>
+      <tr><th>Vigencia y renovación</th><td>La renovación procede solo si ambas partes lo manifiestan por escrito, por 9 meses (Cl. 10). La propuesta decía 12 meses con renovación automática</td><td>12 meses con renovación automática por periodos iguales</td><td>Mínimo 12 meses desde la firma. Renovación automática “sin ninguna notificación”, previa revisión de costos</td></tr>
+      <tr><th>Terminación anticipada</th><td>10 días naturales de aviso por cualquiera de las partes, pagando lo devengado. Rescisión por incumplimiento grave no subsanado en 10 días</td><td>No declarada</td><td>No declarada</td></tr>
+      <tr><th>Seguro</th><td>Responsabilidad civil por $10,000,000</td><td>Responsabilidad civil por $10,000,000</td><td>Póliza de daños por $5,000,000, la mitad que en A. Por solicitar: ampliación a $10,000,000 y confirmar el tipo de cobertura <span class="t">Por confirmar</span></td></tr>
+      <tr><th>Relación laboral</th><td>Personal directo del prestador, sin subcontratación</td><td>Igual que A</td><td>Personal contratado directamente</td></tr>
+      <tr><th>Dirección del inmueble en el documento</th><td>Blvd. Adolfo López Mateos 1075, Álvaro Obregón</td><td>Blvd. Adolfo López Mateos 1075, Álvaro Obregón</td><td>Blvd. Adolfo López Mateos 1470, Col. Mixcoac, Benito Juárez</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="font-size:15px;margin:22px 0 8px">Opción A · Cambios entre la propuesta (04-jun) y el contrato (01-ago)</h3>
+  <div class="grid3">
+    <div class="card"><p><b style="color:var(--tx)">Se añadió</b></p><ul class="tight"><li>Tiempos de resolución de correctivos (Cl. 5)</li><li>Anexo D de KPIs y penalizaciones</li><li>Ajuste por INPC con tope de 8% (Cl. 16)</li><li>Terminación con 10 días de aviso (Cl. 11)</li><li>Comprobantes laborales y fiscales mensuales (Cl. 12)</li></ul></div>
+    <div class="card"><p><b style="color:var(--tx)">Se modificó</b></p><ul class="tight"><li>Renovación: de automática a por escrito, por 9 meses</li><li>Descuento por horas no cubiertas (Cl. 8), sin fórmula</li></ul></div>
+    <div class="card"><p><b style="color:var(--tx)">Se quitó o no se repitió</b></p><ul class="tight"><li>Descuento de 4% por 24 meses</li><li>Emergencias “Incluido” (no se repite en el contrato)</li><li>Plazo de 24–48 h para cotizar materiales (el contrato fija 48 h hábiles para servicios adicionales)</li></ul></div>
+  </div>
+</section>
+
+<!-- 06 -->
+<section>
+  <h2><span class="n">06</span>Referencias públicas en línea</h2>
+  <p class="sub">Consulta del 30-sep-2026. Son de distinto tipo y escala, no se ponderan en este comparativo y no sustituyen la verificación directa con referencias.</p>
+  <div class="tw"><table>
+    <thead><tr><th></th><th><span class="badge">A</span><span class="badge">B</span>HomePro</th><th><span class="badge">C</span>RBO Servicios</th></tr></thead>
+    <tbody>
+      <tr><th>Antigüedad declarada</th><td>Sociedad constituida el 18-nov-2023 (según contrato). División “HomePro Empresas” con técnicos propios anunciada en nov-2025</td><td>12 años en el mercado, 200 empleados y 19 entidades (según su propuesta)</td></tr>
+      <tr><th>Calificaciones públicas</th><td>4.6 de 5 con 25 reseñas en Google, según su propio sitio. Mayormente servicios residenciales e instalaciones</td><td>Indeed: 3.2 de 5 (reseñas de empleados, casi todas de 2018 a 2023; Ecatepec 2.8). Facebook: 80% recomienda con 7 reseñas</td></tr>
+      <tr><th>Clientes o referencias</th><td>Clientes citados en prensa y sitio: Interprotección, Comunal Coworking, Viakon y Gerdau Corsa</td><td>Referencias en su propuesta: Seguros Chubb (6 años), Residencial Etre Polanco (4) y Colliers (4), con contacto telefónico</td></tr>
+      <tr><th>Registro REPSE</th><td>AR192868/2025 (declarado; verificable ante la STPS)</td><td>No declarado en la propuesta</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">No se verificó el REPSE de ninguna de las dos empresas ante la STPS.</p>
+</section>
+
+<!-- 07 -->
+<section>
+  <h2><span class="n">07</span>Puntos por aclarar con cada proveedor</h2>
+  <p class="sub">Datos que el documento no aporta o que presentan inconsistencias internas.</p>
+  <div class="grid3">
+    <div class="card"><h3><span class="badge">A</span>HomePro 1 técnico</h3><ul class="tight">
+      <li>Anexo C con campos vacíos (aprobadores y montos de U Place) y supervisor “a designar”</li>
+      <li>El Anexo D no figura en la cláusula de acuerdo total (Cl. 23)</li>
+      <li>Referencias cruzadas erróneas en las Cl. 3, 7 y 8, y “EL PRESTATARIO” en la firma</li>
+      <li>Definición de “respuesta” y horario de las emergencias; costo de atención</li>
+      <li>Fórmula del descuento por horas no cubiertas</li>
+      <li>Copia firmada del contrato (el archivo recibido tiene las líneas de firma en blanco)</li>
+    </ul></div>
+    <div class="card"><h3><span class="badge">B</span>HomePro 2 técnicos</h3><ul class="tight">
+      <li>Propuesta vencida desde el 18-jun-2026</li>
+      <li>Horario del turno vespertino</li>
+      <li>Lunes a sábado o lunes a domingo (resumen contra estructura de servicios)</li>
+      <li>Consumibles: “Incluido” contra hasta $5,000 por mes</li>
+      <li>Formalizar que exclusiones, política de materiales, informes, KPIs y penalizaciones sean los de A (la propuesta no los incluye)</li>
+    </ul></div>
+    <div class="card"><h3><span class="badge">C</span>RBO 2 personas</h3><ul class="tight">
+      <li>Cobertura de emergencias: guardia, domingo, festivos y horario nocturno</li>
+      <li>Tiempo máximo de llegada y penalización por incumplimiento</li>
+      <li>Aceptación por escrito del SLA, los KPIs y las penalizaciones equivalentes a A (sección 04)</li>
+      <li>Ampliación de la póliza de daños de $5,000,000 a $10,000,000, y confirmación de que cubra responsabilidad civil</li>
+      <li>Dirección del inmueble (1470, Mixcoac, Benito Juárez)</li>
+      <li>Número REPSE, plazo de pago y terminación anticipada</li>
+      <li>Tope del ajuste de enero de 2027 y aviso de renovación</li>
+      <li>Alcance de las bombas de 3 HP</li>
+    </ul></div>
+  </div>
+</section>
+
+<div class="foot">
+  <p><b>Fuentes documentales:</b> Contrato de prestación de servicios especializados HomePro (01-ago-2026); propuesta HomePro 1 técnico (04-jun-2026); propuesta HomePro 2 técnicos (03-jun-2026); Propuesta Técnico-Económica RBO Servicios rev. 0 (30-sep-2026); inventario maestro de activos de la torre.</p>
+  <p><b>Método:</b> los importes son los declarados por cada proveedor. Horas-hombre estimadas: técnicos × 8 h × 26 días. No se aplican descuentos, ajustes ni materiales. El alcance, los informes, los KPIs y las penalizaciones de B se presentan iguales a los de A por indicación de la administración. Las condiciones de C marcadas como recomendadas son las equivalentes a A, para el caso de contratarla.</p>
+</div>
+
+</div>
+</body>
+</html>
